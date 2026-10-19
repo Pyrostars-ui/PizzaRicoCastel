@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Entity\News;
 use App\Repository\AboutRepository;
 use App\Repository\BoissonRepository;
 use App\Repository\HeroRepository;
 use App\Repository\NewsRepository;
 use App\Repository\PizzaRepository;
 use App\Repository\SEORepository;
-use App\Entity\News;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,11 +25,11 @@ final class HomeController extends AbstractController
      */
     #[Route('/', name: 'app_home')]
     public function index(
-        PizzaRepository $pizzaRepo, 
-        HeroRepository $heroRepo, 
-        AboutRepository $aboutRepo, 
+        PizzaRepository $pizzaRepo,
+        HeroRepository $heroRepo,
+        AboutRepository $aboutRepo,
         NewsRepository $newsRepo,
-        SEORepository $seoRepo
+        SEORepository $seoRepo,
     ): Response {
         $specialPizzas = $pizzaRepo->findSpecialOrderByPriceAsc();
         $hero = $heroRepo->findOneBy([], ['id' => 'ASC']);
@@ -84,7 +86,7 @@ final class HomeController extends AbstractController
     {
         return $this->render('home/news_detail.html.twig', [
             'item' => $news,
-            'title' => $news->getTitle() . ' - Pizza Rico'
+            'title' => $news->getTitle().' - Pizza Rico',
         ]);
     }
 

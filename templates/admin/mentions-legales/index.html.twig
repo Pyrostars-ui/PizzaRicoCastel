@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="admin-layout">
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
 
     <div class="admin-content" id="adminContent">
         <div class="admin-main-content p-4">
@@ -26,23 +26,23 @@
                         <div class="card-body p-4">
                             {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
                                 <div class="mb-4">
-                                    {{ form_label(form.metaTitle, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.metaTitle, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_label(form.metaTitle, null, {label_attr: {class: 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.metaTitle, {attr: {class: 'form-control'}}) }}
                                     <div class="form-text">Titre affiché dans l'onglet du navigateur et dans les résultats Google (~50-60 caractères).</div>
                                 </div>
                                 <div class="mb-4">
-                                    {{ form_label(form.metaDescription, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.metaDescription, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_label(form.metaDescription, null, {label_attr: {class: 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.metaDescription, {attr: {class: 'form-control'}}) }}
                                     <div class="form-text">Optionnel — Courte description SEO affichée sous le titre dans les moteurs de recherche.</div>
                                 </div>
                                 <div class="mb-4">
-                                    {{ form_label(form.title, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.title, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                                    {{ form_label(form.title, null, {label_attr: {class: 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.title, {attr: {class: 'form-control form-control-lg'}}) }}
                                     <div class="form-text">Grand titre H1 visible en haut de la page publique /mentions-legales.</div>
                                 </div>
                                 <div class="mb-4">
-                                    {{ form_label(form.content, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 16}}) }}
+                                    {{ form_label(form.content, null, {label_attr: {class: 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.content, {attr: {class: 'form-control', rows: 16}}) }}
                                     <div class="form-text">Éditeur, directeur de publication, hébergeur, propriété intellectuelle, données personnelles, contact, CGV, etc.</div>
                                 </div>
                                 <div class="d-grid">

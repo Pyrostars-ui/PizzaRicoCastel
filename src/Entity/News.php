@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\NewsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 #[ORM\Entity(repositoryClass: NewsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -34,7 +36,11 @@ class News
     private ?string $image = null;
 
     #[Vich\UploadableField(mapping: 'news_images', fileNameProperty: 'image')]
-    #[Assert\Image(maxSize: '2M')]
+    #[Assert\Image(
+        maxSize: '2M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        mimeTypesMessage: 'Veuillez télécharger une image valide (JPEG, PNG, WEBP)',
+    )]
     private ?File $imageFile = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
@@ -109,7 +115,7 @@ class News
     public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
-        if (null !== $imageFile) {
+        if ($imageFile instanceof File) {
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
@@ -131,7 +137,12 @@ class News
     public function generateSlug(): void
     {
         if ('' === $this->slug) {
-            $this->slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $this->title), '-'));
+            $sansAccents = str_replace(
+                ['à', 'á', 'â', 'ã', 'ä', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'],
+                ['a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y'],
+                $this->title,
+            );
+            $this->slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $sansAccents) ?? '', '-'));
         }
     }
 }

@@ -1,23 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Hero;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 /**
  * Formulaire utilisé pour la création et la modification de la section Hero (bannière).
+ *
+ * @extends AbstractType<Hero>
  */
 class HeroType extends AbstractType
 {
     /**
      * Construit le formulaire en ajoutant les différents champs nécessaires.
-     *
-     * @param FormBuilderInterface $builder L'outil de construction du formulaire
-     * @param array $options Options supplémentaires passées au formulaire
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -26,15 +27,15 @@ class HeroType extends AbstractType
                 'label' => 'Titre principal',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Les meilleures pizzas artisanales'
-                ]
+                    'placeholder' => 'Ex: Les meilleures pizzas artisanales',
+                ],
             ])
             ->add('subTitle', null, [
                 'label' => 'Sous-titre',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Découvrez notre savoir-faire traditionnel'
-                ]
+                    'placeholder' => 'Ex: Découvrez notre savoir-faire traditionnel',
+                ],
             ])
             // Champ spécifique pour l'upload d'image géré par VichUploader
             ->add('backgroundFile', VichImageType::class, [
@@ -48,7 +49,7 @@ class HeroType extends AbstractType
                 'asset_helper' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Choisir une image de fond'
+                    'placeholder' => 'Choisir une image de fond',
                 ],
             ])
         ;

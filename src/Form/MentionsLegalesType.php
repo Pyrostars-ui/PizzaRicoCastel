@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\MentionsLegales;
@@ -12,6 +14,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Formulaire d'administration pour éditer les mentions légales.
  * Tous les champs correspondent aux données persistées en base (MentionsLegales).
+ *
+ * @extends AbstractType<MentionsLegales>
  */
 class MentionsLegalesType extends AbstractType
 {

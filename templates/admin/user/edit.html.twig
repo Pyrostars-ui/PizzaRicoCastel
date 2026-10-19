@@ -5,15 +5,15 @@
 {% block body %}
 <div class="admin-layout">
     <!-- Sidebar Admin -->
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <!-- Main Content -->
     <div class="admin-content" id="adminContent">
-        
+
         <!-- Main Content Area -->
         <div class="admin-main-content p-4">
             <h1 class="mb-4 text-white">{{ title }}</h1>
-            
+
             <!-- Breadcrumb navigation -->
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb bg-dark p-3 rounded">
@@ -22,7 +22,7 @@
                     <li class="breadcrumb-item active text-white" aria-current="page"><i class="bi bi-pencil me-1"></i>Édition utilisateur</li>
                 </ol>
             </nav>
-            
+
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="card shadow-sm h-100">
@@ -32,24 +32,24 @@
                         </div>
 
                         <div class="card-body p-4 d-flex flex-column">
-                            {{ form_start(form, {'attr': {'class': 'needs-validation flex-grow-1 d-flex flex-column'}}) }}
+                            {{ form_start(form, {attr: {class: 'needs-validation flex-grow-1 d-flex flex-column'}}) }}
                                 <div class="mb-3">
-                                    {{ form_label(form.email, 'Email <span class="text-danger">*</span>', {'label_attr': {'class': 'form-label'}, 'label_html': true}) }}
-                                    {{ form_widget(form.email, {'attr': {'class': 'form-control bg-dark text-white border-secondary', 'placeholder': 'exemple@domaine.com'}}) }}
+                                    {{ form_label(form.email, 'Email <span class="text-danger">*</span>', {label_attr: {class: 'form-label'}, label_html: true}) }}
+                                    {{ form_widget(form.email, {attr: {class: 'form-control bg-dark text-white border-secondary', placeholder: 'exemple@domaine.com'}}) }}
                                     <div class="form-text text-white"><i class="bi bi-envelope-at me-1"></i> L'adresse email servira d'identifiant de connexion</div>
                                     {{ form_errors(form.email) }}
                                 </div>
-                                
+
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        {{ form_label(form.firstname, 'Prénom <span class="text-danger">*</span>', {'label_attr': {'class': 'form-label'}, 'label_html': true}) }}
-                                        {{ form_widget(form.firstname, {'attr': {'class': 'form-control bg-dark text-white border-secondary', 'placeholder': 'Jean'}}) }}
+                                        {{ form_label(form.firstname, 'Prénom <span class="text-danger">*</span>', {label_attr: {class: 'form-label'}, label_html: true}) }}
+                                        {{ form_widget(form.firstname, {attr: {class: 'form-control bg-dark text-white border-secondary', placeholder: 'Jean'}}) }}
                                         <div class="form-text text-white"><i class="bi bi-person me-1"></i> Prénom de l'utilisateur</div>
                                         {{ form_errors(form.firstname) }}
                                     </div>
                                     <div class="col-md-6">
-                                        {{ form_label(form.name, 'Nom <span class="text-danger">*</span>', {'label_attr': {'class': 'form-label'}, 'label_html': true}) }}
-                                        {{ form_widget(form.name, {'attr': {'class': 'form-control bg-dark text-white border-secondary', 'placeholder': 'Dupont'}}) }}
+                                        {{ form_label(form.name, 'Nom <span class="text-danger">*</span>', {label_attr: {class: 'form-label'}, label_html: true}) }}
+                                        {{ form_widget(form.name, {attr: {class: 'form-control bg-dark text-white border-secondary', placeholder: 'Dupont'}}) }}
                                         <div class="form-text text-white"><i class="bi bi-person-vcard me-1"></i> Nom de famille de l'utilisateur</div>
                                         {{ form_errors(form.name) }}
                                     </div>
@@ -57,12 +57,12 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6 mb-3">
-                                        {{ form_label(form.roles, 'Rôle <span class="text-danger">*</span>', {'label_attr': {'class': 'form-label'}, 'label_html': true}) }}
+                                        {{ form_label(form.roles, 'Rôle <span class="text-danger">*</span>', {label_attr: {class: 'form-label'}, label_html: true}) }}
                                         <div class="mt-2">
                                             {% for child in form.roles %}
                                                 <div class="form-check form-switch mb-2">
-                                                    {{ form_widget(child, {'attr': {'class': 'form-check-input bg-dark border-secondary'}}) }}
-                                                    {{ form_label(child, null, {'label_attr': {'class': 'form-check-label text-white'}}) }}
+                                                    {{ form_widget(child, {attr: {class: 'form-check-input bg-dark border-secondary'}}) }}
+                                                    {{ form_label(child, null, {label_attr: {class: 'form-check-label text-white'}}) }}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -70,8 +70,8 @@
                                         {{ form_errors(form.roles) }}
                                     </div>
                                     <div class="col-md-6">
-                                        {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-                                        {{ form_widget(form.password, {'attr': {'class': 'form-control bg-dark text-white border-secondary', 'placeholder': 'Laisser vide pour conserver le mot de passe actuel'}}) }}
+                                        {{ form_label(form.password, 'Mot de passe', {label_attr: {class: 'form-label'}}) }}
+                                        {{ form_widget(form.password, {attr: {class: 'form-control bg-dark text-white border-secondary', placeholder: 'Laisser vide pour conserver le mot de passe actuel'}}) }}
                                         <div class="form-text text-white"><i class="bi bi-key me-1"></i> Minimum 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre</div>
                                         {{ form_errors(form.password) }}
                                     </div>
@@ -81,7 +81,7 @@
                                     <a href="{{ path('app_admin_user') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Retour sans enregistrer</a>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal"><i class="bi bi-check-circle me-1"></i>Enregistrer les modifications</button>
                                 </div>
-                                
+
                                 <!-- Modal de confirmation pour l'enregistrement -->
                                 <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Colonne d'informations à droite -->
                 <div class="col-12 col-md-6">
                     <div class="card shadow-sm h-100">
@@ -118,19 +118,19 @@
                             <div class="alert alert-info mb-4">
                                 <i class="bi bi-info-circle me-2"></i> Vous êtes en train de modifier les informations de l'utilisateur. Tous les champs marqués d'un <span class="text-danger">*</span> sont obligatoires.
                             </div>
-                            
+
                             <div class="mb-4">
                                 <h6 class="fw-bold"><i class="bi bi-info-circle-fill text-primary me-2"></i>À propos de cette page</h6>
                                 <p>Cette page vous permet de modifier les informations d'un utilisateur existant. Les modifications seront appliquées immédiatement après validation.</p>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <h6 class="fw-bold"><i class="bi bi-person-badge text-info me-2"></i>Utilisateur en cours d'édition</h6>
                                 <div class="card bg-light">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="avatar-circle me-3" style="width: 50px; height: 50px; background-color: #6c757d;">
-                                                <span class="initials">{{ form.firstname.vars.value|slice(0,1) }}{{ form.name.vars.value|slice(0,1) }}</span>
+                                                <span class="initials">{{ form.firstname.vars.value|slice(0, 1) }}{{ form.name.vars.value|slice(0, 1) }}</span>
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-bold">{{ form.firstname.vars.value }} {{ form.name.vars.value }}</h6>
@@ -138,13 +138,13 @@
                                             </div>
                                         </div>
                                         <div class="small">
-                                            <p class="mb-1"><i class="bi bi-calendar-event me-2"></i>Date de création : <span class="fw-bold">{{ "now"|date("d/m/Y") }}</span></p>
+                                            <p class="mb-1"><i class="bi bi-calendar-event me-2"></i>Date de création : <span class="fw-bold">{{ 'now'|date('d/m/Y') }}</span></p>
                                             <p class="mb-0"><i class="bi bi-key me-2"></i>Identifiant : <span class="fw-bold">{{ user is defined ? user.id : 'N/A' }}</span></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <h6 class="fw-bold"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Conseils</h6>
                                 <ul class="list-group list-group-flush">
@@ -153,7 +153,7 @@
                                     <li class="list-group-item"><i class="bi bi-check-circle text-success me-2"></i>Confirmez les modifications avant de valider</li>
                                 </ul>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <h6 class="fw-bold"><i class="bi bi-shield-fill-check text-success me-2"></i>Sécurité</h6>
                                 <p>Les informations personnelles des utilisateurs sont protégées conformément à notre politique de confidentialité et au RGPD.</p>
@@ -161,7 +161,7 @@
                                     <i class="bi bi-exclamation-triangle me-2"></i> Attention : La modification des informations de l'utilisateur sera immédiatement appliquée après validation.
                                 </div>
                             </div>
-                            
+
                             <div class="alert alert-info">
                                 <i class="bi bi-question-circle me-2"></i>Besoin d'aide supplémentaire ? Contactez l'administrateur système.
                             </div>
@@ -173,4 +173,3 @@
     </div>
 </div>
 {% endblock %}
-

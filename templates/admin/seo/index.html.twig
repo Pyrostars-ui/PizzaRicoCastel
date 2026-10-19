@@ -4,8 +4,8 @@
 
 {% block body %}
 <div class="admin-layout">
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <div class="admin-content" id="adminContent">
         <div class="admin-main-content p-4">
             <h1 class="mb-4">{{ title }}</h1>
@@ -27,7 +27,7 @@
                                     <td>{{ item.pageName }}</td>
                                     <td>{{ item.metaTitle }}</td>
                                     <td>
-                                        <a href="{{ path('app_admin_seo_edit', {'id': item.id}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i> Modifier</a>
+                                        <a href="{{ path('app_admin_seo_edit', {id: item.id}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i> Modifier</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

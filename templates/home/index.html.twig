@@ -8,20 +8,14 @@
 
 {% block body %}
     {# Inclusion de la section Hero (bannière dynamique) #}
-    {% include "Components/hero/hero.html.twig" %}
+    {{ include('Components/hero/hero.html.twig') }}
 
 <!-- À propos -->
     <section class="py-5 bg-dark-surface">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
-                    <div class="about-image-wrapper position-relative">
-                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5" alt="Notre pizzeria" class="img-fluid rounded-4 shadow-lg about-img-main">
-                        <div class="about-experience-badge bg-secondary text-white p-4 rounded-4 shadow position-absolute bottom-0 end-0 transform-translate-middle-y">
-                            <span class="d-block h2 fw-bold mb-0">20+</span>
-                            <span class="small text-uppercase">Ans d'expérience</span>
-                        </div>
-                    </div>
+                    {{ include('Components/about/poster.html.twig') }}
                 </div>
                 <div class="col-lg-6">
                     <div class="about-content ps-lg-4">
@@ -194,7 +188,7 @@
                                 </div>
                                 <h5 class="card-title fw-bold mt-2">{{ item.title }}</h5>
                                 <p class="card-text text-white-50 flex-grow-1">{{ item.content|slice(0, 120) ~ '...' }}</p>
-                                <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="btn btn-link text-primary p-0 mt-3 text-decoration-none fw-bold">
+                                <a href="{{ path('app_news_detail', {slug: item.slug}) }}" class="btn btn-link text-primary p-0 mt-3 text-decoration-none fw-bold">
                                     Lire la suite <i class="bi bi-arrow-right ms-1"></i>
                                 </a>
                             </div>

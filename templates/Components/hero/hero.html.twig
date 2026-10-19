@@ -1,6 +1,6 @@
 <!-- Hero Section -->
 {% if hero is defined and hero is not null %}
-    <section class="hero text-center" {% if hero.background %}style="background-image: url('{{ asset('images/hero/' ~ hero.background) }}'); background-size: cover; background-position: center;"{% endif %}>
+    <section class="hero text-center"{% if hero.background %} style="--hero-bg: url('{{ asset('images/hero/' ~ hero.background) }}');"{% endif %}>
         <div class="container">
             <h1>{{ hero.title }}</h1>
             <p>{{ hero.subTitle }}</p>

@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -22,12 +25,12 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
  *
  * On ne consomme le quota qu'en cas d'échec avéré, on libère l'IP après un succès.
  */
-final class LoginAttemptsSubscriber implements EventSubscriberInterface
+final readonly class LoginAttemptsSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly RateLimiterFactory $loginAttemptsLimiter,
+        private RequestStack $requestStack,
+        private UrlGeneratorInterface $urlGenerator,
+        private RateLimiterFactoryInterface $loginAttemptsLimiter,
     ) {
     }
 
@@ -39,7 +42,7 @@ final class LoginAttemptsSubscriber implements EventSubscriberInterface
         }
 
         $request = $this->requestStack->getCurrentRequest();
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return;
         }
 
@@ -58,7 +61,7 @@ final class LoginAttemptsSubscriber implements EventSubscriberInterface
     public function onLoginFailure(LoginFailureEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return;
         }
 
@@ -86,7 +89,7 @@ final class LoginAttemptsSubscriber implements EventSubscriberInterface
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return;
         }
 

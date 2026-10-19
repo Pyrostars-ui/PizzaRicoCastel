@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Boisson;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+/**
+ * @extends AbstractType<Boisson>
+ */
 class BoissonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,8 +25,8 @@ class BoissonType extends AbstractType
                 'label' => 'Nom de la boisson',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Coca-Cola'
-                ]
+                    'placeholder' => 'Ex: Coca-Cola',
+                ],
             ])
             ->add('category', ChoiceType::class, [
                 'label' => 'Catégorie',
@@ -42,7 +46,7 @@ class BoissonType extends AbstractType
                 'label' => 'Contenance',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: 33cl, 1.5L'
+                    'placeholder' => 'Ex: 33cl, 1.5L',
                 ],
                 'required' => false,
             ])
@@ -50,8 +54,8 @@ class BoissonType extends AbstractType
                 'label' => 'Prix',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: 2.50'
-                ]
+                    'placeholder' => 'Ex: 2.50',
+                ],
             ])
             ->add('imageFile', VichImageType::class, [
                 'label' => 'Image',

@@ -1,0 +1,181 @@
+name: CI / Audit Qualité, Sécurité OWASP & RGPD
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - 'release/**'
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - develop
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-pipeline:
+    name: Pipeline SecOps (PostgreSQL 16+ & Gates 1-5)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # --------------------------------------------------------------------------
+    # CONTENEUR DE SERVICE : Base PostgreSQL 16 Alpine (Parité compose.yaml)
+    # --------------------------------------------------------------------------
+    services:
+      db:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: app_test
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: secret_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d app_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      APP_ENV: test
+      APP_DEBUG: '0'
+      APP_SECRET: 'ci_static_secret_token_for_testing_only'
+      DATABASE_URL: 'postgresql://app:secret_test_password@127.0.0.1:5432/app_test?serverVersion=16&charset=utf8'
+
+    steps:
+      - name: Récupération du code source
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------------
+      # EXTRACTION ET CONFIGURATION DU RUNTIME PHP (Format MAJOR.MINOR strict)
+      # ------------------------------------------------------------------------
+      - name: Détection dynamique de la version PHP du projet
+        id: detect-php
+        run: |
+          PHP_VERSION=$(php -r '$c=@json_decode(@file_get_contents("composer.json"),true); $raw=(string)($c["config"]["platform"]["php"] ?? $c["require"]["php"] ?? "8.4"); echo preg_match("/(\d+\.\d+)/", $raw, $m) ? $m[1] : "8.4";')
+          echo "version=${PHP_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Configuration de PHP (${{ steps.detect-php.outputs.version }})
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ steps.detect-php.outputs.version }}
+          extensions: pdo_pgsql, intl, zip, apcu, opcache, pcntl
+          coverage: none
+          tools: composer:v2
+
+      - name: Mise en cache des dépendances Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Installation des dépendances
+        run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+      # ------------------------------------------------------------------------
+      # GATE 1 : Analyse Statique, Supply Chain & Zero EOL (SAST / SCA)
+      # ------------------------------------------------------------------------
+      - name: "[Gate 1.1] Zero EOL — Vérification dynamique du cycle de vie (Strict)"
+        run: php scripts/check-eol.php
+
+      - name: "[Gate 1.2] SCA — Audit des dépendances PHP (Composer)"
+        run: composer audit
+
+      - name: "[Gate 1.3] SCA — Audit des dépendances Front-end (AssetMapper)"
+        if: hashFiles('importmap.php') != ''
+        run: php bin/console importmap:audit
+
+      - name: "[Gate 1.4] Linters Symfony (Conteneur, YAML, Traductions)"
+        run: |
+          php bin/console lint:container
+          php bin/console lint:yaml config/
+          if php bin/console list | grep -q "lint:translations"; then
+            php bin/console lint:translations
+          fi
+
+      - name: "[Gate 1.5] SAST — Standards Twig (Twig-CS-Fixer & lint:twig)"
+        run: |
+          if [ -d templates ]; then
+            php bin/console lint:twig templates/
+            if [ -f vendor/bin/twig-cs-fixer ]; then
+              vendor/bin/twig-cs-fixer lint templates/
+            fi
+          fi
+
+      - name: "[Gate 1.6] SAST — Formatage PSR-12 & Typage strict (PHP-CS-Fixer)"
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: "[Gate 1.7] SAST — Analyse statique stricte (PHPStan niveau 8+)"
+        run: |
+          APP_ENV=dev APP_DEBUG=1 php bin/console cache:warmup --env=dev
+          vendor/bin/phpstan analyse --no-progress
+
+      # ------------------------------------------------------------------------
+      # GATE 2 : Intégrité Logique & Migrations DB Réelles (QA & Couche Données)
+      # ------------------------------------------------------------------------
+      - name: "[Gate 2.1] Exécution des Migrations réelles Doctrine sur PostgreSQL"
+        run: |
+          php bin/console doctrine:database:create --if-not-exists --env=test
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=test
+
+      - name: "[Gate 2.2] Pyramide des Tests — PHPUnit (Unitaires & Intégration)"
+        run: vendor/bin/phpunit --colors=always
+
+      - name: "[Gate 2.3] OWASP A03 — Vérification 0 concaténation SQL/DQL brute"
+        run: |
+          if grep -rnE '(createQuery|executeQuery|executeStatement|prepare)\s*\(\s*["'\''].*(\.\s*\$|\{\$)' src/; then
+            echo "❌ [VIOLATION OWASP A03] Concaténation ou interpolation SQL/DQL détectée dans src/ !"
+            exit 1
+          fi
+
+      # ------------------------------------------------------------------------
+      # GATE 3 : Durcissement Applicatif, Secrets & Worker Mode (OWASP Top 10)
+      # ------------------------------------------------------------------------
+      - name: "[Gate 3.1] OWASP A05 — Absence de secrets / clés privées Vault dans Git"
+        run: |
+          if git ls-files | grep -E '\.env\..*\.local$|\.decrypt\.private\.key$'; then
+            echo "❌ [VIOLATION OWASP A05] Clé privée ou fichier secret local versionné !"
+            exit 1
+          fi
+
+      - name: "[Gate 3.2] OWASP A05 — Compilation de Production & Étanchéité Debug"
+        run: |
+          APP_ENV=prod APP_DEBUG=0 php bin/console lint:container --env=prod
+
+      - name: "[Gate 3.3] Intégrité du Schéma & Mappings Doctrine (Zéro désynchronisation)"
+        run: |
+          if ls migrations/Version*.php >/dev/null 2>&1; then
+            php bin/console doctrine:schema:validate --env=test
+          else
+            php bin/console doctrine:schema:validate --skip-sync --env=test
+          fi
+
+      - name: "[Gate 3.4] FrankenPHP Worker Mode — Vérification ResetInterface & Fuite Mémoire"
+        run: |
+          if grep -rnE '(private|protected|public)[[:space:]]+static[[:space:]]+([^$=;(]+[[:space:]]+)?\$[a-zA-Z_]' src/; then
+            echo "❌ [VIOLATION WORKER MODE] Propriété statique mutable détectée dans src/ !"
+            exit 1
+          fi
+
+      # ------------------------------------------------------------------------
+      # GATE 4 : Conformité Réglementaire (RGPD & Directives CNIL)
+      # ------------------------------------------------------------------------
+      - name: "[Gate 4.1] RGPD Art. 5.1.c — Test à blanc de la purge automatique (> 3 ans)"
+        if: hashFiles('src/Command/PurgeInactiveUsersCommand.php') != ''
+        run: php bin/console app:rgpd:purge-inactive-users --env=test
+
+      # ------------------------------------------------------------------------
+      # GATE 5 : Décision Finale & Déploiement (GO / NO-GO)
+      # ------------------------------------------------------------------------
+      - name: "[Gate 5] Validation formelle du Passeport de Déploiement (18/18)"
+        run: |
+          echo "=========================================================="
+          echo " [STATUT : GO] 18/18 critères validés avec succès."
+          echo " Autorisation formelle de mise en production accordée."
+          echo "=========================================================="

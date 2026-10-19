@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PizzaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 /**
  * Entité représentant une Pizza dans le système.
@@ -51,7 +52,7 @@ class Pizza
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
-    
+
     /**
      * @var File|null Fichier physique de l'image (géré par VichUploader)
      */
@@ -62,7 +63,7 @@ class Pizza
         mimeTypesMessage: 'Veuillez télécharger une image valide (JPEG, PNG, WEBP)',
     )]
     private ?File $imageFile = null;
-    
+
     /**
      * @var \DateTimeInterface|null Date de dernière modification (nécessaire pour VichUploader)
      */
@@ -73,18 +74,18 @@ class Pizza
      * @var float Prix de la pizza en taille moyenne
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Le prix ne peut pas être vide")]
-    #[Assert\Positive(message: "Le prix doit être positif")]
-    #[Assert\Range(min: 5, max: 50, notInRangeMessage: "Le prix doit être compris entre {{ min }}€ et {{ max }}€")]
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide')]
+    #[Assert\Positive(message: 'Le prix doit être positif')]
+    #[Assert\Range(notInRangeMessage: 'Le prix doit être compris entre {{ min }}€ et {{ max }}€', min: 5, max: 50)]
     private float $priceMedium = 0.0;
 
     /**
      * @var float Prix de la pizza en taille grande
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Le prix ne peut pas être vide")]
-    #[Assert\Positive(message: "Le prix doit être positif")]
-    #[Assert\Range(min: 7, max: 60, notInRangeMessage: "Le prix doit être compris entre {{ min }}€ et {{ max }}€")]
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide')]
+    #[Assert\Positive(message: 'Le prix doit être positif')]
+    #[Assert\Range(notInRangeMessage: 'Le prix doit être compris entre {{ min }}€ et {{ max }}€', min: 7, max: 60)]
     private float $priceLarge = 0.0;
 
     /**
@@ -106,7 +107,7 @@ class Pizza
     public function setName(string $name): static
     {
         $this->name = $name;
-        
+
         return $this;
     }
 
@@ -133,9 +134,9 @@ class Pizza
 
         return $this;
     }
-    
+
     /**
-     * Génère automatiquement le slug à partir du nom
+     * Génère automatiquement le slug à partir du nom.
      */
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
@@ -145,20 +146,21 @@ class Pizza
             $this->slug = $this->createSlug($this->getName());
         }
     }
-    
+
     /**
-     * Crée un slug à partir d'une chaîne de caractères
+     * Crée un slug à partir d'une chaîne de caractères.
      */
     private function createSlug(string $string): string
     {
         // Supprimer les caractères accentués
         $sansAccents = str_replace(
-            ['à','á','â','ã','ä', 'ç', 'è','é','ê','ë', 'ì','í','î','ï', 'ñ', 'ò','ó','ô','õ','ö', 'ù','ú','û','ü', 'ý','ÿ'],
-            ['a','a','a','a','a', 'c', 'e','e','e','e', 'i','i','i','i', 'n', 'o','o','o','o','o', 'u','u','u','u', 'y','y'],
+            ['à', 'á', 'â', 'ã', 'ä', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'],
+            ['a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y'],
             $string
         );
+
         // Convertir en minuscules et remplacer les espaces par des tirets
-        return strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $sansAccents), '-'));
+        return strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $sansAccents) ?? '', '-'));
     }
 
     public function getImage(): ?string
@@ -172,38 +174,32 @@ class Pizza
 
         return $this;
     }
-    
-    /**
-     * @return File|null
-     */
+
     public function getImageFile(): ?File
     {
         return $this->imageFile;
     }
-    
-    /**
-     * @param File|null $imageFile
-     */
+
     public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
-        
-        if (null !== $imageFile) {
+
+        if ($imageFile instanceof File) {
             // Il est nécessaire qu'au moins un champ change si vous utilisez Doctrine
             // sinon les écouteurs d'événements ne seront pas appelés et le fichier sera perdu
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
-    
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
-    
+
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-        
+
         return $this;
     }
 

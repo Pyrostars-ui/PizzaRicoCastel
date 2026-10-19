@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\SEO;
@@ -9,6 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<SEO>
+ */
 class SEOType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -16,15 +21,15 @@ class SEOType extends AbstractType
         $builder
             ->add('pageName', TextType::class, [
                 'label' => 'Nom de la page (identifiant interne)',
-                'attr' => ['class' => 'form-control', 'readonly' => true]
+                'attr' => ['class' => 'form-control', 'readonly' => true],
             ])
             ->add('metaTitle', TextType::class, [
                 'label' => 'Meta Title (Balise Titre)',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('metaDescription', TextareaType::class, [
                 'label' => 'Meta Description',
-                'attr' => ['class' => 'form-control', 'rows' => 3]
+                'attr' => ['class' => 'form-control', 'rows' => 3],
             ])
         ;
     }

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "linkedin": {
+      "command": "node",
+      "args": [
+        "C:/Users/pyros/AppData/Roaming/npm/node_modules/mcp-server-linkedin/index.js"
+      ]
+    }
+  }
+}

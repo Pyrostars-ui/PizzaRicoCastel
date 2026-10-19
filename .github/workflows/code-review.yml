@@ -79,7 +79,7 @@ jobs:
       - name: Lint des fichiers YAML
         run: php bin/console lint:yaml --no-interaction config/ tests/
 
-      - name: PHPStan (niveau 5)
+      - name: PHPStan (niveau 10)
         run: php vendor/bin/phpstan analyse --no-progress --no-interaction
 
       - name: PHPUnit

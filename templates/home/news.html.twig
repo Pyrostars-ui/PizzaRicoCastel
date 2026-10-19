@@ -6,7 +6,7 @@
 {% block body %}
 <div class="container py-5">
     <h1 class="display-4 fw-bold mb-5 text-white text-center">Nos Actualités</h1>
-    
+
     <div class="row">
         {% for item in news %}
             <div class="col-md-4 mb-4">
@@ -21,7 +21,7 @@
                         </div>
                         <h5 class="card-title fw-bold text-white mb-3">{{ item.title }}</h5>
                         <p class="card-text text-white-50 flex-grow-1" style="line-height: 1.6;">{{ item.content|slice(0, 150) ~ '...' }}</p>
-                        <a href="{{ path('app_news_detail', {'slug': item.slug}) }}" class="btn btn-outline-primary rounded-pill mt-3 align-self-start px-4">
+                        <a href="{{ path('app_news_detail', {slug: item.slug}) }}" class="btn btn-outline-primary rounded-pill mt-3 align-self-start px-4">
                             Lire la suite <i class="bi bi-arrow-right ms-2"></i>
                         </a>
                     </div>

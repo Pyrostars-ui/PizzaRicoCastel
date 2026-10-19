@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Boisson;
@@ -17,38 +19,22 @@ class BoissonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Boisson[] Returns an array of Boisson objects ordered by price (large) in descending order
+     * @return list<Boisson>
      */
     public function findAllOrderByPriceAsc(): array
     {
-        return $this->createQueryBuilder('p')
-            ->orderBy('p.price', 'ASC')
+        $result = $this->createQueryBuilder('b')
+            ->orderBy('b.price', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
-    }
-    
-    /**
-     * @return Boisson[] Returns an array of Boisson objects that are special, ordered by price (large) in descending order
-     */
-    public function findSpecialOrderByPriceAsc(): array
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.isSpecial = :special')
-            ->setParameter('special', true)
-            ->orderBy('p.price', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
+            ->getResult();
 
-    //    public function findOneBySomeField($value): ?Pizza
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!\is_array($result)) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            $result,
+            static fn (mixed $item): bool => $item instanceof Boisson,
+        ));
+    }
 }

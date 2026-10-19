@@ -1,0 +1,106 @@
+{# Composant réutilisable : Affiche "Notre Histoire" avec effet verre dépoli, mosaïque réfractive et découpe éclair #}
+{% set poster_image = image_url|default('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=85') %}
+{% set poster_alt = image_alt|default('Notre pizzeria Pizza Rico Castelsarrasin') %}
+
+<div class="about-poster-card position-relative rounded-4 overflow-hidden shadow-lg border border-secondary border-opacity-25">
+    <svg
+        viewBox="0 0 750 960"
+        class="w-100 h-auto d-block"
+        role="img"
+        aria-label="{{ poster_alt }}"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <defs>
+            {# 1. Filtre tonal extérieur (Flou = 0, conservation du rendu atmosphérique) #}
+            <filter id="frostedGlassBg" x="0%" y="0%" width="100%" height="100%">
+                <feColorMatrix
+                    in="SourceGraphic"
+                    type="matrix"
+                    values="0.82 0 0 0 0.04
+                            0 0.84 0 0 0.05
+                            0 0 0.90 0 0.08
+                            0 0 0 1 0"
+                />
+            </filter>
+
+            {# 2. Stries horizontales (Scanlines en partie basse) #}
+            <pattern id="posterScanlines" width="750" height="6" patternUnits="userSpaceOnUse">
+                <rect x="0" y="0" width="750" height="2" fill="rgba(215, 228, 255, 0.26)" />
+                <rect x="0" y="2" width="750" height="1" fill="rgba(45, 55, 80, 0.18)" />
+            </pattern>
+
+            {# 3. Dégradé atmosphérique du poster #}
+            <linearGradient id="posterAtmosphere" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#5a5f69" stop-opacity="0.34" />
+                <stop offset="65%" stop-color="#6e7687" stop-opacity="0.28" />
+                <stop offset="84%" stop-color="#91a0d2" stop-opacity="0.42" />
+                <stop offset="100%" stop-color="#e1e8f5" stop-opacity="0.72" />
+            </linearGradient>
+
+            {# 4. Découpe géométrique centrale en forme d'éclair #}
+            <clipPath id="lightningCutoutClip">
+                <polygon points="360,139 476,139 375,538 225,590" />
+                <polygon points="401,466 521,466 270,898" />
+            </clipPath>
+
+            {# 5. Lueur blanche biseautée sur le contour de la découpe #}
+            <filter id="cutoutGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#ffffff" flood-opacity="0.9" />
+            </filter>
+        </defs>
+
+        {# Couche 1 : Fond sans flou (0 px) + voile atmosphérique #}
+        <image
+            href="{{ poster_image }}"
+            x="0"
+            y="0"
+            width="750"
+            height="960"
+            preserveAspectRatio="xMidYMid slice"
+            filter="url(#frostedGlassBg)"
+        />
+        <rect width="750" height="960" fill="url(#posterAtmosphere)" />
+
+        {# Couche 2 : Stries réfractives horizontales en bas de l'affiche #}
+        <rect x="0" y="670" width="750" height="290" fill="url(#posterScanlines)" />
+
+        {# Couche 3 : Image originale nette et contrastée dans la découpe centrale en éclair #}
+        <g clip-path="url(#lightningCutoutClip)">
+            <image
+                href="{{ poster_image }}"
+                x="0"
+                y="0"
+                width="750"
+                height="960"
+                preserveAspectRatio="xMidYMid slice"
+            />
+            <polygon points="360,139 476,139 375,538 225,590" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="8" />
+            <polygon points="401,466 521,466 270,898" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="8" />
+        </g>
+
+        {# Liseré blanc lumineux de la découpe #}
+        <g filter="url(#cutoutGlow)" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2.5" stroke-linejoin="round">
+            <polygon points="360,139 476,139 375,538 225,590" />
+            <polygon points="401,466 521,466 270,898" />
+        </g>
+
+        {# Couche 5 : Typographie éditoriale Poster (4 coins) #}
+        {# Coin Haut-Gauche #}
+        <text x="54" y="142" fill="#c3cefc" font-family="'Playfair Display', Georgia, serif" font-size="86" font-weight="700">Notre</text>
+        <text x="132" y="204" fill="#ffffff" font-family="'Playfair Display', Georgia, serif" font-size="56" font-weight="700">histoire</text>
+
+        {# Coin Haut-Droite #}
+        <text x="696" y="136" text-anchor="end" fill="#ffffff" font-family="'Playfair Display', Georgia, serif" font-size="62" font-weight="700">1995</text>
+        <text x="696" y="192" text-anchor="end" fill="rgba(255,255,255,0.92)" font-family="'Montserrat', sans-serif" font-size="19" font-weight="600" letter-spacing="2">FAIT MAISON</text>
+        <text x="696" y="220" text-anchor="end" fill="rgba(255,255,255,0.92)" font-family="'Montserrat', sans-serif" font-size="19" font-weight="600" letter-spacing="2">CASTELSARRASIN</text>
+
+        {# Coin Bas-Gauche #}
+        <text x="46" y="775" fill="rgba(255,255,255,0.95)" font-family="'Montserrat', sans-serif" font-size="19" font-weight="600" letter-spacing="2">PIZZA RICO</text>
+        <text x="46" y="803" fill="rgba(255,255,255,0.95)" font-family="'Montserrat', sans-serif" font-size="19" font-weight="600" letter-spacing="2">SAVOIR-FAIRE</text>
+        <text x="46" y="885" fill="#ffffff" font-family="'Playfair Display', Georgia, serif" font-size="68" font-weight="700">20+</text>
+
+        {# Coin Bas-Droite #}
+        <text x="694" y="805" text-anchor="end" fill="#ffffff" font-family="'Playfair Display', Georgia, serif" font-size="48" font-weight="700">notre</text>
+        <text x="694" y="892" text-anchor="end" fill="#7080c6" font-family="'Playfair Display', Georgia, serif" font-size="92" font-weight="700">histoire</text>
+    </svg>
+</div>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\MentionsLegales;
@@ -18,11 +20,13 @@ class MentionsLegalesRepository extends ServiceEntityRepository
 
     public function findPublished(): ?MentionsLegales
     {
-        return $this->createQueryBuilder('m')
+        $result = $this->createQueryBuilder('m')
             ->andWhere('m.pageName = :pageName')
             ->setParameter('pageName', MentionsLegales::PAGE_NAME)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $result instanceof MentionsLegales ? $result : null;
     }
 }

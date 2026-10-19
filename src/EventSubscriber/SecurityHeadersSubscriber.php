@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -14,13 +16,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * - HSTS activé exclusivement en environnement de production HTTPS
  * - X-Frame-Options DENY, X-Content-Type-Options nosniff
  * - Referrer-Policy strict-origin-when-cross-origin
- * - Permissions-Policy restreint (aucun accès capteurs)
+ * - Permissions-Policy restreint (aucun accès capteurs).
  */
-final class SecurityHeadersSubscriber implements EventSubscriberInterface
+final readonly class SecurityHeadersSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        #[Autowire('%kernel.environment%')]
-        private readonly string $environment,
+        #[Autowire(param: 'kernel.environment')]
+        private string $environment,
     ) {
     }
 
@@ -39,7 +41,8 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
         $response = $event->getResponse();
-        $nonce = (string) $request->attributes->get('csp_nonce');
+        $rawNonce = $request->attributes->get('csp_nonce');
+        $nonce = \is_string($rawNonce) ? $rawNonce : '';
 
         $cspDirectives = [
             "default-src 'self'",

@@ -1,0 +1,148 @@
+{# Composant réutilisable : Carte des Boissons (Canettes 33cl & Bouteilles) #}
+{% set sodas_canettes = [] %}
+{% set eaux_bouteilles = [] %}
+{% set bieres_bouteilles = [] %}
+{% set vins_bouteilles = [] %}
+
+{% for b in boissons|default([]) %}
+    {% set cat = b.category|default('') %}
+    {% set cap = b.capacity|default('')|lower %}
+    {% if cat == 'Bières' %}
+        {% set bieres_bouteilles = bieres_bouteilles|merge([b]) %}
+    {% elseif cat == 'Vins' %}
+        {% set vins_bouteilles = vins_bouteilles|merge([b]) %}
+    {% elseif cat == 'Eaux' or '1.25' in cap or '1,25' in cap or '1.5' in cap or '1,5' in cap or '50cl' in cap or '1l' in cap %}
+        {% set eaux_bouteilles = eaux_bouteilles|merge([b]) %}
+    {% else %}
+        {% set sodas_canettes = sodas_canettes|merge([b]) %}
+    {% endif %}
+{% endfor %}
+
+{% set panels = [
+    {
+        id: 'canettes',
+        cat_filter: 'canettes',
+        title: 'CANETTES 33CL',
+        panel_image: 'images/boissons/panel_canettes.jpg',
+        image_alt: 'Canettes 33cl Coca-Cola, Orangina & Oasis, Lipton Ice Tea & Fanta — 2,00 €',
+        items: sodas_canettes,
+    },
+    {
+        id: 'eaux-bouteilles',
+        cat_filter: 'eaux',
+        title: 'EAUX & BOUTEILLES',
+        panel_image: 'images/boissons/panel_eaux.jpg',
+        image_alt: 'Eaux & Bouteilles San Pellegrino 50cl/1L, Bouteilles 1,5L et Aranciata Rossa — 3,50 €',
+        items: eaux_bouteilles,
+    },
+    {
+        id: 'bieres-bouteilles',
+        cat_filter: 'bieres',
+        title: 'BIÈRES BOUTEILLES',
+        panel_image: 'images/boissons/panel_bieres.jpg',
+        image_alt: 'Bières Bouteilles 33cl Birra Moretti, Peroni & Heineken, Desperados & 1664 — 4,00 €',
+        items: bieres_bouteilles,
+    },
+    {
+        id: 'vins-bouteilles',
+        cat_filter: 'vins',
+        title: 'VINS ITALIENS 75CL',
+        panel_image: 'images/boissons/panel_vins.jpg',
+        image_alt: 'Vins Italiens 75cl Lambrusco Rouge & Rosé, Chianti DOCG 75cl, Bardolino Rosé — 9,50 €',
+        items: vins_bouteilles,
+    },
+] %}
+
+<div class="boissons-studio-stage rounded-4 p-4 p-lg-5 border border-light border-opacity-10 shadow-lg">
+    {# En-tête & Filtres par catégorie #}
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between border-bottom border-light border-opacity-25 pb-3 mb-4 gap-3">
+        <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge bg-rico-primary text-uppercase px-3 py-2 fw-bold">Canettes 33cl &amp; Bouteilles</span>
+                <h2 class="h4 fw-bold text-white text-uppercase mb-0">Carte des Boissons Fraîches</h2>
+            </div>
+            <p class="text-white-50 small mb-0 mt-1">
+                Sélection servie très fraîche en <strong class="text-white">canettes 33cl</strong> et <strong class="text-white">bouteilles (33cl, 50cl, 75cl, 1L, 1,5L)</strong> — sur place ou à emporter.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Filtrer la carte des boissons">
+            <button type="button" class="btn btn-sm btn-rico-filter active" data-drink-filter="all">
+                Tout (4)
+            </button>
+            <button type="button" class="btn btn-sm btn-rico-filter" data-drink-filter="canettes">
+                Canettes 33cl
+            </button>
+            <button type="button" class="btn btn-sm btn-rico-filter" data-drink-filter="eaux">
+                Eaux &amp; Bouteilles
+            </button>
+            <button type="button" class="btn btn-sm btn-rico-filter" data-drink-filter="bieres">
+                Bières Bouteilles 33cl
+            </button>
+            <button type="button" class="btn btn-sm btn-rico-filter" data-drink-filter="vins">
+                Vins Italiens 75cl
+            </button>
+        </div>
+    </div>
+
+    {# Grille 2x2 de la Carte Boissons Canettes & Bouteilles #}
+    <div class="row g-4" id="studioDrinksGrid">
+        {% for panel in panels %}
+            <div class="col-12 col-md-6 studio-drink-col" data-drink-cat="{{ panel.cat_filter }}">
+                <article class="studio-drink-panel h-100 rounded-4 overflow-hidden text-white d-flex flex-column">
+                    {# Visuel original non retouché du panneau (Carte Boissons Canettes Bouteilles) #}
+                    <div class="bg-black text-center">
+                        <img
+                            src="{{ asset(panel.panel_image) }}"
+                            alt="{{ panel.image_alt }}"
+                            class="w-100 h-auto d-block"
+                        />
+                    </div>
+
+                    {# Détail tarifaire dynamique alimenté depuis la base de données PostgreSQL #}
+                    {% if panel.items is not empty %}
+                        <div class="p-3 p-lg-4 border-top border-light border-opacity-15 bg-black bg-opacity-50 flex-grow-1 d-flex flex-column justify-content-center">
+                            <ul class="list-unstyled mb-0 studio-drink-list">
+                                {% for item in panel.items %}
+                                    <li class="studio-drink-item py-2 d-flex align-items-center justify-content-between gap-2">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <span class="fw-bold text-uppercase studio-item-name">{{ item.name }}</span>
+                                            {% if item.capacity %}
+                                                <span class="badge studio-capacity-badge">{{ item.capacity }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <span class="studio-leader-line flex-grow-1 mx-2"></span>
+                                        <span class="fw-extrabold studio-item-price">{{ item.price|number_format(2, ',', '') }} €</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterButtons = document.querySelectorAll('[data-drink-filter]');
+        const studioCols = document.querySelectorAll('.studio-drink-col');
+
+        filterButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const target = btn.getAttribute('data-drink-filter');
+
+                filterButtons.forEach(function (b) {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+
+                studioCols.forEach(function (col) {
+                    const cat = col.getAttribute('data-drink-cat');
+                    col.style.display = (target === 'all' || cat === target) ? '' : 'none';
+                });
+            });
+        });
+    });
+</script>

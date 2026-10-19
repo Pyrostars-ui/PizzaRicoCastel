@@ -4,12 +4,12 @@
 
 {% block body %}
 <div class="admin-layout">
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <div class="admin-content" id="adminContent">
         <div class="admin-main-content p-4">
             <h1 class="mb-4">{{ title }}</h1>
-            
+
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb bg-dark p-3 rounded">
                     <li class="breadcrumb-item"><a href="{{ path('app_admin_dashboard') }}" class="text-decoration-none text-white">Tableau de bord</a></li>
@@ -26,13 +26,13 @@
                         <div class="card-body p-4">
                             {{ form_start(form) }}
                                 <div class="mb-4">
-                                    {{ form_label(form.title, 'Titre de la section', {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.title, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Ex: Notre Histoire'}}) }}
+                                    {{ form_label(form.title, 'Titre de la section', {label_attr: {class: 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.title, {attr: {class: 'form-control form-control-lg', placeholder: 'Ex: Notre Histoire'}}) }}
                                     <div class="form-text">C'est le titre principal qui apparaîtra sur la page d'accueil.</div>
                                 </div>
                                 <div class="mb-4">
-                                    {{ form_label(form.content, 'Contenu textuel', {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows' : 12, 'placeholder': 'Racontez votre histoire ici...'}}) }}
+                                    {{ form_label(form.content, 'Contenu textuel', {label_attr: {class: 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.content, {attr: {class: 'form-control', rows: 12, placeholder: 'Racontez votre histoire ici...'}}) }}
                                     <div class="form-text">Utilisez des sauts de ligne pour séparer vos paragraphes.</div>
                                 </div>
                                 <div class="d-grid">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-12 col-lg-5">
                     <div class="card shadow-sm mb-4">
                         <div class="card-header py-3">

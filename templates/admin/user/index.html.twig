@@ -16,25 +16,25 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-admin btn-admin-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle me-1"></i>Annuler</button>
-        <a href="#" id="confirmDeleteBtn" class="btn-admin btn-admin-danger" data-delete-url="{{ path('app_admin_user_delete', {'id': 'USER_ID'}) }}"><i class="bi bi-trash me-1"></i>Supprimer</a>
+        <a href="#" id="confirmDeleteBtn" class="btn-admin btn-admin-danger" data-delete-url="{{ path('app_admin_user_delete', {id: 'USER_ID'}) }}"><i class="bi bi-trash me-1"></i>Supprimer</a>
       </div>
     </div>
   </div>
 </div>
 <div class="admin-layout">
     <!-- Sidebar Admin -->
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <!-- Main Content -->
     <div class="admin-content" id="adminContent">
-        
+
         <!-- Main Content Area -->
         <div class="admin-main-content p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="mb-0">{{ title }}</h1>
                 <a href="{{ path('app_register') }}" class="btn-admin btn-admin-primary"><i class="bi bi-plus-circle me-2"></i>Ajouter un utilisateur</a>
             </div>
-            
+
             <!-- Users List -->
             <div class="card shadow-sm">
                 <div class="card-header py-3">
@@ -71,7 +71,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ path('app_admin_user_edit', {'id': users.id}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
+                                            <a href="{{ path('app_admin_user_edit', {id: users.id}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
                                             <button type="button" class="btn-admin btn-admin-danger btn-sm delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ users.id }}"><i class="bi bi-trash"></i></button>
                                         </div>
                                     </td>
@@ -83,6 +83,6 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 {% endblock %}

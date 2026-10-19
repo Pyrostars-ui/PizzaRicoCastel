@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -9,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
@@ -19,7 +21,7 @@ class RegistrationController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
-        RateLimiterFactory $registerAttemptsLimiter,
+        RateLimiterFactoryInterface $registerAttemptsLimiter,
     ): Response {
         $ip = (string) $request->getClientIp();
         $registerLimiter = $registerAttemptsLimiter->create($ip);
@@ -38,8 +40,10 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $registerLimiter->consume(1);
-            /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
+            if (!\is_string($plainPassword) || '' === $plainPassword) {
+                throw new \LogicException('Le mot de passe soumis est invalide.');
+            }
 
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 

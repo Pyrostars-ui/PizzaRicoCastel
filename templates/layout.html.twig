@@ -33,12 +33,12 @@
         </header> #}
 
         <main class="container-fluid p-0">
-        {% include "AdminComponents/flash/flash.html.twig" %}
+        {{ include('AdminComponents/flash/flash.html.twig') }}
             {% block body %}{% endblock %}
         </main>
 
         <footer class="pb-4">
-            {% include "AdminComponents/adminFooter/adminFooter.html.twig" %}
+            {{ include('AdminComponents/adminFooter/adminFooter.html.twig') }}
         </footer>
     </body>
 </html>

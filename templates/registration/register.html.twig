@@ -17,41 +17,41 @@
                     </div>
                 {% endif %}
 
-                {{ form_start(registrationForm, {'attr': {'style': 'display: block !important;'}}) }}
+                {{ form_start(registrationForm, {attr: {style: 'display: block !important;'}}) }}
                     <div class="mb-3">
-                        {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(registrationForm.email, 'Adresse email', {label_attr: {class: 'form-label'}}) }}
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control form-control-lg border-start-0', 'placeholder': 'Entrez votre adresse email'}}) }}
+                            {{ form_widget(registrationForm.email, {attr: {class: 'form-control form-control-lg border-start-0', placeholder: 'Entrez votre adresse email'}}) }}
                         </div>
                         <small class="text-muted">Nous ne partagerons jamais votre email avec des tiers.</small>
                     </div>
                     <div class="mb-3">
-                        {{ form_label(registrationForm.firstname, 'Votre prénom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(registrationForm.firstname, 'Votre prénom', {label_attr: {class: 'form-label'}}) }}
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control form-control-lg border-start-0', 'placeholder': 'Entrez votre prénom'}}) }}
+                            {{ form_widget(registrationForm.firstname, {attr: {class: 'form-control form-control-lg border-start-0', placeholder: 'Entrez votre prénom'}}) }}
                         </div>
                     </div>
                     <div class="mb-3">
-                        {{ form_label(registrationForm.name, 'Votre nom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(registrationForm.name, 'Votre nom', {label_attr: {class: 'form-label'}}) }}
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            {{ form_widget(registrationForm.name, {'attr': {'class': 'form-control form-control-lg border-start-0', 'placeholder': 'Entrez votre nom'}}) }}
+                            {{ form_widget(registrationForm.name, {attr: {class: 'form-control form-control-lg border-start-0', placeholder: 'Entrez votre nom'}}) }}
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(registrationForm.plainPassword, 'Mot de passe', {label_attr: {class: 'form-label'}}) }}
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control form-control-lg border-start-0', 'placeholder': 'Choisissez un mot de passe sécurisé'}}) }}
+                            {{ form_widget(registrationForm.plainPassword, {attr: {class: 'form-control form-control-lg border-start-0', placeholder: 'Choisissez un mot de passe sécurisé'}}) }}
                         </div>
                     </div>
 
                     <div class="mb-4 form-check custom-checkbox">
-                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-                        {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions d\'utilisation', {'label_attr': {'class': 'form-check-label'}}) }}
+                        {{ form_widget(registrationForm.agreeTerms, {attr: {class: 'form-check-input'}}) }}
+                        {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions d\'utilisation', {label_attr: {class: 'form-check-label'}}) }}
                     </div>
 
                     <div class="d-grid gap-2">

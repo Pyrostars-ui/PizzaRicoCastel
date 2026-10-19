@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\User;
@@ -13,14 +15,13 @@ use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 
 /**
  * Formulaire utilisé pour la gestion d'un utilisateur depuis le panneau d'administration.
+ *
+ * @extends AbstractType<User>
  */
 class UserType extends AbstractType
 {
     /**
      * Construit le formulaire pour éditer les informations et les rôles d'un utilisateur.
-     *
-     * @param FormBuilderInterface $builder
-     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -31,12 +32,12 @@ class UserType extends AbstractType
             // Champ spécifique pour gérer les rôles, qui est un tableau dans l'entité
             ->add('roles', ChoiceType::class, [
                 'choices' => [
-                'Utilisateur' => 'ROLE_USER',
-                'Administrateur' => 'ROLE_ADMIN'
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN',
                 ],
                 // multiple=true et expanded=true génèrent des cases à cocher (checkboxes)
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
             ])
             ->add('password', PasswordType::class, [
                 'mapped' => false,
@@ -53,9 +54,6 @@ class UserType extends AbstractType
         ;
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

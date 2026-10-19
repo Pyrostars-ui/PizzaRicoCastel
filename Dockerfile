@@ -1,75 +1,73 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1
 
-# -----------------------------
-# Stage 1 : build (composer + autoload + cache prod)
-# -----------------------------
-FROM php:8.2-apache AS builder
+ARG FRANKENPHP_VERSION=1
+ARG PHP_VERSION=8.4
+ARG COMPOSER_VERSION=2
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libicu-dev \
-    libpq-dev \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    unzip \
-    git \
-    curl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install intl pdo pdo_pgsql zip opcache gd mbstring xml exif \
-    && rm -rf /var/lib/apt/lists/*
+# -----------------------------------------------------------------------------
+# Stage 1 : Image officielle FrankenPHP (PHP 8.4 / 8.5 en support actif)
+# -----------------------------------------------------------------------------
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS frankenphp_upstream
+FROM composer:${COMPOSER_VERSION} AS composer_upstream
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# -----------------------------------------------------------------------------
+# Stage 2 : Socle commun (Extensions PHP, Composer, Caddyfile Worker Mode)
+# -----------------------------------------------------------------------------
+FROM frankenphp_upstream AS frankenphp_base
+
+WORKDIR /app
 
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    APP_ENV=prod \
-    APP_SECRET=!ChangeMe!
+    PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 
-WORKDIR /var/www/html
+RUN install-php-extensions \
+    pdo_pgsql \
+    intl \
+    zip \
+    apcu \
+    opcache \
+    pcntl \
+    gd \
+    exif
 
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts \
-    && rm -rf /tmp/* /root/.composer/cache
+COPY --from=composer_upstream /usr/bin/composer /usr/local/bin/composer
 
-COPY . .
-RUN composer run-script post-install-cmd --no-interaction
+COPY docker/Caddyfile /etc/frankenphp/Caddyfile
+COPY docker/Caddyfile /etc/caddy/Caddyfile
 
-RUN rm -rf var/cache/* var/log/* \
-    && mkdir -p var/cache var/log public/images public/media \
-    && chown -R www-data:www-data var public/images public/media
+# -----------------------------------------------------------------------------
+# Stage 3 : Environnement de Développement (montage volume & outils QA)
+# -----------------------------------------------------------------------------
+FROM frankenphp_base AS frankenphp_dev
 
-# -----------------------------
-# Stage 2 : runtime final (sans outils de build)
-# -----------------------------
-FROM php:8.2-apache AS runtime
+ENV APP_ENV=dev \
+    XDEBUG_MODE=off
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libicu-dev \
-    libpq-dev \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install intl pdo pdo_pgsql zip opcache gd mbstring xml exif \
-    && a2enmod rewrite headers expires \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc /usr/share/man
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public \
-    APP_ENV=prod
+# -----------------------------------------------------------------------------
+# Stage 4 : Environnement de Production (autonome, optimisé, sans dev-deps)
+# -----------------------------------------------------------------------------
+FROM frankenphp_base AS frankenphp_prod
 
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+ENV APP_ENV=prod \
+    APP_DEBUG=0 \
+    APP_RUNTIME="Symfony\\Component\\Runtime\\SymfonyRuntime" \
+    MAX_REQUESTS=500
 
-COPY --from=builder --chown=www-data:www-data /var/www/html /var/www/html
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-WORKDIR /var/www/html
-ENTRYPOINT ["docker-entrypoint.sh"]
-EXPOSE 80
+COPY --link composer.* symfony.* ./
+RUN set -eux; \
+    composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
+
+COPY --link . ./
+
+RUN set -eux; \
+    mkdir -p var/cache var/log public/assets public/images public/media; \
+    composer dump-autoload --classmap-authoritative --no-dev; \
+    composer dump-env prod; \
+    php bin/console asset-map:compile --env=prod --no-debug || true; \
+    chmod +x bin/console; \
+    sync
+

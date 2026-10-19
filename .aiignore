@@ -1,0 +1,22 @@
+# Dépendances et répertoires générés (masquage contextuel strict)
+vendor/
+var/
+assets/vendor/
+public/assets/
+public/bundles/
+.git/
+composer.lock
+
+# Secrets et surcharges d'environnement locales (isolation stricte)
+.env.local
+.env.*.local
+.env.local.php
+config/secrets/*/*.decrypt.private.key
+
+# Caches d'outils QA et artefacts de tests
+.phpunit.cache/
+.phpunit.result.cache
+.php-cs-fixer.cache
+.twig-cs-fixer.cache
+tests/_output/
+coverage/
