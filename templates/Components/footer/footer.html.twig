@@ -1,42 +1,164 @@
-<footer class="rico-footer py-5">
-    <div class="container">
-        <div class="row gy-5 align-items-center mb-5">
-            <div class="col-lg-4 text-center text-lg-start">
-                <a href="{{ path('app_home') }}" class="footer-logo d-inline-block mb-3 text-decoration-none">
-                    <span class="h3 fw-bold" style="color: var(--primary);"><i class="fas fa-pizza-slice me-2"></i>PIZZA RICO</span>
+{# templates/Components/footer/footer.html.twig #}
+<!-- ==================== SHARED COMPONENT: Footer ==================== -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 text-on-surface-variant">
+    <!-- Grille Principale 4 Colonnes -->
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+
+        <!-- Colonne 1 : Identite & Recit Artisanal -->
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-col">
+                <span class="font-display text-headline-sm font-semibold text-secondary tracking-wide">
+                    Pizza Rico
+                </span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
+                    Pizzeria Traditionnelle Castelsarrasin
+                </span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Depuis 1995, la flamme de Pizza Rico ne s'est jamais éteinte. Farines italiennes sélectionnées, fermentation lente de 72h et cuisson au feu de bois dans la pure tradition napolitaine à Castelsarrasin.
+            </p>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm border border-secondary/20 w-fit">
+                <span class="material-symbols-outlined text-[18px]">local_fire_department</span>
+                <span class="uppercase tracking-wider font-semibold">Four au feu de bois 450°C</span>
+            </div>
+            <div class="flex items-center gap-2 pt-2">
+                <a href="https://maps.google.com/?q=7bis+place+des+Belges+82100+Castelsarrasin"
+                   target="_blank" rel="noopener noreferrer"
+                   aria-label="Localisation Google Maps"
+                   class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:bg-secondary hover:text-on-secondary transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">share_location</span>
                 </a>
-                <p class="small pe-lg-5" style="color: var(--text-light); opacity: 0.8;">Artisan pizzaïolo à Castelsarrasin. La passion du goût, le respect des traditions et des produits frais sélectionnés pour vous.</p>
-            </div>
-            <div class="col-lg-4">
-                <div class="d-flex justify-content-center gap-4">
-                    <a href="{{ path('app_pizzas') }}" class="footer-nav-link">CARTE</a>
-                    <a href="{{ path('app_boissons') }}" class="footer-nav-link">BOISSONS</a>
-                    <a href="{{ path('app_about') }}" class="footer-nav-link">L'HISTOIRE</a>
-                    <a href="{{ path('app_news') }}" class="footer-nav-link">ACTUS</a>
-                </div>
-            </div>
-            <div class="col-lg-4 text-center text-lg-end">
-                <div class="social-minimal d-flex justify-content-center justify-content-lg-end gap-3">
-                    <a href="#" class="social-icon-btn"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="social-icon-btn"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="social-icon-btn"><i class="bi bi-tiktok"></i></a>
-                </div>
+                <a href="#avis"
+                   aria-label="Avis clients vérifiés"
+                   class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:bg-secondary hover:text-on-secondary transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">stars</span>
+                </a>
+                <a href="#fournil"
+                   aria-label="Photos du fournil"
+                   class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:bg-secondary hover:text-on-secondary transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+                </a>
             </div>
         </div>
 
-        <div class="border-top pt-4" style="border-color: rgba(255,255,255,0.05) !important;">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="smaller-footer-text mb-0" style="color: var(--text-light); opacity: 0.6;">&copy; {{ 'now'|date('Y') }} PIZZA RICO. CONÇU AVEC PASSION À CASTELSARRASIN.</p>
+        <!-- Colonne 2 : Horaires d'Ouverture Precis -->
+        <div class="flex flex-col gap-3">
+            <h4 class="font-title text-title text-on-surface font-semibold tracking-wide">
+                Horaires d'Ouverture
+            </h4>
+            <div class="flex flex-col gap-2 font-body-sm text-body-sm">
+                <div class="flex justify-between items-start py-1.5 border-b border-outline-variant/10">
+                    <span class="text-on-surface-variant font-medium">Mardi – Jeudi</span>
+                    <span class="text-on-surface font-semibold text-right">
+                        11h45 – 14h00<br>18h30 – 22h30
+                    </span>
                 </div>
-                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-                    <div class="legal-links smaller-footer-text">
-                        <a href="#" class="footer-secondary-link mx-2">MENTIONS LÉGALES</a>
-                        <span style="opacity: 0.3;">|</span>
-                        <a href="#" class="footer-secondary-link mx-2">CONFIDENTIALITÉ</a>
-                    </div>
+                <div class="flex justify-between items-start py-1.5 border-b border-outline-variant/10">
+                    <span class="text-on-surface-variant font-medium">Vendredi – Samedi</span>
+                    <span class="text-on-surface font-semibold text-right">
+                        11h45 – 14h00<br>18h30 – 22h30
+                    </span>
+                </div>
+                <div class="flex justify-between items-start py-1.5 border-b border-outline-variant/10">
+                    <span class="text-on-surface-variant font-medium">Dimanche</span>
+                    <span class="text-on-surface font-semibold text-right">
+                        11h45 – 14h00<br>18h30 – 22h30
+                    </span>
+                </div>
+                <div class="flex justify-between py-1.5 text-primary-container font-semibold">
+                    <span>Lundi</span>
+                    <span>Fermé</span>
                 </div>
             </div>
+            <div class="flex items-center gap-2 pt-2 text-tertiary font-label-sm text-label-sm">
+                <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                <span>Fournil actif • Pâte 72h prête chaque service</span>
+            </div>
+        </div>
+
+        <!-- Colonne 3 : Coordonnees & Acces -->
+        <div class="flex flex-col gap-3">
+            <h4 class="font-title text-title text-on-surface font-semibold tracking-wide">
+                Coordonnées &amp; Accès
+            </h4>
+            <div class="flex flex-col gap-2.5 font-body-sm text-body-sm">
+                <div>
+                    <p class="text-on-surface font-medium">7bis place des Belges</p>
+                    <p class="text-on-surface-variant">82100 Castelsarrasin, France</p>
+                </div>
+                <p class="text-on-surface-variant text-xs flex items-center gap-1.5 pt-1">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">local_parking</span>
+                    <span>Parking gratuit à 20 mètres (&gt;80 places)</span>
+                </p>
+                <p class="text-on-surface-variant text-xs flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">accessible</span>
+                    <span>Accès de plain-pied (PMR &amp; poussettes)</span>
+                </p>
+                <p class="text-on-surface-variant text-xs flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">near_me</span>
+                    <span>À 3 min du Pont-Canal • Sortie A62</span>
+                </p>
+                <a href="tel:0563321443"
+                   class="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors pt-2 font-semibold">
+                    <span class="material-symbols-outlined text-[18px]">call</span>
+                    <span>05 63 32 14 43</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Colonne 4 : Navigation Rapide & Infos Legales -->
+        <div class="flex flex-col gap-3">
+            <h4 class="font-title text-title text-on-surface font-semibold tracking-wide">
+                Navigation &amp; Infos
+            </h4>
+            <ul class="flex flex-col gap-2 font-body-sm text-body-sm">
+                <li>
+                    <a href="{{ path('app_pizzas') }}" class="hover:text-secondary transition-colors">
+                        La Carte des Pizzas
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_about') }}" class="hover:text-secondary transition-colors">
+                        Notre Savoir-Faire (72h)
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_about') }}#histoire" class="hover:text-secondary transition-colors">
+                        L'Histoire depuis 1995
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if app.routes is defined and 'app_contact' in app.routes %}{{ path('app_contact') }}{% else %}/contact{% endif %}" class="hover:text-secondary transition-colors">
+                        Contact &amp; Accès
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_mentions_legales') }}" class="hover:text-secondary transition-colors">
+                        Mentions Légales &amp; CGV
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_mentions_legales') }}#confidentialite" class="hover:text-secondary transition-colors">
+                        Politique de Confidentialité
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_pizzas') }}#allergenes" class="hover:text-secondary transition-colors">
+                        Guide des Allergènes
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Barre Inferieure Copyright -->
+    <div class="w-full bg-surface-container-lowest border-t border-outline-variant/10 py-6">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-3 font-label-md text-label-md text-on-surface-variant">
+            <p>© {{ 'now'|date('Y') }} Pizza Rico Castelsarrasin. Tous droits réservés.</p>
+            <p class="flex items-center gap-1.5 text-secondary">
+                <span class="material-symbols-outlined text-[16px]">local_fire_department</span>
+                <span>Four à bois traditionnel • Pâte artisanale 72h</span>
+            </p>
         </div>
     </div>
 </footer>

@@ -27,8 +27,8 @@
 
 <div class="admin-layout">
     <!-- Sidebar Admin -->
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <!-- Main Content -->
     <div class="admin-content" id="adminContent">
         <!-- Main Content Area -->
@@ -43,7 +43,7 @@
                     <a href="{{ path('app_admin_boisson_create') }}" class="btn-admin btn-admin-primary text-nowrap"><i class="bi bi-plus-circle me-2"></i>Ajouter une boisson</a>
                 </div>
             </div>
-            
+
             {% for message in app.flashes('success') %}
                 <div class="alert alert-success">
                     <i class="bi bi-check-circle me-2"></i> {{ message }}
@@ -88,11 +88,11 @@
                                     <td>{{ boisson.price|number_format(2, ',', '') }}€</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ path('app_admin_boisson_edit', {'slug': boisson.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
-                                            <button type="button" class="btn-admin btn-admin-danger btn-sm delete-boisson" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#deleteBoissonModal" 
-                                                data-delete-url="{{ path('app_admin_boisson_delete', {'id': boisson.id}) }}"
+                                            <a href="{{ path('app_admin_boisson_edit', {slug: boisson.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="btn-admin btn-admin-danger btn-sm delete-boisson"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteBoissonModal"
+                                                data-delete-url="{{ path('app_admin_boisson_delete', {id: boisson.id}) }}"
                                                 data-token="{{ csrf_token('delete' ~ boisson.id) }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -110,7 +110,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 {% endblock %}
 
@@ -121,12 +121,12 @@
         const deleteButtons = document.querySelectorAll('.delete-boisson');
         const deleteForm = document.getElementById('deleteForm');
         const deleteToken = document.getElementById('deleteToken');
-        
+
         deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const deleteUrl = this.getAttribute('data-delete-url');
                 const token = this.getAttribute('data-token');
-                
+
                 deleteForm.setAttribute('action', deleteUrl);
                 deleteToken.setAttribute('value', token);
             });

@@ -1,40 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
-use App\Repository\UserRepository;
-use App\Repository\PizzaRepository;
 use App\Repository\BoissonRepository;
+use App\Repository\PizzaRepository;
+use App\Repository\UserRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Contrôleur gérant le tableau de bord principal de l'administration.
+ * Tableau de bord principal de l'administration.
  */
+#[IsGranted('ROLE_ADMIN')]
 final class DashboardController extends AbstractController
 {
-    /**
-     * Affiche la page d'accueil de l'interface d'administration (Dashboard).
-     */
-    #[Route('/admin', name: 'app_admin_dashboard')]
+    #[Route('/admin', name: 'app_admin_dashboard', methods: ['GET'])]
     public function index(UserRepository $userRepo, PizzaRepository $pizzaRepo, BoissonRepository $boissonRepo): Response
     {
-        // Utilisation de count() pour la performance au lieu de findAll()
         $totalUsers = $userRepo->count([]);
         $totalPizzas = $pizzaRepo->count([]);
         $totalBoissons = $boissonRepo->count([]);
-        
-        // Statistiques spécifiques pour les pizzas
+
         $specialPizzas = $pizzaRepo->count(['isSpecial' => true]);
-        
-        // Calcul du prix moyen des pizzas (exemple de stat utile)
-        $pizzas = $pizzaRepo->findAll();
-        $avgPrice = 0;
-        if ($totalPizzas > 0) {
-            $sum = array_reduce($pizzas, fn($carry, $item) => $carry + $item->getPriceLarge(), 0);
-            $avgPrice = $sum / $totalPizzas;
-        }
+
+        $avgPrice = $pizzaRepo->findAvgPriceLarge() ?? 0.0;
 
         return $this->render('admin/dashboard.html.twig', [
             'totalUsers' => $totalUsers,

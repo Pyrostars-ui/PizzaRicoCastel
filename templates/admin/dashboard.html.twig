@@ -6,11 +6,11 @@
 {% block body %}
     <div class="admin-layout">
         <!-- Sidebar Admin -->
-        {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-        
+        {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
         <!-- Main Content -->
         <div class="admin-content" id="adminContent">
-            
+
             <!-- Main Content Area -->
             <div class="admin-main-content p-4">
             {% if app.user %}

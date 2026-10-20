@@ -1,0 +1,91 @@
+{# templates/Components/sections/quick_contact.html.twig #}
+{# Section 6 : Contact, Horaires & Accès Rapide #}
+
+<section class="py-16 bg-surface-container-low border-t border-outline-variant/20" id="contact" aria-label="Contact et accès rapide">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+            <!-- Statut en Direct & Adresse (5 colonnes) -->
+            <div class="lg:col-span-5 p-8 rounded-xl bg-surface-container subtle-hairline flex flex-col justify-between">
+                <div>
+                    <!-- Indicateur en Direct -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary/10 border border-tertiary/30 text-tertiary font-label-sm text-label-sm mb-6">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+                        </span>
+                        <span>Ouvert ce soir • 18h30 - 22h30</span>
+                    </div>
+
+                    <h3 class="font-display text-headline-md font-semibold text-on-surface mb-2">Venez Nous Rendre Visite</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                        Au cœur du centre historique de Castelsarrasin, face à la place des Belges.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-secondary text-xl mt-0.5" aria-hidden="true">location_on</span>
+                            <div>
+                                <span class="font-title text-title text-on-surface block font-semibold">7bis place des Belges</span>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant">82100 Castelsarrasin, Tarn-et-Garonne</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-secondary text-xl mt-0.5" aria-hidden="true">schedule</span>
+                            <div class="font-body-sm text-body-sm text-on-surface-variant">
+                                <span class="block text-on-surface font-semibold">Du Mardi au Dimanche</span>
+                                <span>Midi: 11h45 - 14h00 • Soir: 18h30 - 22h30</span>
+                                <span class="block text-outline-variant mt-0.5">Fermé le Lundi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-outline-variant/20 flex items-center justify-between">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Click &amp; Collect disponible</span>
+                    <span class="px-2.5 py-1 rounded bg-secondary/15 text-secondary font-label-sm text-label-sm font-semibold">Prêt en 20 min</span>
+                </div>
+            </div>
+
+            <!-- Hotline Commande Directe Fournil (4 colonnes) -->
+            <div class="lg:col-span-4 p-8 rounded-xl bg-surface-container-high border border-primary-container/30 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-primary-container/20 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
+                <div>
+                    <div class="w-12 h-12 rounded-lg bg-primary-container/20 text-primary-container flex items-center justify-center mb-6">
+                        <span class="material-symbols-outlined text-2xl" aria-hidden="true">phone_in_talk</span>
+                    </div>
+                    <span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider">Commandes &amp; Réservations</span>
+                    <h3 class="font-display text-headline-sm font-semibold text-on-surface mt-1 mb-2">Ligne Directe Pizzaiolo</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
+                        Passez votre commande par téléphone pour un retrait rapide à emporter sans file d'attente.
+                    </p>
+                    <div class="font-display text-headline-md font-bold text-secondary mb-4 tracking-tight">
+                        05 63 32 14 43
+                    </div>
+                </div>
+                <a class="w-full py-3 rounded-lg bg-primary-container text-white font-label-lg text-label-lg font-semibold text-center ember-glow hover:bg-inverse-primary transition-all duration-200 flex items-center justify-center gap-2 active:scale-95"
+                   href="tel:0563321443">
+                    <span class="material-symbols-outlined text-lg" aria-hidden="true">call</span>
+                    <span>Appeler pour commander</span>
+                </a>
+            </div>
+
+            <!-- Plan / Carte d'Accès Sombre (3 colonnes) -->
+            <div class="lg:col-span-3 rounded-xl overflow-hidden subtle-hairline relative flex flex-col justify-end bg-surface-container min-h-[260px]">
+                <img class="absolute inset-0 w-full h-full object-cover"
+                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv3gyo6vjvY3CeKTBghF7petfy0Kkt2H0y3fOHGQft-0GOqjHJcZHMKfnyD9XNTXrxKG_1W8LxrHDr_Tna-VaE7kT9PewIxKzh8NN2PzDV3gEgaDAmAEKn6HD-sRC_oanY2IpOlZWa--rR6qJcVxSO46kY3LQ5m_JaBfJBcv1iGir6JCNenVv00a-deBX-gF93heL3cbIx8WxWcbo0ez5OgJ_L_80VNzBgM5Gvdg50QpL5jjBZjwq-1BSXSm3c7zgcKRsM4gq0twmt"
+                     alt="Plan d'accès 7bis place des Belges à Castelsarrasin">
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+                <div class="relative z-10 p-6">
+                    <span class="px-2 py-0.5 rounded bg-surface-container-lowest text-secondary font-label-sm text-label-sm uppercase mb-2 inline-block font-semibold">Parking Gratuit</span>
+                    <h4 class="font-title text-title text-on-surface font-semibold">Accès &amp; Stationnement</h4>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                        Stationnement aisé sur la Place des Belges à 20 mètres.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

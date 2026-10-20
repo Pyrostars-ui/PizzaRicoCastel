@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\Boisson;
@@ -7,13 +9,16 @@ use App\Form\BoissonType;
 use App\Repository\BoissonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Contrôleur d'administration pour la gestion des boissons.
  */
+#[IsGranted('ROLE_ADMIN')]
 final class AdminBoissonController extends AbstractController
 {
     /**
@@ -23,7 +28,7 @@ final class AdminBoissonController extends AbstractController
     public function index(BoissonRepository $boissonRepo): Response
     {
         $boissons = $boissonRepo->findAll();
-        
+
         return $this->render('admin/boisson/index.html.twig', [
             'boissons' => $boissons,
             'title' => 'Gestion des Boissons',
@@ -39,15 +44,16 @@ final class AdminBoissonController extends AbstractController
         $boisson = new Boisson();
         $form = $this->createForm(BoissonType::class, $boisson);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($boisson);
             $em->flush();
-            
+
             $this->addFlash('success', 'La boisson a été créée avec succès');
+
             return $this->redirectToRoute('app_admin_boisson');
         }
-        
+
         return $this->render('admin/boisson/create.html.twig', [
             'form' => $form->createView(),
             'title' => 'Ajouter une boisson',
@@ -61,21 +67,22 @@ final class AdminBoissonController extends AbstractController
     public function edit(BoissonRepository $boissonRepo, string $slug, Request $request, EntityManagerInterface $em): Response
     {
         $boisson = $boissonRepo->findOneBy(['slug' => $slug]);
-        
-        if (!$boisson) {
+
+        if (null === $boisson) {
             throw $this->createNotFoundException('La boisson demandée n\'existe pas');
         }
-        
+
         $form = $this->createForm(BoissonType::class, $boisson);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-            
+
             $this->addFlash('success', 'La boisson a été modifiée avec succès');
+
             return $this->redirectToRoute('app_admin_boisson');
         }
-        
+
         return $this->render('admin/boisson/edit.html.twig', [
             'form' => $form->createView(),
             'boisson' => $boisson,
@@ -87,12 +94,12 @@ final class AdminBoissonController extends AbstractController
      * Gère la suppression d'une boisson.
      */
     #[Route('/admin/boisson/delete/{id}', name: 'app_admin_boisson_delete', methods: ['POST'])]
-    public function delete(Request $request, Boisson $boisson, EntityManagerInterface $em): Response
+    public function delete(Request $request, Boisson $boisson, EntityManagerInterface $em): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$boisson->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$boisson->getId(), $request->getPayload()->getString('_token'))) {
             $em->remove($boisson);
             $em->flush();
-            
+
             $this->addFlash('success', 'La boisson a été supprimée avec succès');
         } else {
             $this->addFlash('error', 'Token de sécurité invalide');

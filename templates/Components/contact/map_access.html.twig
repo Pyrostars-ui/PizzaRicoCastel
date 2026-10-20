@@ -1,0 +1,69 @@
+{# templates/Components/contact/map_access.html.twig #}
+<!-- Right Column (7 Cols): Dynamic Map & Spatial Route Card -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+    <div class="p-space-lg rounded-xl bg-surface-container shadow-2xl flex flex-col gap-space-md border border-outline-variant/10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+            <div>
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest block">Localisation Satellite &amp; Ruelle</span>
+                <h2 class="font-headline-sm text-headline-sm text-on-surface">Place des Belges, Castelsarrasin</h2>
+            </div>
+            <a class="inline-flex items-center gap-space-xs px-4 py-2.5 rounded-lg bg-surface-container-high text-secondary hover:bg-surface-container-highest hover:text-secondary-fixed transition-colors text-label-md font-label-md shadow-sm border border-secondary/20"
+               href="https://maps.google.com/?q=7bis+place+des+Belges+82100+Castelsarrasin"
+               rel="noopener noreferrer"
+               target="_blank">
+                <span class="material-symbols-outlined text-[18px]">near_me</span>
+                <span>Ouvrir dans GPS / Maps</span>
+            </a>
+        </div>
+
+        <!-- Stylized Map View -->
+        <div class="relative w-full h-[380px] lg:h-[440px] rounded-xl overflow-hidden shadow-inner bg-surface-container-lowest border border-outline-variant/10">
+            <!-- Map Background Image -->
+            <div class="w-full h-full bg-cover bg-center"
+                 data-location="Place des Belges, Castelsarrasin, France"
+                 style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjf02gblmIvKTM6Pyt_gBptONTOre0-ilrThSKChDc13h0zQxA0nQp0n4vtXQ5oOe7CtHL1c-JHlaUN4mPAVXOwWCEWMZHBs9aAR3FyGWALY-0gkX23BQH71K_A7qWhjuQw2jCCcCA_bWg_eJL5DS2xQzCzU9o0iX-8Jn_5hKKxw_EH6UAUXi4teGO3hOY_51P583iXe6AeHOlk1be35_kWvcS4V5X2If1j5TMkBqa5TvJ9kG-io_JYQ');">
+            </div>
+
+            <!-- Stylized Floating Pin Highlight -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center pointer-events-none">
+                <div class="relative flex items-center justify-center">
+                    <span class="animate-ping absolute h-12 w-12 rounded-full bg-primary-container/50"></span>
+                    <div class="w-12 h-12 rounded-full bg-primary-container text-white flex items-center justify-center shadow-[0_0_30px_rgba(239,101,65,0.8)]">
+                        <span class="material-symbols-outlined text-[24px]">local_pizza</span>
+                    </div>
+                </div>
+                <div class="mt-2 px-3 py-1.5 rounded-lg bg-surface/90 backdrop-blur-md shadow-xl text-center border border-secondary/30">
+                    <p class="font-title text-label-lg text-secondary font-bold">Pizza Rico</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">{{ address.street|default('7bis place des Belges') }}</p>
+                </div>
+            </div>
+
+            <!-- Floating Quick Guide Pill -->
+            <div class="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-md p-space-md rounded-xl bg-surface/90 backdrop-blur-md shadow-2xl flex items-center gap-space-md border border-outline-variant/20">
+                <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">directions_car</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-md text-label-md text-on-surface font-semibold truncate">À 3 min du Pont Canal • Sortie A62</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant truncate">Suivre centre-ville, stationnement aisé en face de la fontaine</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Spatial Indicators Bar -->
+        <div class="grid grid-cols-3 gap-space-sm pt-space-xs text-center">
+            <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col items-center border border-outline-variant/10">
+                <span class="font-headline-sm text-headline-sm text-secondary font-bold">20m</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Parking Belges</span>
+            </div>
+            <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col items-center border border-outline-variant/10">
+                <span class="font-headline-sm text-headline-sm text-primary font-bold">450°C</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Flamme Bois Vivante</span>
+            </div>
+            <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col items-center border border-outline-variant/10">
+                <span class="font-headline-sm text-headline-sm text-tertiary font-bold">15 min</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Délai Retrait Moyen</span>
+            </div>
+        </div>
+    </div>
+</div>

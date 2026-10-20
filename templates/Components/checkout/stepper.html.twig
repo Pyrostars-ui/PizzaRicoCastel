@@ -1,0 +1,54 @@
+{# templates/Components/checkout/stepper.html.twig #}
+{# Barre de progression 4 étapes du tunnel de commande #}
+
+<nav aria-label="Tunnel de commande" class="pt-space-lg pb-space-xl">
+    <div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-space-md">
+        <a class="hover:text-secondary transition-colors" href="{{ path('app_carte') }}">La Carte</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-secondary">Tunnel de Paiement &amp; Retrait</span>
+    </div>
+    <div class="bg-surface-container-low rounded-xl p-space-md md:p-space-lg shadow-xl">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md relative">
+            <!-- Step 1: Panier (complété) -->
+            <div class="flex items-center gap-space-sm">
+                <div class="w-9 h-9 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">check</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-tertiary">Étape 1</span>
+                    <span class="font-title text-title text-on-surface truncate">Votre Panier</span>
+                </div>
+            </div>
+            <!-- Step 2: Mode & Créneau (actif) -->
+            <div class="flex items-center gap-space-sm">
+                <div class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(239,101,65,0.45)] ring-2 ring-primary">
+                    <span class="material-symbols-outlined text-[20px]">storefront</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">En cours</span>
+                    <span class="font-title text-title text-primary truncate">Mode &amp; Créneau</span>
+                </div>
+            </div>
+            <!-- Step 3: Coordonnées -->
+            <div class="flex items-center gap-space-sm opacity-60">
+                <div class="w-9 h-9 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0">
+                    <span class="font-label-md text-label-md font-bold">3</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Étape 3</span>
+                    <span class="font-title text-title text-on-surface truncate">Coordonnées</span>
+                </div>
+            </div>
+            <!-- Step 4: Règlement -->
+            <div class="flex items-center gap-space-sm opacity-60">
+                <div class="w-9 h-9 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0">
+                    <span class="font-label-md text-label-md font-bold">4</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Étape 4</span>
+                    <span class="font-title text-title text-on-surface truncate">Règlement</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

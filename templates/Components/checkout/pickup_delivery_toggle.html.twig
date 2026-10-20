@@ -1,0 +1,74 @@
+{# templates/Components/checkout/pickup_delivery_toggle.html.twig #}
+{# Section 1 : Mode de Réception (À emporter vs Livraison) #}
+
+<section class="bg-surface-container-low rounded-xl p-space-lg md:p-space-xl shadow-xl">
+    <div class="flex items-center justify-between pb-space-md mb-space-lg">
+        <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">local_shipping</span>
+            </div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">1. Mode de Réception</h2>
+        </div>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary bg-secondary-container/50 px-space-md py-1 rounded-full">Obligatoire</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md" id="orderModeGrid">
+        <!-- Option A: Click & Collect (sélectionné par défaut) -->
+        <label class="order-mode-card cursor-pointer relative flex flex-col justify-between p-space-lg rounded-xl bg-surface-container-high ring-2 ring-primary/80 shadow-[0_8px_24px_rgba(0,0,0,0.4)] transition-all"
+               data-action="select-order-mode"
+               data-mode="takeout">
+            <input checked class="sr-only" name="order_mode" type="radio" value="takeout"/>
+            <div class="flex items-start justify-between mb-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-primary-container/20 text-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[24px]">takeout_dining</span>
+                </div>
+                <span class="inline-flex items-center gap-1 bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm px-space-sm py-0.5 rounded-full">
+                    <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                    Gratuit
+                </span>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="font-title text-title text-on-surface">À Emporter / Click &amp; Collect</span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Prêt en 15-20 min • Four à bois
+                </p>
+                <p class="font-label-md text-label-md text-secondary mt-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">pin_drop</span>
+                    7bis place des Belges, Castelsarrasin
+                </p>
+            </div>
+            <div class="mt-space-md pt-space-sm flex items-center justify-between">
+                <span class="order-mode-badge font-label-sm text-label-sm text-tertiary font-semibold uppercase tracking-wider">Fournée prioritaire</span>
+                <div class="order-mode-dot w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-on-primary"></div>
+                </div>
+            </div>
+        </label>
+        <!-- Option B: Livraison -->
+        <label class="order-mode-card cursor-pointer relative flex flex-col justify-between p-space-lg rounded-xl bg-surface-container opacity-80 hover:opacity-100 hover:bg-surface-container-high transition-all"
+               data-action="select-order-mode"
+               data-mode="delivery">
+            <input class="sr-only" name="order_mode" type="radio" value="delivery"/>
+            <div class="flex items-start justify-between mb-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-bright text-on-surface-variant flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[24px]">moped</span>
+                </div>
+                <span class="bg-surface-bright text-secondary font-label-sm text-label-sm px-space-sm py-0.5 rounded-full">
+                    Dès {{ freeDeliveryFrom|default(25)|number_format(2, ',', '') }} € d'achat
+                </span>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="font-title text-title text-on-surface">Livraison Locale Express</span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Castelsarrasin &amp; communes limitrophes (Moissac, Saint-Porquier)
+                </p>
+                <p class="font-label-md text-label-md text-outline mt-1">
+                    Frais de livraison : {{ deliveryFee|default(2.50)|number_format(2, ',', '') }} € (Offert dès {{ freeDeliveryThreshold|default(35)|number_format(2, ',', '') }} €)
+                </p>
+            </div>
+            <div class="mt-space-md pt-space-sm flex items-center justify-between">
+                <span class="order-mode-badge font-label-sm text-label-sm text-outline uppercase tracking-wider">Sacs isothermes chauffants</span>
+                <div class="order-mode-dot w-5 h-5 rounded-full bg-surface-bright"></div>
+            </div>
+        </label>
+    </div>
+</section>

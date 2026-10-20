@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "🔍 [Pre-Commit] Exécution des garde-fous Gitflow et QA via Docker..."
+
+DOCKER_CMD=(docker compose exec -T app)
+
+# 1. Protection stricte des branches main et develop (Gitflow Règle 6)
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "master" || "$CURRENT_BRANCH" == "develop" ]]; then
+    echo "❌ [Pre-Commit] INTERDICTION : Les commits directs sur '$CURRENT_BRANCH' sont bloqués par le Gitflow."
+    echo "   Créez une branche dérivée de 'develop' (feat/*, fix/*, refactor/*, test/*) ou 'main' (hotfix/*)."
+    exit 1
+fi
+
+# 2. Blocage des fichiers sensibles (.env.*.local, clés privées Vault)
+FORBIDDEN_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '(^\.env(\..+)?\.local(\.php)?$|decrypt\.private\.key$)' || true)
+if [[ -n "$FORBIDDEN_FILES" ]]; then
+    echo "❌ [Pre-Commit] ALERTE SÉCURITÉ : Tentative d'indexation de fichiers secrets ou locaux interdits :"
+    echo "$FORBIDDEN_FILES"
+    exit 1
+fi
+
+# 3. Récupération des fichiers PHP et Twig indexés
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR || true)
+STAGED_PHP=()
+STAGED_TWIG=()
+while IFS= read -r file; do
+    [[ -z "$file" || ! -f "$file" ]] && continue
+    if [[ "$file" == *.php ]]; then
+        STAGED_PHP+=("$file")
+    elif [[ "$file" == *.twig ]]; then
+        STAGED_TWIG+=("$file")
+    fi
+done <<< "$STAGED_FILES"
+
+if [[ "${#STAGED_PHP[@]}" -gt 0 ]]; then
+    echo "  -> Contrôle du style PHP (php-cs-fixer)..."
+    "${DOCKER_CMD[@]}" vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff -- "${STAGED_PHP[@]}"
+fi
+
+if [[ "${#STAGED_TWIG[@]}" -gt 0 ]]; then
+    echo "  -> Contrôle du formatage et de la syntaxe Twig..."
+    "${DOCKER_CMD[@]}" vendor/bin/twig-cs-fixer lint "${STAGED_TWIG[@]}"
+    "${DOCKER_CMD[@]}" bin/console lint:twig "${STAGED_TWIG[@]}"
+fi
+
+# 4. Intégrité globale du conteneur Symfony (exécuté avant PHPStan pour garantir le XML du conteneur)
+echo "  -> Validation du conteneur d'injection de dépendances..."
+"${DOCKER_CMD[@]}" bin/console lint:container --quiet
+
+if [[ "${#STAGED_PHP[@]}" -gt 0 ]]; then
+    echo "  -> Analyse statique PHPStan (niveau 8)..."
+    PHPSTAN_TARGETS=()
+    for f in "${STAGED_PHP[@]}"; do
+        if [[ "$f" == src/* || "$f" == tests/* ]]; then
+            PHPSTAN_TARGETS+=("$f")
+        fi
+    done
+    if [[ "${#PHPSTAN_TARGETS[@]}" -gt 0 ]]; then
+        "${DOCKER_CMD[@]}" vendor/bin/phpstan analyse --level=8 --no-progress -- "${PHPSTAN_TARGETS[@]}"
+    fi
+fi
+
+echo "  -> Validation du mapping Doctrine ORM..."
+"${DOCKER_CMD[@]}" bin/console doctrine:schema:validate --skip-sync --quiet
+
+echo "✅ [Pre-Commit] Toutes les vérifications ont réussi."

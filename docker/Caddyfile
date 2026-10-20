@@ -1,0 +1,35 @@
+{
+	skip_install_trust
+	{$CADDY_GLOBAL_OPTIONS}
+	frankenphp {
+		worker {
+			file /app/public/index.php
+			num {$FRANKENPHP_NUM_WORKERS:2}
+			env FRANKENPHP_WORKER 1
+			env FRANKENPHP_LOOP_MAX {$MAX_REQUESTS:500}
+		}
+	}
+}
+
+{$SERVER_NAME:localhost} {
+	log {
+		output stdout
+		format console
+		level INFO
+	}
+
+	root * /app/public
+	encode zstd br gzip
+
+	mercure {
+		protocol_version_compatibility 8
+		publisher_jwt {$MERCURE_PUBLISHER_JWT_KEY:!ChangeThisMercureHubJWTSecretKey!}
+		subscriber_jwt {$MERCURE_SUBSCRIBER_JWT_KEY:!ChangeThisMercureHubJWTSecretKey!}
+		anonymous
+		cors_origins *
+	}
+
+	vulcain
+
+	php_server
+}

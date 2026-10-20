@@ -1,0 +1,70 @@
+{# templates/Components/checkout/customer_form.html.twig #}
+{# Section 3 : Coordonnées du Client & Suivi Four #}
+
+<section class="bg-surface-container-low rounded-xl p-space-lg md:p-space-xl shadow-xl">
+    <div class="flex items-center gap-space-sm pb-space-md mb-space-lg">
+        <div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[18px]">badge</span>
+        </div>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">3. Coordonnées &amp; Suivi Four</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+        <div class="flex flex-col gap-space-xs">
+            <label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="full-name">
+                <span>Nom &amp; Prénom</span>
+                <span class="text-primary font-bold">*</span>
+            </label>
+            <div class="relative">
+                <span class="material-symbols-outlined text-[20px] absolute left-3.5 top-3 text-outline">person</span>
+                <input class="w-full pl-11 pr-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary text-body-md font-body-md"
+                       id="full-name"
+                       name="full_name"
+                       placeholder="Ex: Jean Dupont"
+                       type="text"
+                       required/>
+            </div>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+            <label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="phone">
+                <span>Téléphone Mobile</span>
+                <span class="text-primary font-bold">* (Alerte SMS de sortie de four)</span>
+            </label>
+            <div class="relative">
+                <span class="material-symbols-outlined text-[20px] absolute left-3.5 top-3 text-outline">smartphone</span>
+                <input class="w-full pl-11 pr-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary text-body-md font-body-md"
+                       id="phone"
+                       name="phone"
+                       placeholder="06 .. .. .. .."
+                       type="tel"
+                       required/>
+            </div>
+        </div>
+        <div class="flex flex-col gap-space-xs md:col-span-2">
+            <label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="email">
+                <span>Adresse Email</span>
+                <span class="text-outline">Pour la confirmation &amp; le reçu fiscal</span>
+            </label>
+            <div class="relative">
+                <span class="material-symbols-outlined text-[20px] absolute left-3.5 top-3 text-outline">mail</span>
+                <input class="w-full pl-11 pr-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary text-body-md font-body-md"
+                       id="email"
+                       name="email"
+                       placeholder="exemple@domaine.com"
+                       type="email"/>
+            </div>
+        </div>
+        <div class="flex flex-col gap-space-xs md:col-span-2">
+            <label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="kitchen-notes">
+                <span>Note pour le Pizzaiolo</span>
+                <span class="text-outline">Optionnel</span>
+            </label>
+            <div class="relative">
+                <textarea class="w-full p-space-md rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm"
+                          id="kitchen-notes"
+                          name="kitchen_notes"
+                          placeholder="Ex: Cuisson bien léchée, piment d'Espelette à part, sans origan..."
+                          rows="2"></textarea>
+            </div>
+        </div>
+    </div>
+</section>

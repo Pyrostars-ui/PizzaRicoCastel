@@ -1,0 +1,90 @@
+{# templates/Components/checkout/payment_methods.html.twig #}
+{# Section 4 : Mode de Paiement #}
+
+<section class="bg-surface-container-low rounded-xl p-space-lg md:p-space-xl shadow-xl">
+    <div class="flex items-center justify-between pb-space-md mb-space-lg">
+        <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+            </div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">4. Règlement Sécurisé</h2>
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-[14px]">shield</span>
+            Protocole SSL 256-Bit
+        </div>
+    </div>
+    <div class="space-y-space-md">
+        <!-- Pay online card -->
+        <label class="payment-card cursor-pointer block p-space-lg rounded-xl bg-surface-container-high ring-2 ring-primary/80 transition-all"
+               data-action="select-payment"
+               data-payment="card_online">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center gap-space-md">
+                    <input checked class="w-4 h-4 text-primary focus:ring-primary accent-primary-container" name="payment_choice" type="radio" value="card_online"/>
+                    <div>
+                        <span class="font-title text-title text-on-surface block">Paiement en ligne sécurisé (CB, Visa, Mastercard, Apple Pay)</span>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Validation instantanée • Prélèvement à la confirmation de commande</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[26px]">credit_card</span>
+                    <span class="material-symbols-outlined text-[26px]">contactless</span>
+                </div>
+            </div>
+            <!-- Card Details Sub-form -->
+            <div class="mt-space-lg pt-space-md bg-surface-container-lowest/60 p-space-md rounded-lg space-y-space-sm" id="cardDetailsForm">
+                <div class="flex flex-col gap-1">
+                    <label class="font-label-sm text-label-sm uppercase tracking-wider text-outline" for="card-number">Numéro de Carte Bancaire</label>
+                    <div class="relative">
+                        <input class="w-full pl-3 pr-10 py-2 rounded-lg bg-surface-container text-on-surface text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-secondary"
+                               id="card-number"
+                               name="card_number"
+                               type="text"
+                               placeholder="•••• •••• •••• ••••"
+                               autocomplete="cc-number"/>
+                        <span class="material-symbols-outlined absolute right-3 top-2 text-secondary text-[20px]">credit_card</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-space-sm">
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm uppercase tracking-wider text-outline" for="card-expiry">Expiration</label>
+                        <input class="w-full px-3 py-2 rounded-lg bg-surface-container text-on-surface text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-secondary"
+                               id="card-expiry"
+                               name="card_expiry"
+                               type="text"
+                               placeholder="MM / AA"
+                               autocomplete="cc-exp"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-sm text-label-sm uppercase tracking-wider text-outline" for="card-cvc">CVC / Cryptogramme</label>
+                        <input class="w-full px-3 py-2 rounded-lg bg-surface-container text-on-surface text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-secondary"
+                               id="card-cvc"
+                               name="card_cvc"
+                               type="password"
+                               placeholder="•••"
+                               autocomplete="cc-csc"/>
+                    </div>
+                </div>
+            </div>
+        </label>
+        <!-- Pay at store -->
+        <label class="payment-card cursor-pointer block p-space-lg rounded-xl bg-surface-container hover:bg-surface-container-high transition-all"
+               data-action="select-payment"
+               data-payment="at_counter">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center gap-space-md">
+                    <input class="w-4 h-4 text-primary focus:ring-primary accent-primary-container" name="payment_choice" type="radio" value="at_counter"/>
+                    <div>
+                        <span class="font-title text-title text-on-surface block">Paiement au comptoir lors du retrait</span>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Espèces, Carte Bancaire, Titres-Restaurant dématérialisés (Swile, Edenred, Bimpli)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 text-secondary">
+                    <span class="material-symbols-outlined text-[24px]">payments</span>
+                    <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+                </div>
+            </div>
+        </label>
+    </div>
+</section>

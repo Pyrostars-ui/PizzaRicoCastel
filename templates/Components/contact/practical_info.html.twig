@@ -1,0 +1,105 @@
+{# templates/Components/contact/practical_info.html.twig #}
+<!-- Left Column (5 Cols): Live status & Practical Info -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+    <!-- Live Status Card -->
+    <div class="p-space-lg rounded-xl bg-surface-container shadow-xl relative overflow-hidden border border-outline-variant/10">
+        <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-secondary/5 blur-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between pb-space-md">
+            <div class="flex items-center gap-space-xs">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+                </span>
+                <span class="font-label-md text-label-md text-tertiary font-bold tracking-wide">OUVERT CE SOIR</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm border border-secondary/20">
+                18h30 - 22h30
+            </span>
+        </div>
+        <div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1 mb-space-md border border-outline-variant/10">
+            <div class="flex items-center justify-between">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Ligne directe four</span>
+                <span class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px]">timer</span> 15-20 min de préparation
+                </span>
+            </div>
+            <a class="text-secondary font-display text-headline-sm tracking-wide hover:text-primary transition-colors flex items-center justify-between mt-1"
+               href="tel:{{ hotline|default('0563321443')|replace({' ': ''}) }}">
+                <span>{{ hotline|default('05 63 32 14 43') }}</span>
+                <span class="material-symbols-outlined text-[20px] text-primary-container">arrow_outward</span>
+            </a>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Retrait express sans file d'attente au comptoir dédié Click &amp; Call.
+            </p>
+        </div>
+
+        <!-- Schedule Accordion / Grid -->
+        <div class="flex flex-col gap-space-sm pt-space-xs">
+            <span class="font-title text-title text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[20px]">schedule</span>
+                Horaires d'Ouverture du Four
+            </span>
+            <div class="flex flex-col gap-2 font-body-sm text-body-sm">
+                <div class="flex justify-between items-center py-2 px-3 rounded-lg bg-surface-container-high/60 border border-outline-variant/10">
+                    <span class="font-medium text-on-surface">{{ hours.days|default('Mardi au Dimanche') }}</span>
+                    <div class="text-right">
+                        <div class="text-on-surface font-semibold">{{ hours.lunch|default('11:45 • 14:00') }}</div>
+                        <div class="text-secondary font-semibold">{{ hours.dinner|default('18:30 • 22:30') }}</div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center py-2 px-3 rounded-lg bg-surface-container-low opacity-80 border border-outline-variant/10">
+                    <span class="font-medium text-on-surface-variant">{{ hours.closed|default('Lundi') }}</span>
+                    <span class="px-2 py-0.5 rounded bg-error-container/40 text-error font-label-sm text-label-sm font-bold">Fermé</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parking & PMR Accessibility Bento -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+        <div class="p-space-md rounded-xl bg-surface-container-high flex flex-col justify-between shadow-md border border-outline-variant/10">
+            <div>
+                <div class="w-10 h-10 rounded-lg bg-surface-container-highest text-secondary flex items-center justify-center mb-space-sm">
+                    <span class="material-symbols-outlined text-[20px]">local_parking</span>
+                </div>
+                <h3 class="font-title text-title text-on-surface">Parking Belges</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-snug">
+                    Zone gratuite de plus de 80 places située directement à moins de 20 mètres de notre entrée.
+                </p>
+            </div>
+            <span class="font-label-sm text-label-sm text-secondary mt-space-md flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">check_circle</span> 100% Gratuit
+            </span>
+        </div>
+        <div class="p-space-md rounded-xl bg-surface-container-high flex flex-col justify-between shadow-md border border-outline-variant/10">
+            <div>
+                <div class="w-10 h-10 rounded-lg bg-surface-container-highest text-tertiary flex items-center justify-center mb-space-sm">
+                    <span class="material-symbols-outlined text-[20px]">accessible</span>
+                </div>
+                <h3 class="font-title text-title text-on-surface">Accès Plain-Pied</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-snug">
+                    Rampe d'accès directe PMR, poussettes et salle climatisée aménagée de plain-pied.
+                </p>
+            </div>
+            <span class="font-label-sm text-label-sm text-tertiary mt-space-md flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">verified</span> Normes PMR
+            </span>
+        </div>
+    </div>
+
+    <!-- Atmospheric Photo Vignette -->
+    <div class="relative rounded-xl overflow-hidden shadow-xl bg-surface-container-low group border border-outline-variant/10">
+        <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700"
+             data-alt="Photographie de Pizza Rico place des Belges au crépuscule"
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxZiBf0-eapb1fwDoeN0MvERPVVFT2ap2SP82RPr7APt66pi_ZDXwx469fl5yDYvtqnfFf7uHSoWAJ_CqYKCPZa2kXB1DmwE0xwNMKsfDqrNDokRn7Wg2gfrdqzQ2PKtLnpAax5FnGW_k9Y41vvI40o9Webx1cKwdcjm0yRP83xFc3N9Ta782oMgSfPKKO_7nz45dFIceVpDJDOzy7LMvRIIJx_tUsGA7UU-DS2uUm1Ro__zTqZkovuA"
+             alt="Pizza Rico au crépuscule"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
+        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-on-surface">
+            <div>
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Ambiance chaleureuse</span>
+                <span class="font-title text-title text-on-surface">Au cœur du centre historique</span>
+            </div>
+            <span class="material-symbols-outlined text-secondary">fireplace</span>
+        </div>
+    </div>
+</div>

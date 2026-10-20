@@ -4,15 +4,15 @@
 
 {% block body %}
 <div class="admin-layout">
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <div class="admin-content" id="adminContent">
         <div class="admin-main-content p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="mb-0">{{ title }}</h1>
                 <a href="{{ path('app_admin_news_create') }}" class="btn-admin btn-admin-primary"><i class="bi bi-plus-circle me-2"></i>Nouvel article</a>
             </div>
-            
+
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb bg-dark p-3 rounded">
                     <li class="breadcrumb-item"><a href="{{ path('app_admin_dashboard') }}" class="text-decoration-none text-white">Tableau de bord</a></li>
@@ -51,8 +51,8 @@
                                     <td>{{ item.createdAt|date('d/m/Y') }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="{{ path('app_admin_news_edit', {'slug': item.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
-                                            <form method="post" action="{{ path('app_admin_news_delete', {'id': item.id}) }}" onsubmit="return confirm('Supprimer cet article ?');">
+                                            <a href="{{ path('app_admin_news_edit', {slug: item.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="{{ path('app_admin_news_delete', {id: item.id}) }}" data-action="confirm-delete" data-message="Supprimer cet article ?">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
                                                 <button type="submit" class="btn-admin btn-admin-danger btn-sm"><i class="bi bi-trash"></i></button>
                                             </form>
@@ -72,4 +72,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('submit', function(e) {
+                const form = e.target.closest('[data-action="confirm-delete"]');
+                if (!form) return;
+                const message = form.getAttribute('data-message') || 'Confirmer ?';
+                if (!confirm(message)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 {% endblock %}

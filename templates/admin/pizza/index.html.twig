@@ -31,8 +31,8 @@
 
 <div class="admin-layout">
     <!-- Sidebar Admin -->
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <!-- Main Content -->
     <div class="admin-content" id="adminContent">
         <!-- Main Content Area -->
@@ -47,7 +47,7 @@
                     <a href="{{ path('app_admin_pizza_create') }}" class="btn-admin btn-admin-primary text-nowrap"><i class="bi bi-plus-circle me-2"></i>Ajouter une pizza</a>
                 </div>
             </div>
-            
+
             <!-- Pizzas List -->
             <div class="card shadow-sm">
                 <div class="card-header py-3">
@@ -94,12 +94,12 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ path('app_admin_pizza_edit', {'slug': pizza.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
-                                            <button type="button" class="btn-admin btn-admin-danger btn-sm delete-pizza" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#deletePizzaModal" 
+                                            <a href="{{ path('app_admin_pizza_edit', {slug: pizza.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="btn-admin btn-admin-danger btn-sm delete-pizza"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deletePizzaModal"
                                                 data-pizza-id="{{ pizza.id }}"
-                                                data-delete-url="{{ path('app_admin_pizza_delete', {'id': pizza.id}) }}"
+                                                data-delete-url="{{ path('app_admin_pizza_delete', {id: pizza.id}) }}"
                                                 data-token="{{ csrf_token('delete' ~ pizza.id) }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -113,7 +113,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 {% endblock %}
 
@@ -125,12 +125,12 @@
         const deletePizzaButtons = document.querySelectorAll('.delete-pizza');
         const deleteForm = document.getElementById('deleteForm');
         const deleteToken = document.getElementById('deleteToken');
-        
+
         deletePizzaButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const deleteUrl = this.getAttribute('data-delete-url');
                 const token = this.getAttribute('data-token');
-                
+
                 deleteForm.setAttribute('action', deleteUrl);
                 deleteToken.setAttribute('value', token);
             });

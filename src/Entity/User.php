@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -28,10 +30,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     /**
-     * @var string|null Adresse email de l'utilisateur (utilisée comme identifiant de connexion)
+     * @var string Adresse email de l'utilisateur (utilisée comme identifiant de connexion)
      */
     #[ORM\Column(length: 180)]
-    private ?string $email = null;
+    private string $email = '';
 
     /**
      * @var list<string> Les rôles attribués à l'utilisateur (ex: ROLE_USER, ROLE_ADMIN)
@@ -46,23 +48,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     /**
-     * @var string|null Nom de famille de l'utilisateur
+     * @var string Nom de famille de l'utilisateur
      */
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name = '';
 
     /**
-     * @var string|null Prénom de l'utilisateur
+     * @var string Prénom de l'utilisateur
      */
     #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
+    private string $firstname = '';
+
+    public function __construct()
+    {
+        $this->password = '';
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -78,14 +85,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * A visual identifier that represents this user.
      *
      * @see UserInterface
+     *
+     * @return non-empty-string
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        if ('' === $this->email) {
+            throw new \LogicException('L\'identifiant utilisateur (email) ne peut pas être vide.');
+        }
+
+        return $this->email;
     }
 
     /**
      * @see UserInterface
+     *
+     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -93,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /**
@@ -123,6 +138,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     *
+     * @return array<mixed, mixed>
      */
     public function __serialize(): array
     {
@@ -138,7 +155,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // @deprecated, to be removed when upgrading to Symfony 8
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -150,7 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFirstname(): ?string
+    public function getFirstname(): string
     {
         return $this->firstname;
     }

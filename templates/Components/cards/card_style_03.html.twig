@@ -1,0 +1,133 @@
+{# templates/Components/cards/card_style_03.html.twig #}
+{# Style 03 : Split-Layout 50/50 & Fiche Gastronomique (ex: Burrata & Quattro Formaggi) #}
+
+{% set index = index|default(1) %}
+{% set pPriceMedium = pizza.priceMedium|number_format(2, '.', '') ~ '€' %}
+{% set pPriceLarge = pizza.priceLarge|number_format(2, '.', '') ~ '€' %}
+{% set diffPrice = (pizza.priceLarge - pizza.priceMedium)|number_format(2, '.', '') ~ '€' %}
+
+{% if pizza.image %}
+    {% set pImageUrl = pizza.image starts with 'http' ? pizza.image : asset('images/pizzas/' ~ pizza.image) %}
+{% else %}
+    {% set pImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCimg3XLz52SxalTNGNLo4W1xR3O4tZd_dHhpQAP3Qgg7KsdE0wo-qmbnTrFUkOAAXtkWEcMf3Ny4zDqayOKBaOjT8KKYz9eJBFQwNbGJb2a5JKP6meVDd8mcBizs0cig9h4Id7ebQJHPduJ_ehERPQIur79V3aMe6R6bIyhe3P-fXoBABDhHUqZeO0PtxIU8L2GfL1aW7zni6dnALZJ6SLOJoNKZoXTjkjD9G9JV3MrXUSbrF1qziWAGmtk1ZjycjI9hQ5sxF6gekc' %}
+{% endif %}
+
+<div class="rounded-2xl bg-surface-container border border-outline-variant/40 overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-12 transition-all duration-300 hover:border-secondary/40 pizza-showcase-item"
+     data-pizza-card
+     data-pizza-id="{{ pizza.id }}"
+     data-pizza-name="{{ pizza.name }}"
+     data-pizza-ingredients="{{ pizza.ingredient }}"
+     data-pizza-category="{{ categoryFilter|default('tomate veggie') }}"
+     data-architecture-style="03"
+     data-price-medium="{{ pizza.priceMedium }}"
+     data-price-large="{{ pizza.priceLarge }}">
+
+    <!-- 50% Full Bleed Visual side -->
+    <div class="lg:col-span-6 relative min-h-[340px] lg:min-h-[460px] overflow-hidden group">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+             src="{{ pImageUrl }}"
+             alt="{{ pizza.name }} gastronomique">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-surface-container hidden lg:block"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent lg:hidden"></div>
+
+        <!-- Floating Organic Origin Stamps -->
+        <div class="absolute top-5 left-5 flex flex-col gap-2">
+            {% if stamp1 is defined and stamp1 %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-secondary border border-secondary/40 font-label-sm text-label-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined text-xs">{{ stamp1Icon|default('verified') }}</span> {{ stamp1 }}
+                </span>
+            {% elseif 'burrata' in pizza.slug %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-secondary border border-secondary/40 font-label-sm text-label-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined text-xs">verified</span> Pouilles IGP • Burrata 125g
+                </span>
+            {% else %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-secondary border border-secondary/40 font-label-sm text-label-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined text-xs">hive</span> Miel Floral du Tarn
+                </span>
+            {% endif %}
+
+            {% if stamp2 is defined and stamp2 %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-tertiary border border-tertiary/40 font-label-sm text-label-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined text-xs">{{ stamp2Icon|default('spa') }}</span> {{ stamp2 }}
+                </span>
+            {% elseif 'burrata' in pizza.slug %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-tertiary border border-tertiary/40 font-label-sm text-label-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined text-xs">spa</span> Basilic Génois Frais
+                </span>
+            {% else %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-tertiary border border-tertiary/40 font-label-sm text-label-sm font-bold shadow-lg">
+                    <span class="material-symbols-outlined text-xs">local_pizza</span> 4 Grands Fromages AOP
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- Wood fire emblem round badge -->
+        <div class="absolute bottom-5 left-5 w-16 h-16 rounded-full bg-primary-container/90 text-white backdrop-blur-md flex flex-col items-center justify-center text-center shadow-lg flame-active">
+            <span class="material-symbols-outlined text-base">local_fire_department</span>
+            <span class="text-[9px] font-bold uppercase leading-none">450°C</span>
+        </div>
+    </div>
+
+    <!-- 50% Architectured Tactile Dark Obsidian Block -->
+    <div class="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between space-y-6">
+        <div>
+            <!-- Spec Sheet Header -->
+            <div class="flex items-start justify-between border-b border-outline-variant/30 pb-4">
+                <div>
+                    <span class="text-xs uppercase tracking-widest font-bold text-secondary">{{ refNumber|default('Référence Création • N°05') }}</span>
+                    <h4 class="font-display text-headline-md font-semibold text-on-surface mt-1">{{ pizza.name }}</h4>
+                </div>
+                <div class="text-right">
+                    <span class="font-display text-headline-md font-bold text-secondary tracking-tight" id="split-price-{{ index }}">{{ pPriceMedium }}</span>
+                    <span class="text-xs text-outline block">Tarif emporté</span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <p class="font-body-md text-body-md text-on-surface-variant my-4 leading-relaxed">
+                {{ pizza.ingredient }}
+            </p>
+
+            <!-- Technical Culinary Spec Sheet -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
+                <div class="p-2.5 rounded-lg bg-surface-container-lowest subtle-hairline">
+                    <span class="text-[10px] text-outline uppercase font-semibold block">{{ box1Label|default('Base Coulis') }}</span>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">{{ box1Val|default('Tomate AOP') }}</span>
+                </div>
+                <div class="p-2.5 rounded-lg bg-surface-container-lowest subtle-hairline">
+                    <span class="text-[10px] text-outline uppercase font-semibold block">{{ box2Label|default('Cœur Frais') }}</span>
+                    <span class="font-label-md text-label-md text-secondary font-semibold">{{ box2Val|default('Burrata 125g') }}</span>
+                </div>
+                <div class="p-2.5 rounded-lg bg-surface-container-lowest subtle-hairline col-span-2 sm:col-span-1">
+                    <span class="text-[10px] text-outline uppercase font-semibold block">{{ box3Label|default('Profil Digestibilité') }}</span>
+                    <span class="font-label-md text-label-md text-tertiary font-semibold">{{ box3Val|default('Légère 72h') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tactile dual sizing switchers & Architectural Trigger Button -->
+        <div class="pt-4 border-t border-outline-variant/30 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-on-surface-variant uppercase">Calibrage du disque :</span>
+                <div class="flex items-center gap-1.5 p-1 rounded-xl bg-surface-container-lowest subtle-hairline">
+                    <button type="button"
+                            class="split-btn-{{ index }} active px-4 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold bg-secondary text-surface-container-lowest transition-all"
+                            data-action="split-size" data-index="{{ index }}" data-size="29cm" data-price="{{ pPriceMedium }}">
+                        Petite 29cm
+                    </button>
+                    <button type="button"
+                            class="split-btn-{{ index }} px-4 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold text-on-surface-variant hover:text-white transition-all"
+                            data-action="split-size" data-index="{{ index }}" data-size="33cm" data-price="{{ pPriceLarge }}">
+                        Grande 33cm (+{{ diffPrice }})
+                    </button>
+                </div>
+            </div>
+            <button type="button"
+                    class="w-full py-4 rounded-xl bg-primary-container text-white font-label-lg text-label-lg font-bold ember-glow hover:bg-inverse-primary transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+                    data-action="add-to-cart" data-name="{{ pizza.name }}" data-price-source="split-cta-price-{{ index }}" data-default-price="{{ pPriceMedium }}" data-size-label="Format choisi">
+                <span class="material-symbols-outlined text-xl">shopping_cart</span>
+                <span>Commander cette création (<span id="split-cta-price-{{ index }}">{{ pPriceMedium }}</span>)</span>
+            </button>
+        </div>
+    </div>
+</div>

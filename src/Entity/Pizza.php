@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PizzaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 /**
  * Entité représentant une Pizza dans le système.
@@ -29,29 +30,29 @@ class Pizza
     private ?int $id = null;
 
     /**
-     * @var string|null Nom de la pizza
+     * @var string Nom de la pizza
      */
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name = '';
 
     /**
-     * @var string|null Liste des ingrédients de la pizza
+     * @var string Liste des ingrédients de la pizza
      */
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $ingredient = null;
+    private string $ingredient = '';
 
     /**
-     * @var string|null Version formatée pour l'URL (slug) du nom de la pizza
+     * @var string Version formatée pour l'URL (slug) du nom de la pizza
      */
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug = '';
 
     /**
      * @var string|null Nom du fichier image stocké en base de données
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
-    
+
     /**
      * @var File|null Fichier physique de l'image (géré par VichUploader)
      */
@@ -62,7 +63,7 @@ class Pizza
         mimeTypesMessage: 'Veuillez télécharger une image valide (JPEG, PNG, WEBP)',
     )]
     private ?File $imageFile = null;
-    
+
     /**
      * @var \DateTimeInterface|null Date de dernière modification (nécessaire pour VichUploader)
      */
@@ -70,35 +71,35 @@ class Pizza
     private ?\DateTimeInterface $updatedAt = null;
 
     /**
-     * @var float|null Prix de la pizza en taille moyenne
+     * @var float Prix de la pizza en taille moyenne
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Le prix ne peut pas être vide")]
-    #[Assert\Positive(message: "Le prix doit être positif")]
-    #[Assert\Range(min: 5, max: 50, notInRangeMessage: "Le prix doit être compris entre {{ min }}€ et {{ max }}€")]
-    private ?float $priceMedium = null;
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide')]
+    #[Assert\Positive(message: 'Le prix doit être positif')]
+    #[Assert\Range(notInRangeMessage: 'Le prix doit être compris entre {{ min }}€ et {{ max }}€', min: 5, max: 50)]
+    private float $priceMedium = 0.0;
 
     /**
-     * @var float|null Prix de la pizza en taille grande
+     * @var float Prix de la pizza en taille grande
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Le prix ne peut pas être vide")]
-    #[Assert\Positive(message: "Le prix doit être positif")]
-    #[Assert\Range(min: 7, max: 60, notInRangeMessage: "Le prix doit être compris entre {{ min }}€ et {{ max }}€")]
-    private ?float $priceLarge = null;
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide')]
+    #[Assert\Positive(message: 'Le prix doit être positif')]
+    #[Assert\Range(notInRangeMessage: 'Le prix doit être compris entre {{ min }}€ et {{ max }}€', min: 7, max: 60)]
+    private float $priceLarge = 0.0;
 
     /**
-     * @var bool|null Indique si c'est une pizza spéciale (ex: mise en avant)
+     * @var bool Indique si c'est une pizza spéciale (ex: mise en avant)
      */
     #[ORM\Column]
-    private ?bool $isSpecial = null;
+    private bool $isSpecial = false;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -106,11 +107,11 @@ class Pizza
     public function setName(string $name): static
     {
         $this->name = $name;
-        
+
         return $this;
     }
 
-    public function getIngredient(): ?string
+    public function getIngredient(): string
     {
         return $this->ingredient;
     }
@@ -122,7 +123,7 @@ class Pizza
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -133,33 +134,33 @@ class Pizza
 
         return $this;
     }
-    
+
     /**
-     * Génère automatiquement le slug à partir du nom
+     * Génère automatiquement le slug à partir du nom.
      */
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function generateSlug(): void
     {
-        if (empty($this->slug) || $this->slug === null) {
+        if ('' === $this->slug) {
             $this->slug = $this->createSlug($this->getName());
         }
     }
-    
+
     /**
-     * Crée un slug à partir d'une chaîne de caractères
+     * Crée un slug à partir d'une chaîne de caractères.
      */
     private function createSlug(string $string): string
     {
-        // Convertir en minuscules et remplacer les espaces par des tirets
-        $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $string), '-'));
         // Supprimer les caractères accentués
-        $slug = str_replace(
-            ['à','á','â','ã','ä', 'ç', 'è','é','ê','ë', 'ì','í','î','ï', 'ñ', 'ò','ó','ô','õ','ö', 'ù','ú','û','ü', 'ý','ÿ'],
-            ['a','a','a','a','a', 'c', 'e','e','e','e', 'i','i','i','i', 'n', 'o','o','o','o','o', 'u','u','u','u', 'y','y'],
-            $slug
+        $sansAccents = str_replace(
+            ['à', 'á', 'â', 'ã', 'ä', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'],
+            ['a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y'],
+            $string
         );
-        return $slug;
+
+        // Convertir en minuscules et remplacer les espaces par des tirets
+        return strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $sansAccents) ?? '', '-'));
     }
 
     public function getImage(): ?string
@@ -173,42 +174,36 @@ class Pizza
 
         return $this;
     }
-    
-    /**
-     * @return File|null
-     */
+
     public function getImageFile(): ?File
     {
         return $this->imageFile;
     }
-    
-    /**
-     * @param File|null $imageFile
-     */
+
     public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
-        
-        if (null !== $imageFile) {
+
+        if ($imageFile instanceof File) {
             // Il est nécessaire qu'au moins un champ change si vous utilisez Doctrine
             // sinon les écouteurs d'événements ne seront pas appelés et le fichier sera perdu
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
-    
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
-    
+
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-        
+
         return $this;
     }
 
-    public function getPriceMedium(): ?float
+    public function getPriceMedium(): float
     {
         return $this->priceMedium;
     }
@@ -220,7 +215,7 @@ class Pizza
         return $this;
     }
 
-    public function getPriceLarge(): ?float
+    public function getPriceLarge(): float
     {
         return $this->priceLarge;
     }
@@ -232,7 +227,7 @@ class Pizza
         return $this;
     }
 
-    public function isSpecial(): ?bool
+    public function isSpecial(): bool
     {
         return $this->isSpecial;
     }

@@ -1,0 +1,223 @@
+{# templates/Components/cards/card_style_01.html.twig #}
+{# Style 01 : La Masterpiece Interactive & Tactile (ex: La Tartufata Di Bosco) #}
+
+{% set pPriceMedium = pizza.priceMedium|number_format(2, '.', '') ~ '€' %}
+{% set pPriceLarge = pizza.priceLarge|number_format(2, '.', '') ~ '€' %}
+
+{% if pizza.image %}
+    {% set pImageUrl = pizza.image starts with 'http' ? pizza.image : asset('images/pizzas/' ~ pizza.image) %}
+{% else %}
+    {% set pImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD51otBK757P7PS06RkHXE2I8ORvglbdbtfEtVdP3DtyBB70j8-OaILXTxvmNOSnhCOudy9xNsnhfQBXXzUk8i-NoAIl6_zvk_qHj7_diAjSpVuVCg6tM3usexaCntgK_D_ETBjKK5gAcyzydL2XB7fZ3FBPi-Xz8ZFQCB1qgeJUZk-pmNwsFSzkmX2QDtu4m5rYALMDVPW4unBNAp-D5-_1eJ9iB7IQegLQYgLAwh8d2WkNfWSQ2GDfH_mh3QBAr4PPvBDsBPEWlW7' %}
+{% endif %}
+
+<section class="space-y-6 pizza-showcase-item"
+         data-pizza-card
+         data-pizza-id="{{ pizza.id }}"
+         data-pizza-name="{{ pizza.name }}"
+         data-pizza-ingredients="{{ pizza.ingredient }}"
+         data-pizza-category="creme veggie"
+         data-architecture-style="01"
+         data-price-medium="{{ pizza.priceMedium }}"
+         data-price-large="{{ pizza.priceLarge }}">
+
+    <div class="flex items-center justify-between border-l-4 border-primary-container pl-4">
+        <div>
+            <span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-semibold">Architecture Style 01</span>
+            <h3 class="font-display text-headline-md font-semibold text-on-surface">La Masterpiece Interactive &amp; Tactile</h3>
+        </div>
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant text-label-sm font-label-sm">
+            <span class="material-symbols-outlined text-sm text-primary">touch_app</span> Vue multi-états en direct
+        </span>
+    </div>
+
+    <!-- The Interactive Card Concept -->
+    <div class="rounded-2xl bg-surface-container-low border border-outline-variant/40 overflow-hidden shadow-2xl relative transition-all duration-300 hover:border-secondary/50">
+        <!-- Top Bar of the Card -->
+        <div class="px-6 sm:px-8 py-4 bg-surface-container-lowest/80 border-b border-outline-variant/20 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full bg-secondary/90 text-surface-container-lowest font-label-sm text-label-sm font-bold uppercase tracking-wider shadow-sm">
+                    Coup de Cœur Chef
+                </span>
+                <!-- Glowing Wood Fire Heat Badge -->
+                <div class="flame-active inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/50 text-primary-fixed font-label-sm text-label-sm">
+                    <span class="material-symbols-outlined text-sm text-primary-container">local_fire_department</span>
+                    <span>Sole Basalte • 450°C</span>
+                </div>
+                <span class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary/10 text-tertiary border border-tertiary/20 text-label-sm font-label-sm">
+                    <span class="material-symbols-outlined text-xs">eco</span> Truffe Noire Sauvage
+                </span>
+            </div>
+
+            <!-- Dynamic Tabs Controller -->
+            <div class="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30" role="tablist">
+                <button type="button"
+                        class="px-3.5 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold transition-all duration-200 bg-secondary text-surface-container-lowest shadow"
+                        id="tab-visual-btn"
+                        data-action="switch-tab" data-tab="visual">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">image</span> Vue Pizza
+                    </span>
+                </button>
+                <button type="button"
+                        class="px-3.5 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold transition-all duration-200 text-on-surface-variant hover:text-white"
+                        id="tab-recipe-btn"
+                        data-action="switch-tab" data-tab="recipe">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">menu_book</span> Secrets du Pizzaiolo
+                    </span>
+                </button>
+                <button type="button"
+                        class="px-3.5 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold transition-all duration-200 text-on-surface-variant hover:text-white"
+                        id="tab-profile-btn"
+                        data-action="switch-tab" data-tab="profile">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">tune</span> Profil &amp; Allergènes
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Body: 2 Columns Layout with Interactive Switch -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[460px]">
+            <!-- Left: Image / Visual Stage -->
+            <div class="lg:col-span-7 relative overflow-hidden bg-surface-container-lowest flex items-center justify-center p-6 lg:p-8">
+                <div class="relative w-full h-[320px] lg:h-[420px] rounded-xl overflow-hidden group">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                         id="style1-photo"
+                         src="{{ pImageUrl }}"
+                         alt="{{ pizza.name }} cuite au feu de bois">
+                    <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+
+                    <!-- Floating interactive pinpoints / micro-motion badges -->
+                    <div class="absolute top-4 left-4 p-2.5 rounded-xl bg-surface-container-lowest/85 backdrop-blur-md subtle-hairline hover:scale-105 transition-transform cursor-pointer text-left">
+                        <span class="text-xs font-semibold text-secondary block">Farine Manitoba 00</span>
+                        <span class="text-[11px] text-on-surface-variant">Alvéolage léger &amp; croustillant</span>
+                    </div>
+                    <div class="absolute bottom-4 right-4 p-2.5 rounded-xl bg-surface-container-lowest/85 backdrop-blur-md subtle-hairline hover:scale-105 transition-transform cursor-pointer text-right">
+                        <span class="text-xs font-semibold text-primary block">Crème de Truffe d'Ombrie</span>
+                        <span class="text-[11px] text-on-surface-variant">Ail noir &amp; beurre clarifié</span>
+                    </div>
+                    <!-- Live Diameter preview indicator -->
+                    <div class="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-surface-container-high/90 backdrop-blur-sm subtle-hairline flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary text-sm">straighten</span>
+                        <span class="text-label-sm font-label-sm text-on-surface font-semibold" id="style1-diameter-label">Diamètre sélectionné: 29cm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Dynamic State Inspector / Controller -->
+            <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-surface-container-low border-t lg:border-t-0 lg:border-l border-outline-variant/30">
+                <!-- STATE TAB 1: Visual Overview (Default) -->
+                <div class="space-y-4" id="tab-visual-content">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Spécialité Signée</span>
+                            <h3 class="font-display text-headline-md font-semibold text-on-surface">{{ pizza.name }}</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-display text-headline-md font-bold text-secondary tracking-tight" id="style1-price">{{ pPriceMedium }}</span>
+                            <span class="text-xs text-outline-variant block">TTC • Emporté</span>
+                        </div>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        {{ pizza.ingredient }}
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20">
+                            <span class="text-[11px] text-outline uppercase font-semibold block">Temps au four</span>
+                            <span class="font-title text-title text-primary font-bold">85 secondes</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20">
+                            <span class="text-[11px] text-outline uppercase font-semibold block">Fermentation</span>
+                            <span class="font-title text-title text-secondary font-bold">72h sur levain</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATE TAB 2: Recipe & Secrets (Hidden initially) -->
+                <div class="space-y-4 hidden" id="tab-recipe-content">
+                    <div class="flex items-center gap-2 text-secondary">
+                        <span class="material-symbols-outlined text-lg">restaurant</span>
+                        <span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Carnet de cuisine du Chef Rico</span>
+                    </div>
+                    <h4 class="font-display text-headline-sm font-semibold text-on-surface">Le secret d'une truffe non dénaturée</h4>
+                    <div class="space-y-3 font-body-sm text-body-sm text-on-surface-variant">
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container border border-outline-variant/20">
+                            <span class="font-bold text-secondary font-mono">01.</span>
+                            <p>La crème de truffe est émulsionnée avec une touche de mascarpone di bufala avant d'être délicatement étalée sur le pâton aéré à la main.</p>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container border border-outline-variant/20">
+                            <span class="font-bold text-secondary font-mono">02.</span>
+                            <p>Les cèpes et girolles sont pré-torréfiés à la flamme du bois de chêne pour concentrer leur jus umami sans détremper la pâte.</p>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container border border-outline-variant/20">
+                            <span class="font-bold text-secondary font-mono">03.</span>
+                            <p>Le Parmigiano 24 mois et la roquette sauvage ne sont déposés qu'à la sortie immédiate du fourneau pour préserver leur fraîcheur croquante.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATE TAB 3: Profile & Allergens (Hidden initially) -->
+                <div class="space-y-4 hidden" id="tab-profile-content">
+                    <div class="flex items-center gap-2 text-tertiary">
+                        <span class="material-symbols-outlined text-lg">fact_check</span>
+                        <span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Fiche Technique &amp; Nutrition</span>
+                    </div>
+                    <div class="space-y-3 font-body-sm text-body-sm">
+                        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20 flex justify-between items-center">
+                            <span class="text-on-surface-variant">Intensité aromatique</span>
+                            <span class="font-bold text-secondary">Boisée &amp; Gourmande (4.8/5)</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20 flex justify-between items-center">
+                            <span class="text-on-surface-variant">Allergènes déclarés</span>
+                            <span class="font-bold text-on-surface">Gluten (blé 00), Lait / Lactose</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20 flex justify-between items-center">
+                            <span class="text-on-surface-variant">Origine produits</span>
+                            <span class="font-bold text-tertiary">Campanie &amp; Ombrie (Italie)</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20 flex justify-between items-center">
+                            <span class="text-on-surface-variant">Régime alimentaire</span>
+                            <span class="px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-semibold text-xs">Végétarienne</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Action Bar: Dynamic Dual-Size Dial Selector & Add-To-Cart -->
+                <div class="pt-6 border-t border-outline-variant/30 mt-6 space-y-4">
+                    <!-- Dual-Size Dial Selector -->
+                    <div>
+                        <div class="flex items-center justify-between text-label-sm font-label-sm mb-2">
+                            <span class="text-on-surface-variant uppercase font-semibold">Format de Pizza :</span>
+                            <span class="text-secondary font-bold" id="style1-dial-indicator">Classique Napolitaine (29cm)</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 p-1 rounded-xl bg-surface-container subtle-hairline">
+                            <button type="button"
+                                    class="py-2.5 px-3 rounded-lg text-label-md font-label-md font-semibold flex items-center justify-center gap-2 bg-secondary text-surface-container-lowest shadow transition-all duration-200"
+                                    id="s1-btn-small"
+                                    data-action="set-size" data-size="small" data-price="{{ pPriceMedium }}" data-diameter="29cm">
+                                <span class="material-symbols-outlined text-base">radio_button_checked</span>
+                                <span>Petite 29cm • {{ pPriceMedium }}</span>
+                            </button>
+                            <button type="button"
+                                    class="py-2.5 px-3 rounded-lg text-label-md font-label-md font-semibold flex items-center justify-center gap-2 text-on-surface-variant hover:text-white transition-all duration-200"
+                                    id="s1-btn-large"
+                                    data-action="set-size" data-size="large" data-price="{{ pPriceLarge }}" data-diameter="33cm">
+                                <span class="material-symbols-outlined text-base">radio_button_unchecked</span>
+                                <span>Grande 33cm • {{ pPriceLarge }}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Instant Tactile Add To Cart CTA -->
+                    <button type="button"
+                            class="w-full py-3.5 rounded-xl bg-primary-container text-white font-label-lg text-label-lg font-bold ember-glow-lg hover:bg-inverse-primary active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-3"
+                            data-action="add-to-cart" data-name="{{ pizza.name }}" data-price-source="style1-cta-price" data-size-source="s1-btn-large" data-default-price="{{ pPriceMedium }}">
+                        <span class="material-symbols-outlined text-xl">shopping_cart_checkout</span>
+                        <span>Ajouter à la commande (<span id="style1-cta-price">{{ pPriceMedium }}</span>)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

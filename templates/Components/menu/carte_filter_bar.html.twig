@@ -1,0 +1,79 @@
+{# templates/Components/menu/carte_filter_bar.html.twig #}
+<!-- Sticky Dynamic Filter & Navigation Subbar -->
+<aside aria-label="Filtres du menu" class="sticky top-20 z-40 w-full bg-surface-container-low/95 backdrop-blur-md shadow-md py-3.5 border-y border-outline-variant/20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Category Pills Carousel -->
+        <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto no-scrollbar py-1">
+            <button type="button"
+                    class="category-btn active px-4 py-2 rounded-full font-label-md text-label-md bg-secondary text-on-secondary whitespace-nowrap transition-all shadow-sm font-semibold"
+                    data-action="filter-category" data-category="all">
+                Toutes ({{ (pizzas|length + dolci|length + boissons|length) }})
+            </button>
+            <button type="button"
+                    class="category-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all font-semibold"
+                    data-action="filter-category" data-category="specialite">
+                Nos Spécialités (7)
+            </button>
+            <button type="button"
+                    class="category-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all font-semibold"
+                    data-action="filter-category" data-category="classique">
+                Les Classiques (4)
+            </button>
+            <button type="button"
+                    class="category-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all font-semibold"
+                    data-action="filter-category" data-category="veggie">
+                Végétariennes (3)
+            </button>
+            <button type="button"
+                    class="category-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all font-semibold"
+                    data-action="filter-category" data-category="truffe">
+                Les Gourmets &amp; Truffe (2)
+            </button>
+            <button type="button"
+                    class="category-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all font-semibold"
+                    data-action="filter-category" data-category="dessert">
+                Desserts Maison ({{ dolci|length }})
+            </button>
+            <button type="button"
+                    class="category-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high whitespace-nowrap transition-all font-semibold"
+                    data-action="filter-category" data-category="boisson">
+                Boissons &amp; Vins ({{ boissons|length }})
+            </button>
+        </div>
+
+        <!-- Live Search & Base Sauce Quick Toggle -->
+        <div class="flex items-center gap-3 w-full md:w-auto shrink-0 justify-end">
+            <!-- Search bar -->
+            <div class="relative flex-1 md:w-64">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+                <input type="text"
+                       id="menuSearch"
+                       class="w-full pl-9 pr-3 py-2 bg-surface-container text-on-surface rounded-lg font-body-sm text-body-sm placeholder:text-outline border border-outline-variant/30 focus:outline-none focus:border-secondary focus:bg-surface-container-high transition-colors"
+                       placeholder="Rechercher une pizza, truffe, burrata..."
+                       data-action="search" />
+            </div>
+
+            <!-- Base selector toggle -->
+            <div class="flex items-center bg-surface-container rounded-lg p-1 shrink-0 border border-outline-variant/30">
+                <button type="button"
+                        class="base-btn active px-3 py-1.5 rounded-md font-label-sm text-label-sm bg-surface-container-high text-secondary font-semibold transition-all"
+                        id="filterAllBases"
+                        data-action="filter-base" data-base="all">
+                    Tous
+                </button>
+                <button type="button"
+                        class="base-btn px-3 py-1.5 rounded-md font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors font-semibold"
+                        id="filterTomate"
+                        data-action="filter-base" data-base="tomate">
+                    San Marzano
+                </button>
+                <button type="button"
+                        class="base-btn px-3 py-1.5 rounded-md font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors font-semibold"
+                        id="filterCreme"
+                        data-action="filter-base" data-base="creme">
+                    Fior di Latte Crème
+                </button>
+            </div>
+        </div>
+    </div>
+</aside>

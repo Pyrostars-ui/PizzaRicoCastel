@@ -1,0 +1,52 @@
+{# templates/Components/checkout/time_slots_grid.html.twig #}
+{# Section 2 : Créneau de Retrait Souhaité #}
+
+<section class="bg-surface-container-low rounded-xl p-space-lg md:p-space-xl shadow-xl">
+    <div class="flex items-center justify-between pb-space-md mb-space-md">
+        <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-container/20 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">schedule</span>
+            </div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface">2. Créneau de Retrait Souhaité</h2>
+        </div>
+        <span class="font-label-md text-label-md text-secondary">Aujourd'hui, Soirée</span>
+    </div>
+    <!-- Wood Oven Warmth Alert Banner -->
+    <div class="mb-space-lg p-space-md rounded-xl bg-gradient-to-r from-primary-container/20 via-surface-container to-surface-container flex items-center gap-space-md">
+        <div class="w-10 h-10 rounded-full bg-primary-container/30 text-primary-fixed flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[24px]">local_fire_department</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface leading-snug">
+            <strong class="text-primary font-semibold">Four Biscotto di Sorrento à 485°C en plein tirage.</strong>
+            Vos disques de pâte sont garnis et enfournés à la minute pour garantir le craquant napolitain et le fondant à la seconde où vous franchissez la porte.
+        </p>
+    </div>
+    <div class="space-y-space-md">
+        <div class="flex flex-col sm:flex-row gap-space-sm">
+            <button class="flex-1 py-space-sm px-space-md rounded-lg bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(239,101,65,0.35)] transition-colors"
+                    type="button"
+                    id="slotAsap"
+                    data-action="slot-asap">
+                <span class="material-symbols-outlined text-[18px]">bolt</span>
+                Dès que possible (~20 min)
+            </button>
+            <button class="py-space-sm px-space-md rounded-lg bg-surface-container hover:bg-surface-bright text-on-surface-variant font-label-lg text-label-lg transition-colors"
+                    type="button"
+                    id="slotLater"
+                    data-action="slot-later">
+                Planifier un horaire plus tard
+            </button>
+        </div>
+        <div id="timeSlotsContainer">
+            <span class="block font-label-sm text-label-sm uppercase tracking-wider text-outline mb-space-sm">Créneaux disponibles ce soir</span>
+            <div class="grid grid-cols-4 sm:grid-cols-8 gap-space-xs" id="timeSlotsGrid">
+                {% for slot in timeSlots|default(['19h45', '20h00', '20h15', '20h30', '20h45', '21h00', '21h15', '21h30']) %}
+                    <button class="time-slot-btn py-2 rounded-lg bg-surface-container hover:bg-surface-bright text-on-surface font-label-sm text-label-sm transition-colors"
+                            type="button"
+                            data-action="select-time-slot"
+                            data-slot="{{ slot }}">{{ slot }}</button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>

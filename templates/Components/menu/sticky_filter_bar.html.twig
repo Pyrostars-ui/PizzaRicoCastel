@@ -1,0 +1,260 @@
+{# templates/Components/menu/sticky_filter_bar.html.twig #}
+{# Barre Flottante Sticky de Filtres par Catégorie et Recherche Live #}
+
+<nav id="carte"
+     aria-label="Filtres des pizzas et recherche"
+     class="sticky top-20 z-40 w-full py-3.5 sm:py-4 bg-surface-container-lowest/80 backdrop-blur-md border-y border-outline-variant/20 shadow-lg shadow-black/40 transition-colors">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
+
+        <!-- 1. Pilules de Catégories Défilantes -->
+        <div class="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-1 lg:pb-0 scrollbar-none"
+             role="tablist"
+             aria-label="Catégories du menu"
+             id="categoryContainer">
+            <!-- Pilule 1 : Toutes nos pizzas -->
+            <button type="button"
+                    role="tab"
+                    id="filter-pill-all"
+                    aria-selected="true"
+                    data-filter="all"
+                    class="cat-pill active px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap bg-secondary text-surface-container-lowest font-bold transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                Toutes nos pizzas ({{ totalCount|default(specialPizzas|default([])|length) }})
+            </button>
+
+            <!-- Pilule 2 : Les 4 Architectures -->
+            <button type="button"
+                    role="tab"
+                    id="filter-pill-architectures"
+                    aria-selected="false"
+                    data-filter="architectures"
+                    class="cat-pill px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-container-high text-on-surface hover:text-secondary hover:bg-surface-variant transition-all focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                <span class="material-symbols-outlined text-xs text-primary mr-1" aria-hidden="true">auto_awesome</span>
+                Les 4 Architectures
+            </button>
+
+            <!-- Pilule 3 : Base Tomate AOP -->
+            <button type="button"
+                    role="tab"
+                    id="filter-pill-tomate"
+                    aria-selected="false"
+                    data-filter="tomate"
+                    class="cat-pill px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-container-high text-on-surface hover:text-secondary hover:bg-surface-variant transition-all focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                Base Tomate AOP
+            </button>
+
+            <!-- Pilule 4 : Base Crème Di Latte -->
+            <button type="button"
+                    role="tab"
+                    id="filter-pill-creme"
+                    aria-selected="false"
+                    data-filter="creme"
+                    class="cat-pill px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-container-high text-on-surface hover:text-secondary hover:bg-surface-variant transition-all focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                Base Crème Di Latte
+            </button>
+
+            <!-- Pilule 5 : Végétariennes -->
+            <button type="button"
+                    role="tab"
+                    id="filter-pill-veggie"
+                    aria-selected="false"
+                    data-filter="veggie"
+                    class="cat-pill px-4 py-2 rounded-full font-label-md text-label-md whitespace-nowrap bg-surface-container-high text-on-surface hover:text-secondary hover:bg-surface-variant transition-all focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                <span class="material-symbols-outlined text-xs text-tertiary mr-1" aria-hidden="true">spa</span>
+                Végétariennes
+            </button>
+        </div>
+
+        <!-- 2. Champ de Recherche Live avec Bouton Reset -->
+        <div class="flex items-center gap-3 w-full lg:w-auto" role="search">
+            <div class="relative flex-1 sm:w-72">
+                <label for="pizzaSearch" class="sr-only">Rechercher une pizza par ingrédient ou nom</label>
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none" aria-hidden="true">search</span>
+                <input type="search"
+                       id="pizzaSearch"
+                       name="q"
+                       autocomplete="off"
+                       placeholder="Rechercher truffe, burrata, parme..."
+                       class="w-full pl-9 pr-9 py-2 rounded-lg bg-surface-container text-on-surface placeholder:text-outline text-body-sm font-body-sm border border-outline-variant/30 focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none transition-all">
+                <!-- Bouton d'effacement rapide -->
+                <button type="button"
+                        id="clearSearchBtn"
+                        aria-label="Effacer le texte de recherche"
+                        class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-outline hover:text-secondary transition-colors p-1 focus:outline-none">
+                    <span class="material-symbols-outlined text-base">close</span>
+                </button>
+            </div>
+            <!-- Feedback pour lecteur d'écran -->
+            <div id="searchFeedback" class="sr-only" aria-live="polite"></div>
+        </div>
+    </div>
+</nav>
+
+<!-- Message gracieux en cas de résultat vide (affiché au besoin dans le showcase) -->
+<div id="noResultsState" class="hidden max-w-2xl mx-auto my-12 text-center py-10 px-6 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+    <span class="material-symbols-outlined text-4xl text-outline mb-2" aria-hidden="true">search_off</span>
+    <h3 class="font-display text-headline-sm text-on-surface font-semibold mb-2">Aucune pizza trouvée</h3>
+    <p class="font-body-sm text-on-surface-variant mb-6">
+        Aucune création au feu de bois ne correspond à vos critères actuels.
+    </p>
+    <button type="button"
+            id="resetFilterBtn"
+            class="px-5 py-2.5 rounded-lg bg-secondary text-surface-container-lowest font-label-md text-label-md font-bold hover:bg-secondary/90 transition-all">
+        Réinitialiser les filtres
+    </button>
+</div>
+
+<!-- Script de Filtrage Réactif et Navigation Clavier (Conforme CSP Nonce) -->
+<script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('pizzaSearch');
+        const clearBtn = document.getElementById('clearSearchBtn');
+        const feedback = document.getElementById('searchFeedback');
+        const noResults = document.getElementById('noResultsState');
+        const resetBtn = document.getElementById('resetFilterBtn');
+        const pills = document.querySelectorAll('.cat-pill');
+        const showcaseCards = document.querySelectorAll('[data-pizza-card], .pizza-showcase-item');
+
+        let activeFilter = 'all';
+        let currentSearch = '';
+        let debounceTimer = null;
+
+        function normalizeStr(str) {
+            return (str || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function applyFilters() {
+            let visibleCount = 0;
+            const normSearch = normalizeStr(currentSearch);
+
+            showcaseCards.forEach(card => {
+                const name = normalizeStr(card.getAttribute('data-pizza-name') || card.querySelector('.pizza-title, h3, h4')?.textContent || '');
+                const ingredients = normalizeStr(card.getAttribute('data-pizza-ingredients') || card.querySelector('.pizza-ingredients, p')?.textContent || '');
+                const category = normalizeStr(card.getAttribute('data-pizza-category') || '');
+
+                let matchesCategory = false;
+                if (activeFilter === 'all') {
+                    matchesCategory = true;
+                } else if (activeFilter === 'architectures') {
+                    matchesCategory = card.hasAttribute('data-architecture-style') || card.classList.contains('pizza-architecture');
+                } else if (activeFilter === 'tomate') {
+                    matchesCategory = category.includes('tomate') || ingredients.includes('tomate') || ingredients.includes('san marzano');
+                } else if (activeFilter === 'creme') {
+                    matchesCategory = category.includes('creme') || ingredients.includes('creme') || ingredients.includes('fior di latte');
+                } else if (activeFilter === 'veggie') {
+                    matchesCategory = category.includes('veggie') || card.hasAttribute('data-veggie') || ingredients.includes('burrata') || ingredients.includes('sauvage') || ingredients.includes('champignon');
+                }
+
+                let matchesSearch = true;
+                if (normSearch.length > 0) {
+                    matchesSearch = name.includes(normSearch) || ingredients.includes(normSearch);
+                }
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (noResults) {
+                if (visibleCount === 0 && (normSearch.length > 0 || activeFilter !== 'all')) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                }
+            }
+
+            if (feedback) {
+                feedback.textContent = visibleCount + (visibleCount > 1 ? ' pizzas trouvées' : ' pizza trouvée');
+            }
+        }
+
+        pills.forEach((pill, index) => {
+            pill.addEventListener('click', function() {
+                pills.forEach(p => {
+                    p.classList.remove('bg-secondary', 'text-surface-container-lowest', 'font-bold', 'shadow-md', 'active');
+                    p.classList.add('bg-surface-container-high', 'text-on-surface');
+                    p.setAttribute('aria-selected', 'false');
+                });
+
+                this.classList.add('bg-secondary', 'text-surface-container-lowest', 'font-bold', 'shadow-md', 'active');
+                this.classList.remove('bg-surface-container-high', 'text-on-surface');
+                this.setAttribute('aria-selected', 'true');
+
+                activeFilter = this.getAttribute('data-filter') || 'all';
+                applyFilters();
+            });
+
+            pill.addEventListener('keydown', function(e) {
+                let targetPill = null;
+                if (e.key === 'ArrowRight') {
+                    targetPill = pills[(index + 1) % pills.length];
+                } else if (e.key === 'ArrowLeft') {
+                    targetPill = pills[(index - 1 + pills.length) % pills.length];
+                }
+
+                if (targetPill) {
+                    e.preventDefault();
+                    targetPill.focus();
+                    targetPill.click();
+                }
+            });
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                currentSearch = val;
+
+                if (clearBtn) {
+                    if (val.length > 0) {
+                        clearBtn.classList.remove('hidden');
+                    } else {
+                        clearBtn.classList.add('hidden');
+                    }
+                }
+
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(applyFilters, 150);
+            });
+
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && this.value.length > 0) {
+                    this.value = '';
+                    currentSearch = '';
+                    if (clearBtn) clearBtn.classList.add('hidden');
+                    applyFilters();
+                }
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.focus();
+                }
+                currentSearch = '';
+                clearBtn.classList.add('hidden');
+                applyFilters();
+            });
+        }
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+                currentSearch = '';
+                if (clearBtn) clearBtn.classList.add('hidden');
+
+                const allPill = document.getElementById('filter-pill-all');
+                if (allPill) allPill.click();
+            });
+        }
+    });
+</script>

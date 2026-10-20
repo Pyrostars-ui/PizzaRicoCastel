@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\News;
@@ -10,6 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
+/**
+ * @extends AbstractType<News>
+ */
 class NewsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -19,16 +24,16 @@ class NewsType extends AbstractType
                 'label' => 'Titre de l\'actualité',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Nouvelle pizza du mois !'
-                ]
+                    'placeholder' => 'Ex: Nouvelle pizza du mois !',
+                ],
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',
                 'attr' => [
-                    'class' => 'form-control', 
+                    'class' => 'form-control',
                     'rows' => 10,
-                    'placeholder' => 'Rédigez le contenu de votre article ici...'
-                ]
+                    'placeholder' => 'Rédigez le contenu de votre article ici...',
+                ],
             ])
             ->add('imageFile', VichImageType::class, [
                 'label' => 'Image de l\'article',
@@ -39,8 +44,8 @@ class NewsType extends AbstractType
                 'asset_helper' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Choisir une image'
-                ]
+                    'placeholder' => 'Choisir une image',
+                ],
             ])
         ;
     }

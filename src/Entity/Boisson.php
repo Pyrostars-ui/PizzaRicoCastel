@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\BoissonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 /**
  * Entité représentant une Boisson dans le système.
@@ -28,26 +30,26 @@ class Boisson
     private ?int $id = null;
 
     /**
-     * @var string|null Nom de la boisson
+     * @var string Nom de la boisson
      */
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le nom ne peut pas être vide")]
-    private ?string $name = null;
+    #[Assert\NotBlank(message: 'Le nom ne peut pas être vide')]
+    private string $name = '';
 
     /**
-     * @var string|null Version formatée pour l'URL (slug) du nom de la boisson
+     * @var string Version formatée pour l'URL (slug) du nom de la boisson
      */
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug = '';
 
     /**
-     * @var float|null Prix de la boisson
+     * @var float Prix de la boisson
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Le prix ne peut pas être vide")]
-    #[Assert\Positive(message: "Le prix doit être positif")]
-    #[Assert\Range(min: 0.5, max: 100, notInRangeMessage: "Le prix doit être compris entre {{ min }}€ et {{ max }}€")]
-    private ?float $price = null;
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide')]
+    #[Assert\Positive(message: 'Le prix doit être positif')]
+    #[Assert\Range(notInRangeMessage: 'Le prix doit être compris entre {{ min }}€ et {{ max }}€', min: 0.5, max: 100)]
+    private float $price = 0.0;
 
     /**
      * @var string|null Catégorie de la boisson (ex: Soda, Vin, Bière)
@@ -68,7 +70,7 @@ class Boisson
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
-    
+
     /**
      * @var File|null Fichier physique de l'image (géré par VichUploader)
      */
@@ -79,7 +81,7 @@ class Boisson
         mimeTypesMessage: 'Veuillez télécharger une image valide (JPEG, PNG, WEBP)',
     )]
     private ?File $imageFile = null;
-    
+
     /**
      * @var \DateTimeInterface|null Date de dernière modification (nécessaire pour VichUploader)
      */
@@ -91,7 +93,7 @@ class Boisson
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -103,7 +105,7 @@ class Boisson
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -115,7 +117,7 @@ class Boisson
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -172,7 +174,7 @@ class Boisson
     {
         $this->imageFile = $imageFile;
 
-        if (null !== $imageFile) {
+        if ($imageFile instanceof File) {
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
@@ -190,30 +192,30 @@ class Boisson
     }
 
     /**
-     * Génère automatiquement le slug à partir du nom
+     * Génère automatiquement le slug à partir du nom.
      */
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function generateSlug(): void
     {
-        if (empty($this->slug) || $this->slug === null) {
+        if ('' === $this->slug) {
             $this->slug = $this->createSlug($this->getName());
         }
     }
-    
+
     /**
-     * Crée un slug à partir d'une chaîne de caractères
+     * Crée un slug à partir d'une chaîne de caractères.
      */
     private function createSlug(string $string): string
     {
-        // Convertir en minuscules et remplacer les espaces par des tirets
-        $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $string), '-'));
         // Supprimer les caractères accentués
-        $slug = str_replace(
-            ['à','á','â','ã','ä', 'ç', 'è','é','ê','ë', 'ì','í','î','ï', 'ñ', 'ò','ó','ô','õ','ö', 'ù','ú','û','ü', 'ý','ÿ'],
-            ['a','a','a','a','a', 'c', 'e','e','e','e', 'i','i','i','i', 'n', 'o','o','o','o','o', 'u','u','u','u', 'y','y'],
-            $slug
+        $sansAccents = str_replace(
+            ['à', 'á', 'â', 'ã', 'ä', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'],
+            ['a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y'],
+            $string
         );
-        return $slug;
+
+        // Convertir en minuscules et remplacer les espaces par des tirets
+        return strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $sansAccents) ?? '', '-'));
     }
 }

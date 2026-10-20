@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\User;
@@ -11,10 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
+#[Route('/admin/user')]
 class AdminUserController extends AbstractController
 {
-    #[Route('/admin/user', name: 'app_admin_user')]
+    #[Route('/', name: 'app_admin_user')]
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('admin/user/index.html.twig', [
@@ -23,7 +28,7 @@ class AdminUserController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/user/edit/{id}', name: 'app_admin_user_edit')]
+    #[Route('/edit/{id}', name: 'app_admin_user_edit')]
     public function edit(User $user, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(UserType::class, $user);
@@ -31,7 +36,7 @@ class AdminUserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('password')->getData();
-            if ($plainPassword) {
+            if (\is_string($plainPassword) && '' !== $plainPassword) {
                 $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             }
 
@@ -48,35 +53,25 @@ class AdminUserController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/user/delete/{id}', name: 'app_admin_user_delete', methods: ['POST', 'GET'])]
-    public function delete(User $user, EntityManagerInterface $entityManager): Response
+    #[Route('/delete/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        // Empêcher la suppression de son propre compte
-        if ($this->getUser() === $user) {
+        $currentUser = $this->getUser();
+        if ($currentUser instanceof User && $currentUser->getId() === $user->getId()) {
             $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+
             return $this->redirectToRoute('app_admin_user');
         }
 
-        $entityManager->remove($user);
-        $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
 
-        $this->addFlash('success', 'Utilisateur supprimé avec succès.');
+            $this->addFlash('success', 'Utilisateur supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Token de sécurité invalide.');
+        }
 
         return $this->redirectToRoute('app_admin_user');
     }
-
-    // #[Route('/make-me-admin/{email}', name: 'app_make_admin')]
-    // public function makeAdmin(string $email, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
-    // {
-    //     $user = $userRepository->findOneBy(['email' => $email]);
-
-    //     if (!$user) {
-    //         return new Response("Utilisateur non trouvé.", 404);
-    //     }
-
-    //     $user->setRoles(['ROLE_ADMIN']);
-    //     $entityManager->flush();
-
-    //     return new Response("L'utilisateur " . $email . " est maintenant ROLE_ADMIN ! Vous pouvez maintenant accéder à /admin.");
-    // }
 }

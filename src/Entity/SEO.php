@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SEORepository;
@@ -16,11 +18,11 @@ class SEO
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $pageName = null;
+    private string $pageName = '';
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $metaTitle = null;
+    private string $metaTitle = '';
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $metaDescription = null;
@@ -30,7 +32,7 @@ class SEO
         return $this->id;
     }
 
-    public function getPageName(): ?string
+    public function getPageName(): string
     {
         return $this->pageName;
     }
@@ -42,7 +44,7 @@ class SEO
         return $this;
     }
 
-    public function getMetaTitle(): ?string
+    public function getMetaTitle(): string
     {
         return $this->metaTitle;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\About;
@@ -9,6 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<About>
+ */
 class AboutType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -18,16 +23,16 @@ class AboutType extends AbstractType
                 'label' => 'Titre de la section',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Notre Histoire'
-                ]
+                    'placeholder' => 'Ex: Notre Histoire',
+                ],
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',
                 'attr' => [
-                    'class' => 'form-control', 
+                    'class' => 'form-control',
                     'rows' => 10,
-                    'placeholder' => 'Rédigez ici le texte qui sera affiché dans la section "À propos"...'
-                ]
+                    'placeholder' => 'Rédigez ici le texte qui sera affiché dans la section "À propos"...',
+                ],
             ])
         ;
     }

@@ -5,8 +5,8 @@
 {% block body %}
 <div class="admin-layout">
     <!-- Sidebar Admin -->
-    {% include 'AdminComponents/adminSidebar/adminSidebar.html.twig' %}
-    
+    {{ include('AdminComponents/adminSidebar/adminSidebar.html.twig') }}
+
     <!-- Main Content -->
     <div class="admin-content" id="adminContent">
         <!-- Main Content Area -->
@@ -35,7 +35,7 @@
                 </ol>
             </nav>
 
-            {{ form_start(form, {'attr': {'id': 'news-form', 'class': 'admin-form'}}) }}
+            {{ form_start(form, {attr: {id: 'news-form', class: 'admin-form'}}) }}
             <div class="row">
                 {# Colonne Gauche : Contenu #}
                 <div class="col-12 col-lg-8">
@@ -45,14 +45,14 @@
                         </div>
                         <div class="card-body p-4">
                             <div class="mb-4">
-                                {{ form_label(form.title, 'Titre de l\'actualité', {'label_attr': {'class': 'form-label fw-bold text-white-50 small text-uppercase'}}) }}
-                                {{ form_widget(form.title, {'attr': {'class': 'form-control news-input-standard', 'placeholder': 'Ex: Nouvelle pizza du mois !'}}) }}
+                                {{ form_label(form.title, 'Titre de l\'actualité', {label_attr: {class: 'form-label fw-bold text-white-50 small text-uppercase'}}) }}
+                                {{ form_widget(form.title, {attr: {class: 'form-control news-input-standard', placeholder: 'Ex: Nouvelle pizza du mois !'}}) }}
                                 {{ form_errors(form.title) }}
                             </div>
-                            
+
                             <div class="mb-0">
-                                {{ form_label(form.content, 'Texte de l\'article', {'label_attr': {'class': 'form-label fw-bold text-white-50 small text-uppercase'}}) }}
-                                {{ form_widget(form.content, {'attr': {'class': 'form-control news-input-standard', 'rows': 15, 'placeholder': 'Rédigez votre actualité ici...'}}) }}
+                                {{ form_label(form.content, 'Texte de l\'article', {label_attr: {class: 'form-label fw-bold text-white-50 small text-uppercase'}}) }}
+                                {{ form_widget(form.content, {attr: {class: 'form-control news-input-standard', rows: 15, placeholder: 'Rédigez votre actualité ici...'}}) }}
                                 {{ form_errors(form.content) }}
                             </div>
                         </div>
@@ -68,8 +68,8 @@
                         </div>
                         <div class="card-body p-4 text-center">
                             <div class="mb-3 text-start">
-                                {{ form_label(form.imageFile, 'Changer l\'image', {'label_attr': {'class': 'form-label fw-bold text-white-50 small text-uppercase'}}) }}
-                                {{ form_widget(form.imageFile, {'attr': {'class': 'form-control news-input-standard form-control-sm'}}) }}
+                                {{ form_label(form.imageFile, 'Changer l\'image', {label_attr: {class: 'form-label fw-bold text-white-50 small text-uppercase'}}) }}
+                                {{ form_widget(form.imageFile, {attr: {class: 'form-control news-input-standard form-control-sm'}}) }}
                                 {{ form_errors(form.imageFile) }}
                             </div>
 

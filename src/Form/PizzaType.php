@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Pizza;
@@ -10,14 +12,13 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 /**
  * Formulaire utilisé pour la création et la modification d'une Pizza.
+ *
+ * @extends AbstractType<Pizza>
  */
 class PizzaType extends AbstractType
 {
     /**
      * Construit le formulaire en ajoutant les champs correspondant aux propriétés de l'entité Pizza.
-     *
-     * @param FormBuilderInterface $builder L'outil de construction du formulaire
-     * @param array $options Options supplémentaires passées au formulaire
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -26,7 +27,6 @@ class PizzaType extends AbstractType
             ->add('ingredient')
             // Champ pour l'upload d'image géré par VichUploader
             ->add('imageFile', VichImageType::class, [
-                
                 'label' => 'Image',
                 'required' => false, // Permet de ne pas avoir à re-uploader l'image lors d'une simple modification de texte
                 'allow_delete' => true,
@@ -46,8 +46,6 @@ class PizzaType extends AbstractType
     /**
      * Configure les options globales du formulaire.
      * Associe notamment ce formulaire à l'entité Pizza.
-     *
-     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver): void
     {

@@ -1,47 +1,220 @@
-{# Template de base utilisé pour le site public. Définit la structure HTML commune. #}
+{# Template de base utilisé pour le site public — Design System "Artisanal Ember & Stone" #}
 <!DOCTYPE html>
-<html>
+<html lang="fr" class="dark">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}Pizza Rico - Castelsarrasin{% endblock %}</title>
-        <meta name="description" content="{% block meta_description %}Pizza Rico : Les meilleures pizzas artisanales de Castelsarrasin. Ingrédients frais et pâte maison.{% endblock %}">
-        
+        <title>{% block title %}{{ seo.metaTitle|default('Pizza Rico - Pizzeria Traditionnelle Castelsarrasin') }}{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}{{ seo.metaDescription|default('Véritable pizza napolitaine au feu de bois à 450°C, maturation 72h et ingrédients DOP certifiés depuis 1995 à Castelsarrasin.') }}{% endblock %}">
+        {% if app.environment != 'prod' %}
+            <meta name="robots" content="noindex, nofollow">
+        {% endif %}
+        <link rel="canonical" href="{{ url_canonique() }}">
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍕</text></svg>">
+
         {% block stylesheets %}
-            <!-- Google Fonts -->
+            <!-- Google Fonts & Material Symbols Outlined -->
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-            <!-- Bootstrap 5 CSS CDN -->
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-            <!-- Bootstrap Icons -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-            <!-- Font Awesome -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
         {% endblock %}
+
+        <!-- Injection transparente du Nonce CSP sur les balises de style générées dynamiquement par Tailwind Play CDN -->
+        <script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+            (function() {
+                const origCreate = document.createElement.bind(document);
+                document.createElement = function(tagName, options) {
+                    const el = origCreate(tagName, options);
+                    if (typeof tagName === 'string' && tagName.toLowerCase() === 'style') {
+                        el.setAttribute('nonce', '{{ app.request.attributes.get('csp_nonce') }}');
+                    }
+                    return el;
+                };
+            })();
+        </script>
+
+        <!-- Tailwind CSS Play CDN (avec plugins forms et container-queries) -->
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" nonce="{{ app.request.attributes.get('csp_nonce') }}"></script>
+
+        <!-- Configuration Inline Tailwind — Tokens Officiels "Artisanal Ember & Stone" -->
+        <script id="tailwind-config" nonce="{{ app.request.attributes.get('csp_nonce') }}">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "background": "#121416",
+                            "surface": "#121416",
+                            "surface-dim": "#121416",
+                            "surface-bright": "#38393c",
+                            "surface-container-lowest": "#0c0e10",
+                            "surface-container-low": "#1a1c1e",
+                            "surface-container": "#1e2022",
+                            "surface-container-high": "#282a2c",
+                            "surface-container-highest": "#333537",
+                            "surface-variant": "#333537",
+                            "on-surface": "#e2e2e5",
+                            "on-surface-variant": "#e0bfb7",
+                            "inverse-surface": "#e2e2e5",
+                            "inverse-on-surface": "#2f3133",
+                            "outline": "#a88a83",
+                            "outline-variant": "#59413b",
+                            "surface-tint": "#ffb4a1",
+                            "primary": "#ffb4a1",
+                            "on-primary": "#611200",
+                            "primary-container": "#ef6541",
+                            "on-primary-container": "#550f00",
+                            "inverse-primary": "#ab3514",
+                            "primary-fixed": "#ffdbd2",
+                            "primary-fixed-dim": "#ffb4a1",
+                            "on-primary-fixed": "#3c0800",
+                            "on-primary-fixed-variant": "#891e00",
+                            "secondary": "#eebe7f",
+                            "on-secondary": "#452b00",
+                            "secondary-container": "#63430e",
+                            "on-secondary-container": "#deb073",
+                            "secondary-fixed": "#ffddb3",
+                            "secondary-fixed-dim": "#eebe7f",
+                            "on-secondary-fixed": "#291800",
+                            "on-secondary-fixed-variant": "#60400c",
+                            "tertiary": "#a0d3a5",
+                            "on-tertiary": "#073918",
+                            "tertiary-container": "#6c9c72",
+                            "on-tertiary-container": "#003112",
+                            "tertiary-fixed": "#bcefc0",
+                            "tertiary-fixed-dim": "#a0d3a5",
+                            "on-tertiary-fixed": "#00210a",
+                            "on-tertiary-fixed-variant": "#22502d",
+                            "error": "#ffb4ab",
+                            "on-error": "#690005",
+                            "error-container": "#93000a",
+                            "on-error-container": "#ffdad6",
+                            "on-background": "#e2e2e5"
+                        },
+                        borderRadius: {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "2xl": "1rem",
+                            "3xl": "1.5rem",
+                            "full": "9999px"
+                        },
+                        spacing: {
+                            "gutter": "1.5rem",
+                            "gutter-mobile": "1rem",
+                            "margin": "3rem",
+                            "margin-mobile": "1.25rem",
+                            "space-xs": "0.25rem",
+                            "space-sm": "0.5rem",
+                            "space-md": "1rem",
+                            "space-lg": "1.5rem",
+                            "space-xl": "2.5rem"
+                        },
+                        fontFamily: {
+                            "display": ["Playfair Display", "serif"],
+                            "display-mobile": ["Playfair Display", "serif"],
+                            "headline-lg": ["Playfair Display", "serif"],
+                            "headline-lg-mobile": ["Playfair Display", "serif"],
+                            "headline-md": ["Playfair Display", "serif"],
+                            "headline-sm": ["Playfair Display", "serif"],
+                            "title": ["Plus Jakarta Sans", "sans-serif"],
+                            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+                            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+                            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+                            "label-lg": ["Plus Jakarta Sans", "sans-serif"],
+                            "label-md": ["Plus Jakarta Sans", "sans-serif"],
+                            "label-sm": ["Plus Jakarta Sans", "sans-serif"],
+                            "sans": ["Plus Jakarta Sans", "sans-serif"],
+                            "serif": ["Playfair Display", "serif"]
+                        },
+                        fontSize: {
+                            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.08em", "fontWeight": "700" }],
+                            "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.06em", "fontWeight": "600" }],
+                            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.04em", "fontWeight": "600" }],
+                            "body-sm": ["0.875rem", { "lineHeight": "1.375rem", "fontWeight": "400" }],
+                            "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+                            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }],
+                            "title": ["1.125rem", { "lineHeight": "1.625rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                            "headline-sm": ["1.375rem", { "lineHeight": "1.875rem", "fontWeight": "500" }],
+                            "headline-md": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "500" }],
+                            "headline-lg": ["2.5rem", { "lineHeight": "3rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                            "headline-lg-mobile": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "0em", "fontWeight": "600" }],
+                            "display": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                            "display-mobile": ["2.5rem", { "lineHeight": "3rem", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                        }
+                    }
+                }
+            };
+        </script>
+
+        <!-- Styles personnalisés & Utilitaires Signature Artisanal Ember & Stone -->
+        <style nonce="{{ app.request.attributes.get('csp_nonce') }}">
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 1;
+            }
+            .ember-glow {
+                box-shadow: 0 4px 20px 0 rgba(224, 90, 55, 0.35);
+            }
+            .ember-glow-lg {
+                box-shadow: 0 8px 32px 0 rgba(239, 101, 65, 0.45);
+            }
+            .gold-glow {
+                box-shadow: 0 4px 18px 0 rgba(212, 167, 106, 0.25);
+            }
+            .subtle-hairline {
+                border: 1px solid rgba(212, 167, 106, 0.12);
+            }
+            .custom-card-scrollbar::-webkit-scrollbar {
+                width: 5px;
+            }
+            .custom-card-scrollbar::-webkit-scrollbar-track {
+                background: rgba(18, 20, 22, 0.6);
+                border-radius: 9999px;
+            }
+            .custom-card-scrollbar::-webkit-scrollbar-thumb {
+                background: #eebe7f;
+                border-radius: 9999px;
+            }
+            .custom-card-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: #ef6541;
+            }
+            @keyframes heatPulse {
+                0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 6px rgba(239, 101, 65, 0.7)); }
+                50% { opacity: 1; filter: drop-shadow(0 0 16px rgba(239, 101, 65, 0.95)); }
+            }
+            .flame-active {
+                animation: heatPulse 2s ease-in-out infinite;
+            }
+            .diagonal-clip {
+                clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
+            }
+            @media (max-width: 1024px) {
+                .diagonal-clip {
+                    clip-path: none;
+                }
+            }
+        </style>
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-            <!-- Bootstrap 5 JS Bundle with Popper -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-            <!-- Scripts are now managed in app.js -->
+            {% block importmap %}{{ importmap('app', {nonce: app.request.attributes.get('csp_nonce')}) }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        <header>
-            {% include "Components/navbar/navbar.html.twig" %}
-        </header>
+    <body class="bg-background text-on-surface antialiased selection:bg-primary-container selection:text-white min-h-screen flex flex-col">
+        {% block header %}
+            {{ include('Components/navbar/navbar.html.twig') }}
+        {% endblock %}
 
-        <main class="container py-4">
+        <main class="w-full flex-grow overflow-x-hidden min-h-screen bg-background text-on-surface">
             {% block body %}{% endblock %}
         </main>
 
-        <footer class="pb-4">
-            {% include "Components/footer/footer.html.twig" %}
-        </footer>
-        
-        
-        <!-- Scripts déplacés dans app.js -->
+        {% block footer %}
+            {{ include('Components/footer/footer.html.twig') }}
+        {% endblock %}
     </body>
 </html>
