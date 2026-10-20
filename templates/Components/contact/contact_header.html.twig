@@ -1,0 +1,44 @@
+{# templates/Components/contact/contact_header.html.twig #}
+<!-- Top Atmospheric Header -->
+<section class="relative w-full overflow-hidden bg-surface-container-lowest py-space-xl px-6 lg:px-12 border-b border-outline-variant/10">
+    <!-- Ambient Emberscape Background Glow -->
+    <div class="absolute -top-32 -left-20 w-96 h-96 rounded-full bg-primary-container/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 right-0 w-80 h-80 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg relative z-10">
+        <div class="flex flex-col max-w-3xl">
+            <div class="flex flex-wrap items-center gap-space-sm mb-space-sm">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm uppercase tracking-wider border border-tertiary/20">
+                    <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                    Castelsarrasin • Four au feu de bois
+                </span>
+                <span class="text-outline text-label-sm font-label-sm">•</span>
+                <span class="text-on-surface-variant text-label-sm font-label-sm uppercase tracking-wider">Réservation &amp; Emporter</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-tight">
+                Nous Trouver &amp; <span class="italic text-secondary">Nous Contacter</span>
+            </h1>
+            <p class="mt-space-sm font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                Venez déguster nos pizzas napolitaines cuites au feu de bois à 450°C, au cœur du Tarn-et-Garonne, ou commandez par téléphone pour un retrait croustillant et sans attente.
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md">
+            <div class="p-space-md rounded-xl bg-surface-container-high shadow-md flex items-center gap-space-md border border-outline-variant/10">
+                <div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-[24px]">pin_drop</span>
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Adresse</span>
+                    <span class="font-title text-title text-on-surface">{{ address.street|default('7bis place des Belges') }}</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">{{ address.postalCode|default('82100') }} {{ address.city|default('Castelsarrasin') }}</span>
+                </div>
+            </div>
+            <a class="inline-flex items-center justify-center gap-space-sm px-6 py-4 rounded-xl bg-primary-container text-white font-label-lg text-label-lg font-bold shadow-[0_4px_25px_rgba(239,101,65,0.4)] hover:brightness-110 active:scale-[0.98] transition-all"
+               href="tel:{{ hotline|default('0563321443')|replace({' ': ''}) }}">
+                <span class="material-symbols-outlined text-[22px]">phone_in_talk</span>
+                <span>{{ hotline|default('05 63 32 14 43') }}</span>
+            </a>
+        </div>
+    </div>
+</section>

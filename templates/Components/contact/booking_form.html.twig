@@ -1,0 +1,156 @@
+{# templates/Components/contact/booking_form.html.twig #}
+<!-- Reservation & Event Inquiry Section -->
+<section class="w-full bg-surface-container-low py-space-xl px-6 lg:px-12 relative overflow-hidden border-t border-outline-variant/10">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+            <!-- Left storytelling & perks -->
+            <div class="lg:col-span-5 flex flex-col gap-space-md">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Tables &amp; Grandes Commandes</span>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface leading-tight">
+                    Réserver Votre Table ou <span class="italic text-primary">Un Événement</span>
+                </h2>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Anniversaires, repas d’équipe, célébrations de club ou soirées privées. Nous accueillons les groupes avec des formules dégustation sur mesure ou des plateaux de pizzas napolitaines cuites à la chaîne.
+                </p>
+                <div class="flex flex-col gap-space-sm pt-space-xs">
+                    <div class="flex items-start gap-space-sm">
+                        <div class="w-8 h-8 rounded-full bg-primary-container/20 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="material-symbols-outlined text-[18px]">verified</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-lg text-label-lg text-on-surface font-semibold">Confirmation Express sous 15 minutes</span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant">Par SMS ou appel de confirmation de notre chef de salle durant nos heures de service.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-space-sm">
+                        <div class="w-8 h-8 rounded-full bg-secondary/20 text-secondary flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="material-symbols-outlined text-[18px]">local_pizza</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-lg text-label-lg text-on-surface font-semibold">Privatisation &amp; Formules Groupe</span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant">Pâte maturée 72 heures garantie même pour 40 convives et plus.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-space-md p-space-md rounded-xl bg-surface-container flex items-center gap-space-md shadow-md border border-outline-variant/10">
+                    <span class="material-symbols-outlined text-secondary text-[32px]">support_agent</span>
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Une question urgente pour ce soir ?</p>
+                        <p class="font-title text-title text-on-surface">Appelez directement le <a class="text-secondary hover:underline" href="tel:{{ hotline|default('0563321443')|replace({' ': ''}) }}">{{ hotline|default('05 63 32 14 43') }}</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Reservation Form -->
+            <div class="lg:col-span-7">
+                <div class="p-space-lg lg:p-space-xl rounded-xl bg-surface shadow-2xl relative border border-outline-variant/10">
+                    <div class="flex items-center justify-between pb-space-md mb-space-md border-b border-outline-variant/10">
+                        <div class="flex flex-col">
+                            <h3 class="font-title text-title text-on-surface font-semibold">Formulaire de Réservation &amp; Devis</h3>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant">Sans aucun paiement préalable requis</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm font-semibold border border-tertiary/20">
+                            Réponse en &lt;15 min
+                        </span>
+                    </div>
+
+                    <form class="flex flex-col gap-space-md" id="reservationForm" method="post" action="{{ path('app_contact') }}">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold" for="clientName">Nom complet *</label>
+                                <input class="w-full px-4 py-3 rounded-lg bg-surface-container-high text-on-surface placeholder:text-outline/70 focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm border border-outline-variant/10"
+                                       id="clientName" name="clientName" placeholder="ex: Julien Dupont" required type="text"/>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold" for="clientPhone">Téléphone mobile *</label>
+                                <input class="w-full px-4 py-3 rounded-lg bg-surface-container-high text-on-surface placeholder:text-outline/70 focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm border border-outline-variant/10"
+                                       id="clientPhone" name="clientPhone" placeholder="06 00 00 00 00" required type="tel"/>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold" for="partyGuests">Convives</label>
+                                <select class="w-full px-4 py-3 rounded-lg bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm border border-outline-variant/10"
+                                        id="partyGuests" name="partyGuests">
+                                    <option value="2">2 personnes</option>
+                                    <option value="4" selected>4 personnes</option>
+                                    <option value="6">6 personnes</option>
+                                    <option value="8">8 personnes</option>
+                                    <option value="12">10 à 15 personnes</option>
+                                    <option value="group">Grand Groupe (+20)</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold" for="bookingDate">Date souhaitée *</label>
+                                <input class="w-full px-4 py-3 rounded-lg bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm border border-outline-variant/10"
+                                       id="bookingDate" name="bookingDate" required type="date"/>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold" for="bookingTime">Service</label>
+                                <select class="w-full px-4 py-3 rounded-lg bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm border border-outline-variant/10"
+                                        id="bookingTime" name="bookingTime">
+                                    <option value="12:15">Midi • 12h15</option>
+                                    <option value="12:45">Midi • 12h45</option>
+                                    <option value="19:00">Soir • 19h00</option>
+                                    <option value="19:45">Soir • 19h45</option>
+                                    <option value="20:30" selected>Soir • 20h30</option>
+                                    <option value="21:15">Soir • 21h15</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold" for="specialRequests">Remarques, allergies ou détails de commande</label>
+                            <textarea class="w-full px-4 py-3 rounded-lg bg-surface-container-high text-on-surface placeholder:text-outline/70 focus:outline-none focus:ring-2 focus:ring-secondary text-body-sm font-body-sm resize-none border border-outline-variant/10"
+                                      id="specialRequests" name="specialRequests" placeholder="Intolérance gluten, besoin de chaise haute, souhait de formules pizzas à partager..." rows="3"></textarea>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-xs">
+                            <div class="flex items-center gap-2 text-on-surface-variant text-label-sm font-label-sm">
+                                <span class="material-symbols-outlined text-[18px] text-tertiary">lock</span>
+                                <span>Vos données restent strictement confidentielles</span>
+                            </div>
+                            <button class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-8 py-3.5 rounded-lg bg-primary-container text-white font-label-lg text-label-lg font-bold shadow-[0_4px_20px_rgba(239,101,65,0.35)] hover:bg-primary hover:text-on-primary transition-all active:scale-95"
+                                    id="submitBtn" type="submit">
+                                <span>Envoyer la demande</span>
+                                <span class="material-symbols-outlined text-[18px]">send</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="hidden mt-space-md p-space-md rounded-lg bg-tertiary-container/30 border border-tertiary/30 text-on-surface text-center flex flex-col items-center gap-1"
+                         id="confirmationBanner">
+                        <span class="material-symbols-outlined text-tertiary text-[28px]">task_alt</span>
+                        <p class="font-title text-title text-tertiary font-bold">Demande envoyée avec succès !</p>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">L'équipe de Pizza Rico vous recontacte d'ici 15 minutes pour valider votre table.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nonce-protected CSP Script for Form Interaction -->
+<script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.getElementById('reservationForm');
+        var banner = document.getElementById('confirmationBanner');
+        var btn = document.getElementById('submitBtn');
+
+        if (form && banner && btn) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Transmission...</span>';
+
+                setTimeout(function() {
+                    form.reset();
+                    banner.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Demande envoyée</span><span class="material-symbols-outlined text-[18px]">check</span>';
+                }, 700);
+            });
+        }
+    });
+</script>

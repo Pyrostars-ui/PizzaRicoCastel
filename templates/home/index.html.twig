@@ -1,202 +1,456 @@
-{# Template de la page d'accueil. Hérite de base.html.twig #}
+{# templates/home/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{# Définition du titre de la page #}
-{% block title %}{{ seo.metaTitle|default('Pizza Rico - Castelsarrasin') }}{% endblock %}
-
-{% block meta_description %}{{ seo.metaDescription|default('Pizza Rico : Les meilleures pizzas artisanales de Castelsarrasin. Ingrédients frais et pâte maison.') }}{% endblock %}
+{% block title %}{{ seo.metaTitle|default('Pizza Rico | Pizzeria Napolitaine Artisanale au Feu de Bois - Castelsarrasin') }}{% endblock %}
+{% block meta_description %}{{ seo.metaDescription|default('Pizzeria artisanale à Castelsarrasin depuis 1995. Pizzas napolitaines traditionnelles cuites au feu de bois à 450°C, maturation 72h et ingrédients AOP italiens.') }}{% endblock %}
 
 {% block body %}
-    {# Inclusion de la section Hero (bannière dynamique) #}
-    {{ include('Components/hero/hero.html.twig') }}
+    {# 1. Section Hero Dramatique 450°C avec Shaders, Badges et 4 Compteurs #}
+    {{ include('Components/hero/hero.html.twig', {
+        hero: hero,
+    }) }}
 
-<!-- À propos -->
-    <section class="py-5 bg-dark-surface">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6">
-                    {{ include('Components/about/poster.html.twig') }}
+    {# 2. Barre Flottante Sticky de Filtres et Recherche #}
+    {{ include('Components/menu/sticky_filter_bar.html.twig', {
+        totalCount: (allPizzas is defined and allPizzas|length > 0) ? allPizzas|length : (specialPizzas|default([])|length),
+        specialPizzas: specialPizzas|default([]),
+    }) }}
+
+    {# 3. Showcase des 4 Architectures de Cartes Radicales #}
+    <main class="max-w-7xl mx-auto px-6 lg:px-12 py-16 space-y-24">
+        <!-- En-tête du Catalogue -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-outline-variant/30 pb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-primary-container flame-active" aria-hidden="true"></span>
+                    <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase font-bold">Catalogues &amp; Architectures Sensorielles</span>
                 </div>
-                <div class="col-lg-6">
-                    <div class="about-content ps-lg-4">
-                        <h6 class="text-secondary text-uppercase fw-bold mb-3">Découvrez notre univers</h6>
-                        <h2 class="display-5 fw-bold mb-4 text-white">{{ about.title|default('Notre Histoire') }}</h2>
-                        <div class="text-white-50 lead mb-4">
-                            {% if about %}
-                                {{ about.content|nl2br }}
-                            {% else %}
-                                <p>Fondée en 1995 par la famille Rico, notre pizzeria s'est donnée pour mission de faire découvrir les saveurs authentiques de l'Italie à Paris.</p>
-                                <p>Nos pizzas sont préparées à la main avec des ingrédients frais et de qualité, importés directement d'Italie ou sélectionnés chez des producteurs locaux.</p>
-                            {% endif %}
-                        </div>
-                        <div class="row g-4 mb-5">
-                            <div class="col-sm-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0 bg-primary-subtle p-3 rounded-circle me-3">
-                                        <i class="bi bi-fire text-primary h4 mb-0"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0 text-white fw-bold">Cuisson Traditionnelle</h6>
-                                        <small class="text-white-50">Four à bois authentique</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0 bg-success-subtle p-3 rounded-circle me-3">
-                                        <i class="bi bi-patch-check text-success h4 mb-0"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0 text-white fw-bold">Ingrédients Frais</h6>
-                                        <small class="text-white-50">Sélection locale</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="{{ path('app_pizzas') }}" class="btn btn-outline-primary btn-lg px-4 rounded-pill">
-                            Découvrir notre carte <i class="bi bi-arrow-right ms-2"></i>
-                        </a>
-                    </div>
-                </div>
+                <h2 class="font-display text-headline-lg font-semibold text-on-surface tracking-tight">Nos Créations au Feu de Bois</h2>
+            </div>
+            <div class="text-right mt-4 md:mt-0">
+                <span class="inline-block px-3 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary font-label-sm text-label-sm">
+                    Sole en pierre naturelle • 450°C
+                </span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">
+                    Découvrez notre menu réinventé à travers 4 expériences interactives et visuelles immersives.
+                </p>
             </div>
         </div>
-    </section>
 
-    <!-- Nos Spécialités -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title mb-5">Nos Spécialités</h2>
-            <div class="row">
-                {# Vérifie s'il y a des pizzas spéciales à afficher #}
-                {% if specialPizzas is empty %}
-                    <div class="col-12 text-center">
-                        <p class="lead">Nos spécialités seront bientôt disponibles !</p>
-                    </div>
-                {% else %}
-                    {# Boucle sur les pizzas spéciales pour les afficher sous forme de cartes #}
-                    {% for pizza in specialPizzas %}
-                        <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                            <div class="menu-card h-100">
-                                {% if pizza.image %}
-                                    <img src="{{ asset('images/pizzas/' ~ pizza.image) }}" class="card-img-top" alt="{{ pizza.name }}">
-                                {% else %}
-                                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" class="card-img-top" alt="{{ pizza.name }}">
-                                {% endif %}
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ pizza.name }}</h5>
-                                    <p class="ingredients flex-grow-1">{{ pizza.ingredient }}</p>
-                                    <div class="mb-2">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="text-muted small">Petite</span>
-                                            <span class="dotted-line flex-grow-1 mx-2"></span>
-                                            <span class="price">{{ pizza.priceMedium|number_format(2, ',', '') }} €</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="text-muted small">Grande</span>
-                                            <span class="dotted-line flex-grow-1 mx-2"></span>
-                                            <span class="price">{{ pizza.priceLarge|number_format(2, ',', '') }} €</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        </div>
-    </section>
+        {# Préparation des Entités Pizzas pour les 4 Styles #}
+        {% set pTartufata = pizzasBySlug['la-tartufata-di-bosco'] ?? specialPizzas[0] ?? allPizzas[0] ?? null %}
+        {% set pReine = pizzasBySlug['reine-d-italie-supreme'] ?? specialPizzas[1] ?? allPizzas[1] ?? null %}
+        {% set pMargherita = pizzasBySlug['margherita-verace-stg'] ?? specialPizzas[2] ?? allPizzas[2] ?? null %}
+        {% set pBurrata = pizzasBySlug['burrata-pesto-genovese'] ?? specialPizzas[3] ?? allPizzas[3] ?? null %}
+        {% set pQuattro = pizzasBySlug['quattro-formaggi-nobile'] ?? specialPizzas[4] ?? allPizzas[4] ?? null %}
+        {% set pParma = pizzasBySlug['parma-stracciatella'] ?? specialPizzas[5] ?? allPizzas[5] ?? null %}
+        {% set pDiavola = pizzasBySlug['diavola-fumee-calabra'] ?? specialPizzas[6] ?? allPizzas[6] ?? null %}
 
-    <!-- Témoignages -->
-    {# <section class="py-5">
-        <div class="container">
-            <h2 class="section-title mb-5">Ce que disent nos clients</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="testimonial">
-                        <div class="quote">"Les meilleures pizzas de Paris ! La pâte est parfaite et les ingrédients sont toujours frais. Je recommande vivement la Napolitaine."</div>
-                        <div class="author">Sophie L.</div>
-                        <div class="stars text-warning">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="testimonial">
-                        <div class="quote">"Service impeccable et livraison rapide. Les pizzas arrivent toujours chaudes et délicieuses. Mon endroit préféré pour commander !"</div>
-                        <div class="author">Thomas M.</div>
-                        <div class="stars text-warning">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-half"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="testimonial">
-                        <div class="quote">"Ambiance chaleureuse et familiale. On se sent comme en Italie ! Les desserts maison sont aussi à tomber. Je recommande le tiramisu."</div>
-                        <div class="author">Julie D.</div>
-                        <div class="stars text-warning">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> #}
+        <!-- STYLE 01 : Masterpiece Interactive & Tactile -->
+        {% if pTartufata %}
+            {{ include('Components/cards/card_style_01.html.twig', {
+                pizza: pTartufata,
+            }) }}
+        {% endif %}
 
-    <!-- Call to Action -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2>Envie d'une pizza délicieuse ?</h2>
-                    <p class="lead">Venez nous rendre visite pour déguster nos délicieuses pizzas !</p>
-                    <div class="text-center mt-4">
-                        <a href="{{ path('app_pizzas') }}" class="btn btn-primary btn-lg"><i class="bi bi-journal-text me-2"></i>Carte de nos pizzas</a>
+        <!-- STYLE 02 : Storyboard Défilant & Cuisson -->
+        {% if pReine or pMargherita %}
+            <section class="space-y-6">
+                <div class="flex items-center justify-between border-l-4 border-secondary pl-4">
+                    <div>
+                        <span class="font-label-sm text-label-sm text-secondary tracking-wider uppercase font-semibold">Architecture Style 02</span>
+                        <h3 class="font-display text-headline-md font-semibold text-on-surface">Cartes à Défilement Vertical Interne &amp; Storyboard</h3>
                     </div>
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant text-label-sm font-label-sm">
+                        <span class="material-symbols-outlined text-sm text-secondary" aria-hidden="true">swipe_vertical</span> Défilez dans la carte
+                    </span>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Actualités -->
-    {% if news is not empty %}
-    <section class="py-5 bg-dark-surface">
-        <div class="container">
-            <h2 class="section-title mb-5 text-white">Nos Actualités</h2>
-            <div class="row">
-                {% for item in news %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 bg-dark text-white border-secondary shadow-sm hover-lift">
-                            {% if item.image %}
-                                <img src="{{ asset('images/news/' ~ item.image) }}" class="card-img-top" alt="{{ item.title }}" style="height: 220px; object-fit: cover;">
-                            {% endif %}
-                            <div class="card-body d-flex flex-column">
-                                <div class="mb-2">
-                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3">Actu</span>
-                                    <small class="text-white-50 ms-2">{{ item.createdAt|date('d/m/Y') }}</small>
-                                </div>
-                                <h5 class="card-title fw-bold mt-2">{{ item.title }}</h5>
-                                <p class="card-text text-white-50 flex-grow-1">{{ item.content|slice(0, 120) ~ '...' }}</p>
-                                <a href="{{ path('app_news_detail', {slug: item.slug}) }}" class="btn btn-link text-primary p-0 mt-3 text-decoration-none fw-bold">
-                                    Lire la suite <i class="bi bi-arrow-right ms-1"></i>
-                                </a>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {% if pReine %}
+                        {{ include('Components/cards/card_style_02.html.twig', {
+                            pizza: pReine,
+                            cardKey: 'a',
+                            subtitle: 'Recette Royale',
+                            badgeTag: 'DOP & Rovagnati',
+                            categoryFilter: 'tomate',
+                            step1Text: 'Saisie en 80 secondes à 450°C sur sole de pierre ponce pour fixer le parfum herbacé du jambon blanc rôti sans dessécher sa fibre tendre.',
+                            step3Text: 'À savourer avec un filet d\'huile d\'olive extra-vierge toscane et une pincée d\'origan des Pouilles séché à l\'ombre.',
+                        }) }}
+                    {% endif %}
+
+                    {% if pMargherita %}
+                        {{ include('Components/cards/card_style_02.html.twig', {
+                            pizza: pMargherita,
+                            cardKey: 'b',
+                            subtitle: 'L\'Origine Absolue',
+                            badgeTag: '100% Végétarienne',
+                            categoryFilter: 'tomate veggie',
+                            step1Text: 'Seulement 4 ingrédients fondamentaux : farine 00, levure mère, sel de mer de Trapani et eau pure du Tarn. Étirée exclusivement à la main selon la technique du slap.',
+                            step3Text: 'Feuilles de basilic frais jetées sur la pâte en fin de cuisson, arrosées d\'un trait continu d\'huile d\'olive en spirale dorée.',
+                        }) }}
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- STYLE 03 : Split-Layout 50/50 & Fiche Gastronomique -->
+        {% if pBurrata or pQuattro %}
+            <section class="space-y-6">
+                <div class="flex items-center justify-between border-l-4 border-tertiary pl-4">
+                    <div>
+                        <span class="font-label-sm text-label-sm text-tertiary tracking-wider uppercase font-semibold">Architecture Style 03</span>
+                        <h3 class="font-display text-headline-md font-semibold text-on-surface">Split-Layout Architecturé &amp; Fiche Gastronomique</h3>
                     </div>
-                {% endfor %}
-            </div>
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant text-label-sm font-label-sm">
+                        <span class="material-symbols-outlined text-sm text-tertiary" aria-hidden="true">dashboard_customize</span> 50/50 Plein-Champ &amp; Données
+                    </span>
+                </div>
+
+                <div class="space-y-8">
+                    {% if pBurrata %}
+                        {{ include('Components/cards/card_style_03.html.twig', {
+                            pizza: pBurrata,
+                            index: 1,
+                            refNumber: 'Référence Création • N°05',
+                            categoryFilter: 'tomate veggie',
+                            stamp1: 'Pouilles IGP • Burrata 125g',
+                            stamp1Icon: 'verified',
+                            stamp2: 'Basilic Génois Frais',
+                            stamp2Icon: 'spa',
+                            box1Label: 'Base Coulis',
+                            box1Val: 'Tomate AOP',
+                            box2Label: 'Cœur Frais',
+                            box2Val: 'Burrata 125g',
+                            box3Label: 'Profil Digestibilité',
+                            box3Val: 'Légère 72h',
+                        }) }}
+                    {% endif %}
+
+                    {% if pQuattro %}
+                        {{ include('Components/cards/card_style_03.html.twig', {
+                            pizza: pQuattro,
+                            index: 2,
+                            refNumber: 'Référence Création • N°04',
+                            categoryFilter: 'creme',
+                            stamp1: 'Miel Floral du Tarn',
+                            stamp1Icon: 'hive',
+                            stamp2: '4 Grands Fromages AOP',
+                            stamp2Icon: 'local_pizza',
+                            box1Label: 'Base',
+                            box1Val: 'Crème & Fior',
+                            box2Label: 'Touche Sucrée',
+                            box2Val: 'Miel du Tarn',
+                            box3Label: 'Saveur',
+                            box3Val: 'Douce-piquante',
+                        }) }}
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- STYLE 04 : Expérimental Typographique & Minimalisme Radical -->
+        {% if pParma or pDiavola %}
+            <section class="space-y-6">
+                <div class="flex items-center justify-between border-l-4 border-error-container pl-4">
+                    <div>
+                        <span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-semibold">Architecture Style 04</span>
+                        <h3 class="font-display text-headline-md font-semibold text-on-surface">Expérimental Typographique &amp; Minimalisme Radical</h3>
+                    </div>
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant text-label-sm font-label-sm">
+                        <span class="material-symbols-outlined text-sm text-primary" aria-hidden="true">format_paint</span> Déconstruction &amp; Typo Géante
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {% if pParma %}
+                        {{ include('Components/cards/card_style_04.html.twig', {
+                            pizza: pParma,
+                            cardKey: 'a',
+                            tagEdition: 'Parma 18M',
+                            stageBadge: 'Sole de brique volcanique',
+                            categoryFilter: 'tomate',
+                        }) }}
+                    {% endif %}
+
+                    {% if pDiavola %}
+                        {{ include('Components/cards/card_style_04.html.twig', {
+                            pizza: pDiavola,
+                            cardKey: 'b',
+                            tagEdition: 'Piment Calabre & Spianata',
+                            stageBadge: 'Huile pimentée macérée 30j',
+                            categoryFilter: 'tomate',
+                        }) }}
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+    </main>
+
+    {# 4. Section Les 3 Piliers de la Tradition #}
+    {{ include('Components/sections/pillars.html.twig', {about: about}) }}
+
+    {# 5. Section Contact & Accès Rapide #}
+    {{ include('Components/sections/quick_contact.html.twig') }}
+
+    <!-- Notification Toast Flottant lors de l'ajout au panier -->
+    <div id="cartToast"
+         class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-3.5 rounded-xl bg-surface-container-high border border-secondary/40 text-on-surface shadow-2xl backdrop-blur-md">
+        <span class="material-symbols-outlined text-secondary text-2xl">check_circle</span>
+        <div>
+            <span class="font-title text-title text-white block text-sm font-semibold" id="cartToastTitle">Pizza ajoutée au panier !</span>
+            <span class="text-xs text-on-surface-variant" id="cartToastSub">Retrait au fournil en 15-20 min</span>
         </div>
-    </section>
-    {% endif %}
+    </div>
+
+    <!-- Scripts Interactifs des 4 Styles de Cartes & Panier (Conforme CSP Nonce) -->
+    <script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+        /* ---------------------------------------------------- */
+        /* PANIER & NOTIFICATION TOAST                         */
+        /* ---------------------------------------------------- */
+        let currentCartCount = 0;
+
+        try {
+            const storedCart = JSON.parse(localStorage.getItem('pizza_rico_cart') || '[]');
+            currentCartCount = Array.isArray(storedCart) ? storedCart.reduce((acc, item) => acc + (item.qty || 1), 0) : 0;
+            const counter = document.getElementById('cartCount');
+            if (counter) counter.textContent = currentCartCount;
+        } catch (e) {
+            currentCartCount = 0;
+        }
+
+        function addToCart(pizzaName, price, size) {
+            // Parser le prix (peut être "14.50€", "14,50 €", ou nombre)
+            let parsedPrice = typeof price === "number" ? price : parseFloat(String(price).replace(/[^0-9.,]/g, "").replace(",", "."));
+            if (isNaN(parsedPrice)) parsedPrice = 0;
+            currentCartCount++;
+            const counter = document.getElementById('cartCount');
+            if (counter) {
+                counter.textContent = currentCartCount;
+                counter.classList.add('scale-125');
+                setTimeout(() => counter.classList.remove('scale-125'), 200);
+            }
+
+            try {
+                const cart = JSON.parse(localStorage.getItem('pizza_rico_cart') || '[]');
+                cart.push({
+                    name: pizzaName,
+                    price: parsedPrice,
+                    size: size || '29cm',
+                    qty: 1,
+                    addedAt: new Date().toISOString()
+                });
+                localStorage.setItem('pizza_rico_cart', JSON.stringify(cart));
+            } catch (e) {
+                // local storage fail-safe
+            }
+
+            // Notification Toast
+            const toast = document.getElementById('cartToast');
+            const toastTitle = document.getElementById('cartToastTitle');
+            const toastSub = document.getElementById('cartToastSub');
+            if (toast && toastTitle) {
+                toastTitle.textContent = pizzaName + ' ajoutée !';
+                if (toastSub && price) {
+                    toastSub.textContent = (size ? size + " • " : "") + parsedPrice.toFixed(2).replace(".", ",") + " € • Prêt en 15-20 min";
+                }
+                toast.classList.remove('translate-y-24', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-24', 'opacity-0');
+                }, 2800);
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* STYLE 01 INTERACTION LOGIC (Onglets & Tailles)       */
+        /* ---------------------------------------------------- */
+        function switchStyle1Tab(tab) {
+            const tabs = ['visual', 'recipe', 'profile'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('tab-' + t + '-btn');
+                const content = document.getElementById('tab-' + t + '-content');
+                if (btn && content) {
+                    if (t === tab) {
+                        btn.classList.add('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                        btn.classList.remove('text-on-surface-variant');
+                        content.classList.remove('hidden');
+                    } else {
+                        btn.classList.remove('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                        btn.classList.add('text-on-surface-variant');
+                        content.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        function setStyle1Size(size, price, diam) {
+            const btnSmall = document.getElementById('s1-btn-small');
+            const btnLarge = document.getElementById('s1-btn-large');
+            const priceDisplay = document.getElementById('style1-price');
+            const ctaPrice = document.getElementById('style1-cta-price');
+            const diamLabel = document.getElementById('style1-diameter-label');
+            const dialIndicator = document.getElementById('style1-dial-indicator');
+
+            if (priceDisplay) priceDisplay.textContent = price;
+            if (ctaPrice) ctaPrice.textContent = price;
+            if (diamLabel) diamLabel.textContent = 'Diamètre sélectionné: ' + diam;
+
+            if (size === 'small') {
+                if (dialIndicator) dialIndicator.textContent = 'Classique Napolitaine (29cm)';
+                if (btnSmall) {
+                    btnSmall.classList.add('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                    btnSmall.classList.remove('text-on-surface-variant');
+                    const ic = btnSmall.querySelector('span.material-symbols-outlined');
+                    if (ic) ic.textContent = 'radio_button_checked';
+                }
+                if (btnLarge) {
+                    btnLarge.classList.remove('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                    btnLarge.classList.add('text-on-surface-variant');
+                    const ic = btnLarge.querySelector('span.material-symbols-outlined');
+                    if (ic) ic.textContent = 'radio_button_unchecked';
+                }
+            } else {
+                if (dialIndicator) dialIndicator.textContent = 'Généreuse Familiale (33cm)';
+                if (btnLarge) {
+                    btnLarge.classList.add('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                    btnLarge.classList.remove('text-on-surface-variant');
+                    const ic = btnLarge.querySelector('span.material-symbols-outlined');
+                    if (ic) ic.textContent = 'radio_button_checked';
+                }
+                if (btnSmall) {
+                    btnSmall.classList.remove('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                    btnSmall.classList.add('text-on-surface-variant');
+                    const ic = btnSmall.querySelector('span.material-symbols-outlined');
+                    if (ic) ic.textContent = 'radio_button_unchecked';
+                }
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* STYLE 02 INTERACTION LOGIC (Scroll Cards)           */
+        /* ---------------------------------------------------- */
+        function selectScrollSize(cardKey, size, price, btn) {
+            const priceEl = document.getElementById('price-scroll-' + cardKey);
+            if (priceEl) priceEl.textContent = price;
+
+            const allButtons = document.querySelectorAll('.size-btn-s' + cardKey);
+            allButtons.forEach(b => {
+                b.classList.remove('bg-surface-bright', 'text-secondary', 'font-semibold');
+                b.classList.add('text-on-surface-variant');
+            });
+            if (btn) {
+                btn.classList.add('bg-surface-bright', 'text-secondary', 'font-semibold');
+                btn.classList.remove('text-on-surface-variant');
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* STYLE 03 INTERACTION LOGIC (Split Layout Cards)     */
+        /* ---------------------------------------------------- */
+        function selectSplitSize(index, size, price, btn) {
+            const splitPrice = document.getElementById('split-price-' + index);
+            const splitCta = document.getElementById('split-cta-price-' + index);
+            if (splitPrice) splitPrice.textContent = price;
+            if (splitCta) splitCta.textContent = price;
+
+            const allButtons = document.querySelectorAll('.split-btn-' + index);
+            allButtons.forEach(b => {
+                b.classList.remove('bg-secondary', 'text-surface-container-lowest');
+                b.classList.add('text-on-surface-variant');
+            });
+            if (btn) {
+                btn.classList.add('bg-secondary', 'text-surface-container-lowest');
+                btn.classList.remove('text-on-surface-variant');
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* STYLE 04 INTERACTION LOGIC (Radical Typo Cards)      */
+        /* ---------------------------------------------------- */
+        function selectRadSize(cardKey, size, price, watermark, btn) {
+            const radPrice = document.getElementById('rad-price-' + cardKey);
+            if (radPrice) radPrice.textContent = price;
+
+            const wm = document.getElementById('rad-watermark-' + cardKey);
+            if (wm) wm.textContent = watermark;
+
+            const allButtons = document.querySelectorAll('.rad-btn-' + cardKey);
+            allButtons.forEach(b => {
+                b.classList.remove('bg-secondary', 'bg-primary-container', 'text-surface-container-lowest', 'text-white');
+                b.classList.add('text-on-surface-variant');
+            });
+            if (btn) {
+                if (cardKey === 'a') {
+                    btn.classList.add('bg-secondary', 'text-surface-container-lowest');
+                } else {
+                    btn.classList.add('bg-primary-container', 'text-white');
+                }
+                btn.classList.remove('text-on-surface-variant');
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* EVENT DELEGATION (CSP-compliant, no inline handlers) */
+        /* ---------------------------------------------------- */
+        document.addEventListener('click', function(e) {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+            const action = target.getAttribute('data-action');
+
+            if (action === 'switch-tab') {
+                switchStyle1Tab(target.getAttribute('data-tab'));
+            } else if (action === 'set-size') {
+                setStyle1Size(target.getAttribute('data-size'), target.getAttribute('data-price'), target.getAttribute('data-diameter'));
+                // Update button states
+                const card = target.closest('section');
+                if (card) {
+                    card.querySelectorAll('[data-action="set-size"]').forEach(b => {
+                        b.classList.remove('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                        b.classList.add('text-on-surface-variant');
+                        const ic = b.querySelector('span.material-symbols-outlined');
+                        if (ic) ic.textContent = 'radio_button_unchecked';
+                    });
+                    target.classList.add('bg-secondary', 'text-surface-container-lowest', 'shadow');
+                    target.classList.remove('text-on-surface-variant');
+                    const ic = target.querySelector('span.material-symbols-outlined');
+                    if (ic) ic.textContent = 'radio_button_checked';
+                }
+            } else if (action === 'scroll-size') {
+                selectScrollSize(target.getAttribute('data-key'), target.getAttribute('data-size'), target.getAttribute('data-price'), target);
+            } else if (action === 'split-size') {
+                selectSplitSize(parseInt(target.getAttribute('data-index'), 10), target.getAttribute('data-size'), target.getAttribute('data-price'), target);
+            } else if (action === 'rad-size') {
+                selectRadSize(target.getAttribute('data-key'), target.getAttribute('data-size'), target.getAttribute('data-price'), target.getAttribute('data-watermark'), target);
+            } else if (action === "add-to-cart") {
+                const name = target.getAttribute("data-name");
+                const priceSource = target.getAttribute("data-price-source");
+                const defaultPrice = target.getAttribute("data-default-price");
+                const explicitPrice = target.getAttribute("data-explicit-price");
+                let price = defaultPrice;
+                if (priceSource) {
+                    const el = document.getElementById(priceSource);
+                    if (el) price = el.textContent;
+                }
+                // Détecter la taille sélectionnée dans la carte parente
+                let size = "";
+                const parentCard = target.closest("section, article, .menu-item-card");
+                if (parentCard) {
+                    const activeSizeBtn = parentCard.querySelector("[data-action=\"set-size\"].bg-secondary, [data-action=\"scroll-size\"].bg-surface-bright, [data-action=\"split-size\"].bg-secondary, [data-action=\"rad-size\"].bg-secondary, [data-action=\"rad-size\"].bg-primary-container, .size-btn.active");
+                    if (activeSizeBtn) {
+                        const btnText = activeSizeBtn.textContent.trim();
+                        if (btnText.includes("33") || btnText.includes("Grande") || btnText.includes("33cm")) size = "33cm";
+                        else if (btnText.includes("29") || btnText.includes("Petite") || btnText.includes("29cm")) size = "29cm";
+                    }
+                }
+                if (explicitPrice) {
+                    addToCart(name, parseFloat(explicitPrice), size);
+                } else {
+                    addToCart(name, price, size);
+                }
+            }
+        });
+    </script>
 {% endblock %}

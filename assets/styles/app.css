@@ -62,7 +62,6 @@ html, body {
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
     color: var(--text-light);
     background-color: var(--dark-bg);
     /* Suppression de la transition globale sur body qui tue les perfs au scroll */
@@ -129,9 +128,7 @@ body.menu-open {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-body {
-    padding-top: 80px; /* Espace pour la navbar fixe */
-}
+
 
 /* Navbar */
 .navbar {

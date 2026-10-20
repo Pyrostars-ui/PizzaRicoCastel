@@ -1,0 +1,48 @@
+{# templates/Components/about/hero_savoir_faire.html.twig #}
+<!-- Storytelling Hero with Atmospheric Ember Scrim -->
+<section class="relative w-full -mt-20 overflow-hidden bg-surface-container-lowest">
+    <div class="absolute inset-0 z-0">
+        <div class="w-full h-full bg-cover bg-center opacity-40 scale-105 transition-transform duration-1000 ease-out"
+             style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDrtHITtU8SZ2QNeI_H2QJDK5v7j_KKX1nBOO6dgaX5YjVqBi77SYZsqdVfGuunA7vxewBi2GodmFziL6lXWlvbLHfeHPLK9mrQbCGjlx6gaIPFJV9pBmqaaCXrYIztrW6cQzmL_ugTloYToGHAfmi0QtEKo85o2z5smpnZ4fDu-oaGFpqjTUPVrslC26N7JbBpr_nPWz_m-kf0-yqEUW3CQEcFtrXO_JPQEfX5J3Zp-_EHLD6-gbGGg');">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-surface-container-lowest/70"></div>
+        <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary-container/15 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full bg-secondary-container/20 blur-[120px] pointer-events-none"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-40 pb-24 lg:pt-48 lg:pb-36 flex flex-col items-start">
+        <div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high/80 text-secondary mb-space-lg shadow-sm border border-secondary/20">
+            <span class="material-symbols-outlined text-[16px]">local_fire_department</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-fixed">Héritage &amp; Passion Artisanale</span>
+        </div>
+        <div class="max-w-4xl">
+            <h1 class="font-display text-display text-on-surface leading-[1.08] tracking-tight mb-space-md">
+                L’Artisanat Napolitain au Cœur du <span class="italic font-normal text-secondary underline decoration-primary-container/40 underline-offset-8">Tarn-et-Garonne</span>.
+            </h1>
+            <div class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed mt-space-md">
+                {% if about and about.content %}
+                    <p>{{ about.content|nl2br }}</p>
+                {% else %}
+                    <p>Depuis 1995, la flamme de Pizza Rico ne s'est jamais éteinte. Entre tradition transmise au creux de la main, minéralité de la pierre de lave et alchimie d’une fermentation de 72 heures, nous perpétuons à Castelsarrasin la véritable âme de la pizza napolitaine.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-space-xl grid grid-cols-2 md:grid-cols-4 gap-space-md w-full pt-space-lg">
+            <div class="p-space-md rounded-xl bg-surface-container-low/70 border border-outline-variant/10 shadow-sm flex flex-col">
+                <span class="font-headline-lg text-headline-lg text-primary leading-none">485°C</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mt-space-xs">Cuisson au Bois de Hêtre</span>
+            </div>
+            <div class="p-space-md rounded-xl bg-surface-container-low/70 border border-outline-variant/10 shadow-sm flex flex-col">
+                <span class="font-headline-lg text-headline-lg text-secondary leading-none">72h</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mt-space-xs">Fermentation Lente</span>
+            </div>
+            <div class="p-space-md rounded-xl bg-surface-container-low/70 border border-outline-variant/10 shadow-sm flex flex-col">
+                <span class="font-headline-lg text-headline-lg text-tertiary leading-none">68%</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mt-space-xs">Hydratation Parfaite</span>
+            </div>
+            <div class="p-space-md rounded-xl bg-surface-container-low/70 border border-outline-variant/10 shadow-sm flex flex-col">
+                <span class="font-headline-lg text-headline-lg text-on-surface leading-none">100%</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mt-space-xs">Pétrissage &amp; Façonnage Main</span>
+            </div>
+        </div>
+    </div>
+</section>

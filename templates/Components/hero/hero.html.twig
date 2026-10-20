@@ -1,22 +1,174 @@
-<!-- Hero Section -->
-{% if hero is defined and hero is not null %}
-    <section class="hero text-center"{% if hero.background %} style="--hero-bg: url('{{ asset('images/hero/' ~ hero.background) }}');"{% endif %}>
-        <div class="container">
-            <h1>{{ hero.title }}</h1>
-            <p>{{ hero.subTitle }}</p>
-            <div class="mt-4">
-                <a href="{{ path('app_pizzas') }}" class="btn btn-primary me-2"><i class="bi bi-journal-text me-2"></i>Carte de nos pizzas</a>
-            </div>
-        </div>
-    </section>
+{# templates/Components/hero/hero.html.twig #}
+{# Section Hero Dramatique 450°C — Thème Artisanal Ember & Stone #}
+
+{% set heroTitle = hero ? hero.title : "L'Art de la Véritable Pizza Napolitaine au Feu de Bois" %}
+{% set heroSubTitle = hero ? hero.subTitle : "Pâte artisanale maturée 72h & ingrédients frais importés d'Italie depuis 1995 à Castelsarrasin. Une alchimie pure de passion et de tradition." %}
+
+{% if hero and hero.background %}
+    {% set heroBgUrl = hero.background starts with 'http' ? hero.background : asset('images/hero/' ~ hero.background) %}
 {% else %}
-    <section class="hero text-center">
-        <div class="container">
-            <h1>Bienvenue chez Pizza Rico</h1>
-            <p>Au coeur de Castelsarrasin depuis 1995</p>
-            <div class="mt-4">
-                <a href="{{ path('app_pizzas') }}" class="btn btn-primary me-2"><i class="bi bi-journal-text me-2"></i>Carte de nos pizzas</a>
+    {% set heroBgUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDiWvVIoC2OMEQhN9LClhU0BFDmt9LYYIk9Vi6k3RytDB3VsftMoKE7X3K2nwXEXihOT_K07uoHpaQSEaNGbI6PfvnygrWW24fAHkaLd11cUjKjrwSwIGUI3GoE_R47QTaiOwQIXPvbmzC0BatCM9bLuB0pqlLohr4aIy5j9J-qAH8geHrZWAzftzR1YLwfHDIM05Hc9T-ohTALQpTu955TXFeCqUHvBAaq85SfiW7AhGq5sI215It8yj866dVi_Winic1QImpBemtx' %}
+{% endif %}
+
+<section class="relative min-h-[850px] lg:min-h-[901px] flex items-center justify-center overflow-hidden bg-surface-container-lowest" aria-label="Présentation Pizza Rico">
+    <!-- Shaders d'Ambiance Volcanique & Halo de Braise -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <!-- Halo Braise Rougeoyant (Bouche du fourneau) -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] sm:w-[750px] h-[450px] sm:h-[550px] bg-primary-container/15 blur-[120px] rounded-full"></div>
+        <!-- Halo Or Croûte (Sole réfractaire) -->
+        <div class="absolute bottom-10 left-5 sm:left-10 w-[350px] sm:w-[480px] h-[300px] sm:h-[380px] bg-secondary/10 blur-[100px] rounded-full"></div>
+        <!-- Étincelle Volcanique Basse Droite -->
+        <div class="absolute -bottom-10 right-5 sm:right-10 w-[300px] h-[300px] bg-primary/10 blur-[90px] rounded-full"></div>
+        <!-- Image de Fond du Fournil avec Fondu Mat -->
+        <div class="absolute inset-0 w-full h-full opacity-30 lg:opacity-35 mix-blend-screen bg-cover bg-center bg-no-repeat transition-opacity duration-700"
+             style="background-image: url('{{ heroBgUrl }}');"></div>
+        <!-- Vignette Dégradé Cinématographique -->
+        <div class="absolute inset-0 bg-gradient-to-t from-background via-surface-container-lowest/80 to-transparent"></div>
+    </div>
+
+    <!-- Conteneur de Contenu Centré -->
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24 text-center flex flex-col items-center">
+        <!-- 1. Cluster des 3 Badges Traditionnels -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-6 sm:mb-8" role="list">
+            <!-- Badge 1 : Four à bois 450°C avec flamme pulsante -->
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-container/20 border border-primary-container/40 text-primary-fixed font-label-sm text-label-sm flame-active shadow-sm" role="listitem">
+                <span class="material-symbols-outlined text-sm text-primary-container" aria-hidden="true">local_fire_department</span>
+                <span class="font-medium tracking-wide">Four au feu de bois 450°C</span>
+            </div>
+            <!-- Badge 2 : Farine bio T00 -->
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary/15 border border-secondary/30 text-secondary font-label-sm text-label-sm shadow-sm" role="listitem">
+                <span class="material-symbols-outlined text-sm text-secondary" aria-hidden="true">eco</span>
+                <span class="font-medium tracking-wide">Farine bio T00</span>
+            </div>
+            <!-- Badge 3 : Depuis 1995 -->
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/40 text-on-surface-variant font-label-sm text-label-sm shadow-sm" role="listitem">
+                <span class="material-symbols-outlined text-sm text-secondary" aria-hidden="true">verified</span>
+                <span class="font-medium tracking-wide">Depuis 1995 • Castelsarrasin</span>
             </div>
         </div>
-    </section>
-{% endif %}
+
+        <!-- 2. Titre H1 Éditorial & Sous-titre -->
+        <h1 class="font-display text-display-mobile sm:text-headline-lg md:text-display font-semibold text-on-surface max-w-4xl tracking-tight mb-6 leading-tight">
+            {{ heroTitle }}
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10 text-balance leading-relaxed">
+            {{ heroSubTitle }}
+        </p>
+
+        <!-- 3. Hub d'Actions & CTAs -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto mb-14 lg:mb-16">
+            <!-- CTA Primaire : Commander en Ligne -->
+            <a href="#carte"
+               class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-primary-container text-white font-label-lg text-label-lg font-semibold ember-glow hover:bg-inverse-primary hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2.5">
+                <span class="material-symbols-outlined text-lg" aria-hidden="true">local_pizza</span>
+                <span>Commander en ligne</span>
+                <span class="material-symbols-outlined text-base" aria-hidden="true">arrow_forward</span>
+            </a>
+
+            <!-- CTA Secondaire : Explorer la Carte -->
+            <a href="{{ path('app_pizzas') }}"
+               class="w-full sm:w-auto px-7 py-3.5 rounded-lg border border-secondary text-secondary font-label-lg text-label-lg font-semibold hover:bg-secondary/10 hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-lg" aria-hidden="true">restaurant_menu</span>
+                <span>Explorer la carte</span>
+            </a>
+
+            <!-- Hotline Directe : Téléphone -->
+            <a href="tel:0563321443"
+               class="w-full sm:w-auto px-5 py-3.5 rounded-lg border border-outline-variant/40 bg-surface-container/60 hover:bg-surface-container-high text-on-surface hover:text-secondary hover:border-secondary/40 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 font-label-md text-label-md">
+                <span class="material-symbols-outlined text-secondary text-base" aria-hidden="true">call</span>
+                <span class="font-semibold tracking-wide">05 63 32 14 43</span>
+            </a>
+        </div>
+
+        <!-- 4. Bento des 4 Compteurs Métriques Vivants -->
+        <div class="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-surface-container-low/90 backdrop-blur-md subtle-hairline shadow-2xl shadow-black/50"
+             id="heroMetricBar"
+             aria-label="Chiffres clés de la tradition Pizza Rico">
+            <!-- Compteur 1 : 72h -->
+            <div class="flex flex-col items-center py-2 px-3 border-r border-outline-variant/20">
+                <span class="font-display text-headline-sm sm:text-headline-md font-bold text-secondary tracking-tight"
+                      data-counter-target="72"
+                      data-counter-suffix="h">72h</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Maturation lente</span>
+            </div>
+            <!-- Compteur 2 : 450°C -->
+            <div class="flex flex-col items-center py-2 px-3 md:border-r border-outline-variant/20">
+                <span class="font-display text-headline-sm sm:text-headline-md font-bold text-primary tracking-tight flame-active"
+                      data-counter-target="450"
+                      data-counter-suffix="°C">450°C</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Cuisson feu de bois</span>
+            </div>
+            <!-- Compteur 3 : 100% -->
+            <div class="flex flex-col items-center py-2 px-3 border-r border-outline-variant/20">
+                <span class="font-display text-headline-sm sm:text-headline-md font-bold text-secondary tracking-tight"
+                      data-counter-target="100"
+                      data-counter-suffix="%">100%</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Farine bio &amp; AOP</span>
+            </div>
+            <!-- Compteur 4 : 4.9/5 Google -->
+            <div class="flex flex-col items-center py-2 px-3">
+                <span class="font-display text-headline-sm sm:text-headline-md font-bold text-tertiary tracking-tight flex items-center justify-center gap-1">
+                    <span data-counter-target="4.9" data-counter-suffix="/5" data-counter-decimals="1">4.9/5</span>
+                    <span class="material-symbols-outlined text-secondary text-sm sm:text-base" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">star</span>
+                </span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Note Google avis</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Script d'Animation Progressive des 4 Compteurs (Conforme CSP Nonce) -->
+<script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+    document.addEventListener('DOMContentLoaded', function() {
+        const metricBar = document.getElementById('heroMetricBar');
+        if (!metricBar) return;
+
+        const counters = metricBar.querySelectorAll('[data-counter-target]');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            counters.forEach(counter => {
+                const target = counter.getAttribute('data-counter-target');
+                const suffix = counter.getAttribute('data-counter-suffix') || '';
+                counter.textContent = target + suffix;
+            });
+            return;
+        }
+
+        let animated = false;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !animated) {
+                    animated = true;
+                    counters.forEach(counter => {
+                        const target = parseFloat(counter.getAttribute('data-counter-target'));
+                        const suffix = counter.getAttribute('data-counter-suffix') || '';
+                        const decimals = parseInt(counter.getAttribute('data-counter-decimals') || '0', 10);
+                        const duration = 1600;
+                        const startTime = performance.now();
+
+                        function updateCount(currentTime) {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                            const currentVal = (target * easeProgress).toFixed(decimals);
+
+                            counter.textContent = currentVal + suffix;
+
+                            if (progress < 1) {
+                                requestAnimationFrame(updateCount);
+                            } else {
+                                counter.textContent = (decimals > 0 ? target.toFixed(decimals) : target) + suffix;
+                            }
+                        }
+
+                        requestAnimationFrame(updateCount);
+                    });
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(metricBar);
+    });
+</script>

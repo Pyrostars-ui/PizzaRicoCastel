@@ -52,7 +52,7 @@
                                     <td>
                                         <div class="d-flex gap-2">
                                             <a href="{{ path('app_admin_news_edit', {slug: item.slug}) }}" class="btn-admin btn-admin-success btn-sm"><i class="bi bi-pencil"></i></a>
-                                            <form method="post" action="{{ path('app_admin_news_delete', {id: item.id}) }}" onsubmit="return confirm('Supprimer cet article ?');">
+                                            <form method="post" action="{{ path('app_admin_news_delete', {id: item.id}) }}" data-action="confirm-delete" data-message="Supprimer cet article ?">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
                                                 <button type="submit" class="btn-admin btn-admin-danger btn-sm"><i class="bi bi-trash"></i></button>
                                             </form>
@@ -72,4 +72,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('submit', function(e) {
+                const form = e.target.closest('[data-action="confirm-delete"]');
+                if (!form) return;
+                const message = form.getAttribute('data-message') || 'Confirmer ?';
+                if (!confirm(message)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 {% endblock %}

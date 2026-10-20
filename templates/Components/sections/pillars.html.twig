@@ -1,0 +1,67 @@
+{# templates/Components/sections/pillars.html.twig #}
+{# Section 5 : Notre Savoir-Faire Artisanal — Les 3 Piliers de la Tradition #}
+
+<section class="py-24 bg-surface-container-lowest relative overflow-hidden" id="savoir-faire" aria-label="Notre savoir-faire artisanal">
+    <!-- Halo chaud d'ambiance en arrière-plan -->
+    <div class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-primary-container/10 blur-[130px] rounded-full pointer-events-none" aria-hidden="true"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Excellence &amp; Héritage</span>
+            <h2 class="font-display text-headline-lg font-semibold text-on-surface mt-2 mb-4">
+                {{ about ? about.title : 'Notre Savoir-Faire Artisanal' }}
+            </h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+                {{ about ? about.content|slice(0, 200) ~ '...' : 'Depuis 1995 à Castelsarrasin, nous perpétuons sans compromis les règles séculaires de la Vera Pizza Napoletana.' }}
+            </p>
+        </div>
+
+        <!-- Grille des 3 Piliers -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Pilier 1 : Four à bois 450°C -->
+            <div class="p-8 rounded-xl bg-surface-container subtle-hairline hover:border-secondary/40 transition-all duration-300 flex flex-col items-start relative group">
+                <div class="w-14 h-14 rounded-lg bg-primary-container/15 border border-primary-container/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-primary text-2xl" aria-hidden="true">local_fire_department</span>
+                </div>
+                <span class="font-label-sm text-label-sm text-secondary font-bold uppercase mb-2">Pilier 01</span>
+                <h3 class="font-display text-headline-sm font-semibold text-on-surface mb-3">Four à Bois Traditionnel</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Cuisson à 450°C en 90 secondes sur pierre réfractaire pour une croûte alvéolée croustillante et un cœur fondant incomparable.
+                </p>
+                <div class="mt-6 pt-4 border-t border-outline-variant/20 w-full flex items-center text-label-sm font-label-sm text-secondary">
+                    <span>Flamme vive au bois de hêtre</span>
+                </div>
+            </div>
+
+            <!-- Pilier 2 : Farine Tipo 00 & 72h -->
+            <div class="p-8 rounded-xl bg-surface-container subtle-hairline hover:border-secondary/40 transition-all duration-300 flex flex-col items-start relative group">
+                <div class="w-14 h-14 rounded-lg bg-secondary/15 border border-secondary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-secondary text-2xl" aria-hidden="true">hourglass_top</span>
+                </div>
+                <span class="font-label-sm text-label-sm text-secondary font-bold uppercase mb-2">Pilier 02</span>
+                <h3 class="font-display text-headline-sm font-semibold text-on-surface mb-3">Farine Tipo 00 &amp; Levain Naturel</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Maturation lente de 72 heures au levain pour une digestibilité absolue, développant des arômes de noisette et une mie aérée.
+                </p>
+                <div class="mt-6 pt-4 border-t border-outline-variant/20 w-full flex items-center text-label-sm font-label-sm text-secondary">
+                    <span>Fermentation contrôlée 72h</span>
+                </div>
+            </div>
+
+            <!-- Pilier 3 : Produits AOP & IGP -->
+            <div class="p-8 rounded-xl bg-surface-container subtle-hairline hover:border-secondary/40 transition-all duration-300 flex flex-col items-start relative group">
+                <div class="w-14 h-14 rounded-lg bg-tertiary-container/20 border border-tertiary-container/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-tertiary text-2xl" aria-hidden="true">verified</span>
+                </div>
+                <span class="font-label-sm text-label-sm text-secondary font-bold uppercase mb-2">Pilier 03</span>
+                <h3 class="font-display text-headline-sm font-semibold text-on-surface mb-3">Produits AOP &amp; IGP Frais</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Tomates San Marzano de Campanie, Mozzarella di Bufala DOP, jambons d'Émilie-Romagne affinés et basilic génois frais du jour.
+                </p>
+                <div class="mt-6 pt-4 border-t border-outline-variant/20 w-full flex items-center text-label-sm font-label-sm text-secondary">
+                    <span>Filière d'importation directe</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

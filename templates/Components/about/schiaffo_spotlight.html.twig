@@ -1,0 +1,57 @@
+{# templates/Components/about/schiaffo_spotlight.html.twig #}
+<!-- Savoir-Faire Spotlight: L'Artisan au Travail -->
+<section class="relative w-full py-space-xl lg:py-28 px-6 lg:px-12 bg-surface-container-lowest overflow-hidden">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+        <!-- Visual Column with Overlap Bento Frame -->
+        <div class="lg:col-span-6 relative">
+            <div class="relative rounded-xl overflow-hidden aspect-[4/5] shadow-2xl bg-surface-container border border-outline-variant/10">
+                <img class="w-full h-full object-cover"
+                     data-alt="Maître pizzaiolo étirant le pâton selon la technique du Schiaffo à Castelsarrasin"
+                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt7T2P159GQPSts8jINxQBHAtPVMb0hUNhlWVg1jzLXDg3bpYd9LhreWaKGhFs20i0lRoNEGtsAi7DA2Kd7rf1RcXKfc3KIWzCXgp_IvLN-hj4_YsGrd-I9NwYjET8QM4tzqR3oZDh96kmL_giMBmXdfEZGWZvHQE-nq2y-93GHZwPmCX5KsBTMclSYg0T5zHOJwsNQ0Z_eK7NZioHBd6r6wWNEzzz01J_u500ICeAgdlEgefUYJRMNA"
+                     alt="Artisan pizzaiolo façonnant la pâte"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
+            </div>
+            <!-- Floating Glass Card Micro-Badge -->
+            <div class="absolute -bottom-6 -right-4 md:right-8 bg-surface-container-high/90 backdrop-blur-md p-space-md rounded-xl max-w-xs shadow-xl hidden sm:flex flex-col gap-space-xs border border-secondary/20">
+                <div class="flex items-center gap-space-xs text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">pan_tool</span>
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Technique du « Schiaffo »</span>
+                </div>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Façonnage manuel d’un geste vif sans jamais écraser le gaz de fermentation. Le rouleau à pâtisserie est formellement banni.
+                </p>
+            </div>
+        </div>
+
+        <!-- Text Narrative Column -->
+        <div class="lg:col-span-6 flex flex-col justify-center lg:pl-space-lg">
+            <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-container">Maîtrise du Geste</span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mt-space-xs mb-space-md">
+                Le Geste Vif, Sans Compromis ni Rouleau
+            </h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">
+                À Naples, la confection de la pizza est reconnue au patrimoine immatériel de l'UNESCO. Ce n’est pas du folklore : c’est une physique précise des fluides et des gaz.
+            </p>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-space-lg leading-relaxed">
+                Lorsque notre maître pizzaiolo étire le pâton à la main sur son marbre poudré de semoule de blé dur, il chasse délicatement l'air du centre vers la périphérie. C'est ce mouvement qui gonfle le <span class="text-secondary font-semibold">cornicione</span> sous la fournaise et lui confère son alvéolage nuageux unique.
+            </p>
+            <!-- Artisanal Metric Grid -->
+            <div class="grid grid-cols-2 gap-space-md pt-space-xs">
+                <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col border border-outline-variant/10">
+                    <div class="flex items-center gap-space-xs text-secondary mb-1">
+                        <span class="material-symbols-outlined text-[18px]">nature_people</span>
+                        <span class="font-title text-title text-on-surface">100% Naturel</span>
+                    </div>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">Farine de blé sélectionnée non traitée, sans additifs ni améliorants synthétiques.</span>
+                </div>
+                <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col border border-outline-variant/10">
+                    <div class="flex items-center gap-space-xs text-primary-container mb-1">
+                        <span class="material-symbols-outlined text-[18px]">timer</span>
+                        <span class="font-title text-title text-on-surface">90 Secondes</span>
+                    </div>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">Temps exact de cuisson pour saisir la croûte tout en gardant une garniture fraîche et juteuse.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

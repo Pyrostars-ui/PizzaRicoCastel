@@ -1,0 +1,373 @@
+{# templates/order/checkout.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ seo ? seo.metaTitle : (title ~ ' | Pizza Rico') }}{% endblock %}
+{% block meta_description %}{{ seo ? seo.metaDescription : 'Finalisez votre commande de pizzas artisanales Pizza Rico : choix du créneau de retrait, coordonnées et paiement sécurisé.' }}{% endblock %}
+
+{% block body %}
+<div class="flex flex-col w-full min-h-screen bg-background">
+    <!-- Ambient Embers Glow Background Elements -->
+    <div class="relative w-full overflow-hidden pb-space-xl">
+        <div class="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-primary-container/10 blur-[120px] pointer-events-none"></div>
+        <div class="absolute top-80 right-10 w-80 h-80 rounded-full bg-secondary/10 blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+            {# Stepper 4 étapes #}
+            {{ include('Components/checkout/stepper.html.twig') }}
+
+            {# Main Asymmetric Checkout Grid: 8 cols (inputs) / 4 cols (sticky cart) #}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+                <!-- Left Column: Checkout Inputs (8 cols) -->
+                <div class="lg:col-span-7 xl:col-span-8 flex flex-col gap-space-xl">
+                    {# Section 1: Mode de Réception #}
+                    {{ include('Components/checkout/pickup_delivery_toggle.html.twig', {
+                        deliveryFee: deliveryFee|default(2.50),
+                        freeDeliveryThreshold: freeDeliveryThreshold|default(35.00),
+                        freeDeliveryFrom: freeDeliveryFrom|default(25.00),
+                    }) }}
+
+                    {# Section 2: Créneau de Retrait #}
+                    {{ include('Components/checkout/time_slots_grid.html.twig', {
+                        timeSlots: timeSlots|default(['19h45', '20h00', '20h15', '20h30', '20h45', '21h00', '21h15', '21h30']),
+                    }) }}
+
+                    {# Section 3: Coordonnées #}
+                    {{ include('Components/checkout/customer_form.html.twig') }}
+
+                    {# Section 4: Paiement #}
+                    {{ include('Components/checkout/payment_methods.html.twig') }}
+                </div>
+
+                <!-- Right Column: Sticky Cart Summary (4 cols) -->
+                {{ include('Components/checkout/order_summary_sidebar.html.twig', {
+                    hotline: hotline|default('05 63 32 14 43'),
+                }) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# JavaScript : chargement du panier depuis localStorage et calculs dynamiques #}
+<script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+    document.addEventListener('DOMContentLoaded', function() {
+        var state = {
+            cart: [],
+            orderMode: 'takeout',
+            selectedSlot: 'asap',
+            slotMode: 'asap',
+            paymentMethod: 'card_online'
+        };
+
+        var DELIVERY_FEE = {{ deliveryFee|default(2.50) }};
+        var FREE_DELIVERY_THRESHOLD = {{ freeDeliveryThreshold|default(35.00) }};
+
+        function formatPrice(val) {
+            return val.toFixed(2).replace('.', ',') + ' €';
+        }
+
+        function loadCart() {
+            try {
+                var saved = localStorage.getItem('pizza_rico_cart');
+                if (saved) {
+                    var parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) {
+                        state.cart = parsed;
+                    }
+                }
+            } catch (e) {
+                console.warn('Impossible de charger le panier:', e);
+            }
+        }
+
+        function renderSummary() {
+            var listEl = document.getElementById('summaryItemsList');
+            var countEl = document.getElementById('summaryItemCount');
+
+            if (!listEl) return;
+
+            if (state.cart.length === 0) {
+                listEl.innerHTML = '';
+                var emptyDiv = document.createElement('div');
+                emptyDiv.className = 'py-8 flex flex-col items-center justify-center text-center gap-2 text-on-surface-variant';
+                emptyDiv.innerHTML = '<span class="material-symbols-outlined text-[36px] text-outline">shopping_bag</span>' +
+                    '<p class="font-body-sm text-body-sm">Votre panier est vide.<br/>Retournez à <a href="{{ path('app_carte')|e('js') }}" class="text-secondary hover:text-primary underline">la carte</a> pour commander.</p>';
+                listEl.appendChild(emptyDiv);
+                if (countEl) countEl.textContent = 'Panier vide';
+            } else {
+                listEl.innerHTML = '';
+                var totalItems = 0;
+                state.cart.forEach(function(item) {
+                    totalItems += (item.quantity || 1);
+                    var itemDiv = document.createElement('div');
+                    itemDiv.className = 'flex gap-space-sm items-start';
+                    var imgHtml = item.image
+                        ? '<img class="w-full h-full object-cover" src="' + item.image + '" alt="' + (item.name || '') + '"/>'
+                        : '<span class="material-symbols-outlined text-[28px] text-secondary">local_pizza</span>';
+                    itemDiv.innerHTML =
+                        '<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-surface-container relative flex items-center justify-center">' + imgHtml + '</div>' +
+                        '<div class="flex-1 min-w-0">' +
+                            '<div class="flex justify-between items-baseline gap-1">' +
+                                '<h4 class="font-title text-title text-on-surface truncate">' + (item.name || 'Article') + '</h4>' +
+                                '<span class="font-title text-title text-secondary shrink-0 font-bold">' + formatPrice((item.price || 0) * (item.quantity || 1)) + '</span>' +
+                            '</div>' +
+                            '<p class="font-label-sm text-label-sm text-outline mt-0.5">' + (item.size ? item.size + ' • ' : '') + (item.description || '') + '</p>' +
+                            '<div class="flex items-center justify-between mt-2">' +
+                                '<span class="font-label-md text-label-md text-tertiary">Quantité : ' + (item.quantity || 1) + '</span>' +
+                            '</div>' +
+                        '</div>';
+                    listEl.appendChild(itemDiv);
+                });
+                if (countEl) countEl.textContent = totalItems + (totalItems > 1 ? ' créations artisanales' : ' création artisanale');
+            }
+
+            updateTotals();
+        }
+
+        function updateTotals() {
+            var subtotal = 0;
+            state.cart.forEach(function(item) {
+                subtotal += (item.price || 0) * (item.quantity || 1);
+            });
+
+            var deliveryFee = 0;
+            if (state.orderMode === 'delivery') {
+                deliveryFee = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+            }
+
+            var tax = subtotal * 0.10;
+            var total = subtotal + deliveryFee;
+
+            var subtotalEl = document.getElementById('summarySubtotal');
+            var taxEl = document.getElementById('summaryTax');
+            var totalEl = document.getElementById('summaryTotal');
+            var ctaPriceEl = document.getElementById('ctaTotalPrice');
+            var deliveryEl = document.getElementById('summaryDeliveryFee');
+
+            if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
+            if (taxEl) taxEl.textContent = formatPrice(tax);
+            if (totalEl) totalEl.textContent = formatPrice(total);
+            if (ctaPriceEl) ctaPriceEl.textContent = formatPrice(total);
+            if (deliveryEl) {
+                if (state.orderMode === 'delivery') {
+                    deliveryEl.textContent = deliveryFee === 0 ? 'Offert (0,00 €)' : formatPrice(deliveryFee);
+                    deliveryEl.className = deliveryFee === 0 ? 'text-tertiary font-bold' : 'text-on-surface font-semibold';
+                } else {
+                    deliveryEl.textContent = 'Offert (0,00 €)';
+                    deliveryEl.className = 'text-tertiary font-bold';
+                }
+            }
+        }
+
+        // ── Visual helpers for order mode cards ──
+        function selectOrderModeCard(mode) {
+            var cards = document.querySelectorAll('.order-mode-card');
+            cards.forEach(function(card) {
+                var cardMode = card.getAttribute('data-mode');
+                var radio = card.querySelector('input[type="radio"]');
+                var dot = card.querySelector('.order-mode-dot');
+                var badge = card.querySelector('.order-mode-badge');
+                var isSelected = cardMode === mode;
+
+                if (radio) radio.checked = isSelected;
+
+                if (isSelected) {
+                    card.classList.remove('bg-surface-container', 'opacity-80');
+                    card.classList.add('bg-surface-container-high', 'ring-2', 'ring-primary/80', 'shadow-[0_8px_24px_rgba(0,0,0,0.4)]');
+                    if (dot) {
+                        dot.classList.remove('bg-surface-bright');
+                        dot.classList.add('bg-primary');
+                        if (!dot.querySelector('div')) {
+                            var innerDot = document.createElement('div');
+                            innerDot.className = 'w-2 h-2 rounded-full bg-on-primary';
+                            dot.appendChild(innerDot);
+                        }
+                    }
+                    if (badge) {
+                        badge.classList.remove('text-outline');
+                        badge.classList.add('text-tertiary', 'font-semibold');
+                    }
+                } else {
+                    card.classList.remove('bg-surface-container-high', 'ring-2', 'ring-primary/80', 'shadow-[0_8px_24px_rgba(0,0,0,0.4)]');
+                    card.classList.add('bg-surface-container', 'opacity-80');
+                    if (dot) {
+                        dot.classList.remove('bg-primary');
+                        dot.classList.add('bg-surface-bright');
+                        var innerDot = dot.querySelector('div');
+                        if (innerDot) innerDot.remove();
+                    }
+                    if (badge) {
+                        badge.classList.remove('text-tertiary', 'font-semibold');
+                        badge.classList.add('text-outline');
+                    }
+                }
+            });
+        }
+
+        // ── Visual helpers for time slot buttons ──
+        function selectTimeSlotBtn(slot) {
+            var btns = document.querySelectorAll('.time-slot-btn');
+            btns.forEach(function(btn) {
+                var btnSlot = btn.getAttribute('data-slot');
+                if (btnSlot === slot) {
+                    btn.classList.remove('bg-surface-container', 'text-on-surface');
+                    btn.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'shadow-md');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'shadow-md');
+                    btn.classList.add('bg-surface-container', 'text-on-surface');
+                }
+            });
+        }
+
+        function selectSlotModeBtn(mode) {
+            var asapBtn = document.getElementById('slotAsap');
+            var laterBtn = document.getElementById('slotLater');
+            var container = document.getElementById('timeSlotsContainer');
+
+            if (mode === 'asap') {
+                if (asapBtn) {
+                    asapBtn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+                    asapBtn.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-[0_4px_16px_rgba(239,101,65,0.35)]');
+                }
+                if (laterBtn) {
+                    laterBtn.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-[0_4px_16px_rgba(239,101,65,0.35)]');
+                    laterBtn.classList.add('bg-surface-container', 'text-on-surface-variant');
+                }
+                if (container) container.style.display = 'none';
+            } else {
+                if (laterBtn) {
+                    laterBtn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+                    laterBtn.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-[0_4px_16px_rgba(239,101,65,0.35)]');
+                }
+                if (asapBtn) {
+                    asapBtn.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-[0_4px_16px_rgba(239,101,65,0.35)]');
+                    asapBtn.classList.add('bg-surface-container', 'text-on-surface-variant');
+                }
+                if (container) container.style.display = '';
+            }
+        }
+
+        // ── Visual helpers for payment cards ──
+        function selectPaymentCard(method) {
+            var cards = document.querySelectorAll('.payment-card');
+            var cardForm = document.getElementById('cardDetailsForm');
+            cards.forEach(function(card) {
+                var cardMethod = card.getAttribute('data-payment');
+                var radio = card.querySelector('input[type="radio"]');
+                var isSelected = cardMethod === method;
+
+                if (radio) radio.checked = isSelected;
+
+                if (isSelected) {
+                    card.classList.remove('bg-surface-container');
+                    card.classList.add('bg-surface-container-high', 'ring-2', 'ring-primary/80');
+                } else {
+                    card.classList.remove('bg-surface-container-high', 'ring-2', 'ring-primary/80');
+                    card.classList.add('bg-surface-container');
+                }
+            });
+
+            if (cardForm) {
+                cardForm.style.opacity = method === 'card_online' ? '1' : '0.5';
+                cardForm.style.pointerEvents = method === 'card_online' ? 'auto' : 'none';
+            }
+        }
+
+        // ── Event Delegation (CSP-compliant, no inline handlers) ──
+        document.addEventListener('click', function(e) {
+            var target = e.target.closest('[data-action]');
+            if (!target) return;
+
+            var action = target.getAttribute('data-action');
+
+            switch (action) {
+                case 'select-order-mode': {
+                    var mode = target.getAttribute('data-mode');
+                    if (mode) {
+                        state.orderMode = mode;
+                        selectOrderModeCard(mode);
+                        updateTotals();
+                    }
+                    break;
+                }
+
+                case 'slot-asap': {
+                    state.slotMode = 'asap';
+                    state.selectedSlot = 'asap';
+                    selectSlotModeBtn('asap');
+                    break;
+                }
+
+                case 'slot-later': {
+                    state.slotMode = 'later';
+                    var firstSlot = document.querySelector('.time-slot-btn');
+                    if (firstSlot) {
+                        state.selectedSlot = firstSlot.getAttribute('data-slot');
+                        selectTimeSlotBtn(state.selectedSlot);
+                    }
+                    selectSlotModeBtn('later');
+                    break;
+                }
+
+                case 'select-time-slot': {
+                    var slot = target.getAttribute('data-slot');
+                    if (slot) {
+                        state.slotMode = 'later';
+                        state.selectedSlot = slot;
+                        selectTimeSlotBtn(slot);
+                        selectSlotModeBtn('later');
+                    }
+                    break;
+                }
+
+                case 'select-payment': {
+                    var method = target.getAttribute('data-payment');
+                    if (method) {
+                        state.paymentMethod = method;
+                        selectPaymentCard(method);
+                    }
+                    break;
+                }
+
+                case 'apply-promo': {
+                    var promoInput = document.getElementById('promoCodeInput');
+                    if (promoInput && promoInput.value.trim()) {
+                        alert('Code promo "' + promoInput.value.trim().toUpperCase() + '" appliqué ! (démo)');
+                    }
+                    break;
+                }
+
+                case 'confirm-order': {
+                    if (state.cart.length === 0) {
+                        alert('Votre panier est vide. Veuillez ajouter des articles depuis la carte.');
+                        window.location.href = '{{ path('app_carte')|e('js') }}';
+                        return;
+                    }
+                    var nameInput = document.getElementById('full-name');
+                    var phoneInput = document.getElementById('phone');
+                    if (!nameInput || !nameInput.value.trim()) {
+                        alert('Veuillez renseigner votre nom.');
+                        if (nameInput) nameInput.focus();
+                        return;
+                    }
+                    if (!phoneInput || !phoneInput.value.trim()) {
+                        alert('Veuillez renseigner votre téléphone pour l\'alerte SMS.');
+                        if (phoneInput) phoneInput.focus();
+                        return;
+                    }
+                    alert('Commande confirmée ! Votre pizza sera prête dans 15-20 minutes. Merci !');
+                    localStorage.removeItem('pizza_rico_cart');
+                    window.location.href = '{{ path('app_home')|e('js') }}';
+                    break;
+                }
+            }
+        });
+
+        // ── Initialisation ──
+        loadCart();
+        renderSummary();
+        selectOrderModeCard(state.orderMode);
+        selectSlotModeBtn(state.slotMode);
+        selectPaymentCard(state.paymentMethod);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{# templates/Components/checkout/order_summary_sidebar.html.twig #}
+{# Colonne droite : Récapitulatif de commande persistant #}
+
+<div class="lg:col-span-5 xl:col-span-4 sticky top-28 space-y-space-md">
+    <div class="bg-surface-container-low rounded-xl p-space-lg md:p-space-xl shadow-2xl relative overflow-hidden">
+        <!-- Subtle crust gold ambient corner light -->
+        <div class="absolute -top-16 -right-16 w-36 h-36 rounded-full bg-secondary/15 blur-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between pb-space-md mb-space-md">
+            <div class="flex flex-col">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Votre Commande</h3>
+                <span class="font-body-sm text-body-sm text-on-surface-variant" id="summaryItemCount">Chargement du panier...</span>
+            </div>
+            <div class="flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[16px]">timer</span>
+                ~15-20 min
+            </div>
+        </div>
+        <!-- Cart Items List (rempli dynamiquement par JS depuis localStorage) -->
+        <div class="space-y-space-md pb-space-lg" id="summaryItemsList">
+            <!-- Empty state -->
+            <div class="py-8 flex flex-col items-center justify-center text-center gap-2 text-on-surface-variant" id="summaryEmptyNotice">
+                <span class="material-symbols-outlined text-[36px] text-outline">shopping_bag</span>
+                <p class="font-body-sm text-body-sm">Votre panier est vide.<br/>Retournez à <a href="{{ path('app_carte') }}" class="text-secondary hover:text-primary underline">la carte</a> pour commander.</p>
+            </div>
+        </div>
+        <!-- Promo Code Input -->
+        <div class="py-space-md">
+            <div class="flex gap-2">
+                <input class="flex-1 px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-secondary uppercase tracking-wider"
+                       placeholder="Code promo ou Club Rico"
+                       type="text"
+                       id="promoCodeInput"/>
+                <button class="px-4 py-2 rounded-lg bg-surface-container-high hover:bg-surface-bright text-secondary font-label-md text-label-md transition-colors"
+                        type="button"
+                        id="applyPromoBtn" data-action="apply-promo">Appliquer</button>
+            </div>
+        </div>
+        <!-- Financial Breakdown Table -->
+        <div class="space-y-space-xs py-space-md font-body-sm text-body-sm text-on-surface-variant">
+            <div class="flex justify-between items-center">
+                <span>Sous-total articles</span>
+                <span class="text-on-surface font-semibold" id="summarySubtotal">0,00 €</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="flex items-center gap-1">
+                    Retrait Click &amp; Collect
+                    <span class="material-symbols-outlined text-[14px] text-tertiary">check</span>
+                </span>
+                <span class="text-tertiary font-bold" id="summaryDeliveryFee">Offert (0,00 €)</span>
+            </div>
+            <div class="flex justify-between items-center text-outline">
+                <span>Dont TVA (10% et 20%)</span>
+                <span id="summaryTax">0,00 €</span>
+            </div>
+            <div class="pt-space-sm mt-space-sm flex justify-between items-baseline border-t border-outline-variant/20">
+                <div class="flex flex-col">
+                    <span class="font-headline-sm text-headline-sm text-on-surface">Total TTC</span>
+                    <span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Paiement garanti</span>
+                </div>
+                <span class="font-headline-md text-headline-md text-primary font-bold" id="summaryTotal">0,00 €</span>
+            </div>
+        </div>
+        <!-- Main Big Action CTA Button -->
+        <button class="w-full mt-space-md py-space-md px-space-lg rounded-xl bg-primary-container text-on-primary-container font-headline-sm text-headline-sm hover:bg-primary hover:text-on-primary transition-all duration-300 shadow-[0_6px_25px_rgba(239,101,65,0.45)] hover:shadow-[0_8px_35px_rgba(239,101,65,0.65)] flex items-center justify-between group active:scale-[0.99]"
+                type="button"
+                id="confirmOrderBtn" data-action="confirm-order">
+            <span class="font-bold tracking-tight">Confirmer la Commande</span>
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-on-primary-container group-hover:text-on-primary transition-colors" id="ctaTotalPrice">0,00 €</span>
+                <span class="material-symbols-outlined text-[24px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </button>
+        <!-- Reassurance Trust Badges -->
+        <div class="mt-space-lg pt-space-md space-y-space-sm text-on-surface-variant font-body-sm text-body-sm">
+            <div class="flex items-start gap-space-sm">
+                <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">nest_eco_leaf</span>
+                <span>Pâte maturée 72 heures au levain naturel, farines italiennes Caputo et mozzarella fraîche DOP.</span>
+            </div>
+            <div class="flex items-start gap-space-sm">
+                <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">sms</span>
+                <span>Vous recevrez un SMS en temps réel dès l'enfournement et à la sortie du four.</span>
+            </div>
+            <div class="flex items-center gap-space-sm pt-space-xs text-primary">
+                <span class="material-symbols-outlined text-[18px]">support_agent</span>
+                <span class="font-label-md text-label-md font-semibold">Une question ? {{ hotline|default('05 63 32 14 43') }} (Direct cuisine)</span>
+            </div>
+        </div>
+    </div>
+    <!-- Wood Oven Live Service Status Card -->
+    <div class="bg-surface-container rounded-xl p-space-md flex items-center justify-between text-on-surface shadow-md">
+        <div class="flex items-center gap-space-sm">
+            <div class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-label-md text-label-md font-bold uppercase tracking-wider text-tertiary">Pizzeria Ouverte</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Prise de commande en direct</span>
+            </div>
+        </div>
+        <span class="font-headline-sm text-headline-sm text-secondary font-display">18h30 - 22h30</span>
+    </div>
+</div>

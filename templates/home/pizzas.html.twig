@@ -1,89 +1,534 @@
-{# Template affichant la liste de toutes les pizzas. #}
+{# templates/home/pizzas.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ seo ? seo.metaTitle : title }}{% endblock %}
+{% block meta_description %}{{ seo ? seo.metaDescription : 'Découvrez la carte complète de Pizza Rico à Castelsarrasin : pizzas napolitaines cuites au feu de bois 450°C, pâton fermenté 72h, desserts maison et sélection transalpine.' }}{% endblock %}
 
 {% block body %}
-    <!-- Hero Section pour la page des pizzas -->
-    <section class="page-header py-5 mb-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h1 class="display-4 fw-bold">Nos Pizzas</h1>
-                    <p class="lead">Découvrez toutes nos délicieuses pizzas préparées avec des ingrédients frais et de qualité</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="flex flex-col w-full min-h-screen bg-background">
+    {# 1. Atmospheric Storytelling Ribbon (Badges 450°C/72h/DOP, H1, Facts) #}
+    {{ include('Components/menu/carte_ribbon.html.twig') }}
 
-    <!-- Section Pizzas -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                {# Message affiché si le catalogue de pizzas est vide #}
-                {% if pizzas is empty %}
-                    <div class="col-12 text-center">
-                        <p class="lead">Aucune pizza n'est disponible pour le moment.</p>
+    {# 2. Sticky Live Filter & Sub-Navigation Bar #}
+    {{ include('Components/menu/carte_filter_bar.html.twig') }}
+
+    {# 3. Main Asymmetric 12-Column Grid Layout (8 cols Catalogue + 4 cols Sticky Cart) #}
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <!-- Left Main Cards Flow (8 colonnes) -->
+        <div class="lg:col-span-8 flex flex-col gap-16">
+            <!-- Section 1: Pizzas Spécialités & Signatures -->
+            <section class="flex flex-col gap-8" id="section-specialites">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-outline-variant/20 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase tracking-widest font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-primary ember-glow"></span>
+                            Les Incontournables Rico
+                        </div>
+                        <h2 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
+                            Pizzas Cuites au Feu de Bois
+                        </h2>
                     </div>
-                {% else %}
-                    {# Parcours de toutes les pizzas récupérées depuis la base de données #}
+                    <span class="font-label-md text-label-md text-secondary font-semibold">
+                        {{ pizzas|length }} recettes artisanales
+                    </span>
+                </div>
+
+                <!-- Pizza Grid (2 colonnes) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="pizza-grid">
                     {% for pizza in pizzas %}
-                        <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                            <div class="menu-card h-100">
-                                {# Gestion de l'affichage de l'image (personnalisée ou par défaut) #}
-                                {% if pizza.image %}
-                                    <img src="{{ asset('images/pizzas/' ~ pizza.image) }}" class="card-img-top" alt="{{ pizza.name }}">
-                                {% else %}
-                                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" class="card-img-top" alt="{{ pizza.name }}">
-                                {% endif %}
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ pizza.name }}</h5>
-                                    <p class="ingredients flex-grow-1">{{ pizza.ingredient }}</p>
-                                    <div class="mb-2">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="text-muted small">Petite</span>
-                                            <span class="dotted-line flex-grow-1 mx-2"></span>
-                                            {# Formatage du prix avec 2 décimales #}
-                                            <span class="price">{{ pizza.priceMedium|number_format(2, ',', '') }} €</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="text-muted small">Grande</span>
-                                            <span class="dotted-line flex-grow-1 mx-2"></span>
-                                            <span class="price">{{ pizza.priceLarge|number_format(2, ',', '') }} €</span>
-                                        </div>
-                                    </div>
-                                    {# Badge pour mettre en évidence les spécialités #}
-                                    {% if pizza.isSpecial %}
-                                        <div class="special-badge">Spécialité</div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        {{ include('Components/cards/carte_pizza_card.html.twig', {pizza: pizza}) }}
+                    {% else %}
+                        <div class="col-span-2 p-8 rounded-xl bg-surface-container text-center text-on-surface-variant">
+                            <p class="font-body-md">Aucune pizza disponible pour le moment.</p>
                         </div>
                     {% endfor %}
-                {% endif %}
+                </div>
+            </section>
+
+            <!-- Section 2: Desserts Maison (Dolci Fatti in Casa) -->
+            <section class="flex flex-col gap-8 pt-6" id="section-desserts">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-outline-variant/20 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-secondary font-label-sm text-label-sm uppercase tracking-widest font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                            Pâtisserie Artisanale Italienne
+                        </div>
+                        <h2 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
+                            Dolci Fatti in Casa
+                        </h2>
+                    </div>
+                    <span class="font-label-md text-label-md text-secondary font-semibold">
+                        {{ dolci|length }} desserts maison
+                    </span>
+                </div>
+
+                <!-- Desserts Grid (3 colonnes) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% for dolce in dolci %}
+                        {{ include('Components/cards/carte_dolce_card.html.twig', {dolce: dolce}) }}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Section 3: Boissons & Vins Italiens -->
+            <section class="flex flex-col gap-8 pt-6" id="section-boissons">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-outline-variant/20 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-tertiary font-label-sm text-label-sm uppercase tracking-widest font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                            Sélection Transalpine
+                        </div>
+                        <h2 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
+                            Boissons &amp; Vins Italiens
+                        </h2>
+                    </div>
+                    <span class="font-label-md text-label-md text-secondary font-semibold">
+                        {{ boissons|length }} références fraîches
+                    </span>
+                </div>
+
+                <!-- Boissons Grid (2 colonnes) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for boisson in boissons %}
+                        {{ include('Components/cards/carte_boisson_card.html.twig', {boisson: boisson}) }}
+                    {% else %}
+                        <div class="col-span-2 p-8 rounded-xl bg-surface-container text-center text-on-surface-variant">
+                            <p class="font-body-md">Aucune boisson disponible pour le moment.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Section 4: Charte Qualité Pizza Rico -->
+            <section class="p-6 sm:p-8 rounded-2xl bg-surface-container-low flex flex-col md:flex-row items-center gap-6 shadow-sm border border-outline-variant/30">
+                <div class="w-16 h-16 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center shrink-0 border border-secondary/30">
+                    <span class="material-symbols-outlined text-[32px]">verified</span>
+                </div>
+                <div class="flex flex-col gap-1 text-center md:text-left">
+                    <span class="font-headline-sm text-headline-sm text-on-surface font-semibold">La Charte Qualité Pizza Rico</span>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                        Toutes nos pâtes sont pétries avec de la farine type 00 italienne et subissent un repos contrôlé de 72h. Nos garnitures fraîches (roquette, burrata, basilic) sont appliquées post-cuisson pour préserver toute leur authenticité et leur intensité aromatique.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Message interactif "Aucun résultat trouvé" -->
+            <div id="noResultsNotice" class="hidden p-12 rounded-2xl bg-surface-container text-center flex flex-col items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-4xl text-outline">search_off</span>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Aucune création ne correspond à votre recherche</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">Essayez de modifier votre mot-clé ou réinitialisez les filtres pour retrouver toutes nos créations au feu de bois.</p>
+                <button type="button" data-action="reset-filters" class="mt-2 px-4 py-2 rounded-lg bg-surface-container-high text-secondary hover:bg-secondary hover:text-on-secondary transition-colors text-label-md font-semibold">
+                    Réinitialiser les filtres
+                </button>
             </div>
         </div>
-    </section>
 
-    <!-- Call to Action -->
-    <section class="cta-section py-5 mt-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h2>Envie de déguster nos pizzas ?</h2>
-                    <p class="h3">Venez nous rendre visite (proche de la poste) ou appelez-nous :</p>
-                    <div class="mt-4 d-inline-flex flex-column align-items-start gap-3 text-start">
-                        <a href="https://www.google.com/maps/search/?api=1&amp;query=7bis+place+des+Belges+82100+Castelsarrasin" target="_blank" rel="noopener noreferrer" class="h2 mb-0 text-danger text-decoration-none d-inline-flex align-items-center" aria-label="Ouvrir l'adresse 7bis place des Belges 82100 Castelsarrasin dans Google Maps">
-                            <i class="bi bi-house-door me-3 text-center" style="width: 1.25em;" aria-hidden="true"></i>
-                            <span>7bis place des Belges 82100 Castelsarrasin</span>
-                        </a>
-                        <a href="tel:+33563321443" class="h2 mb-0 text-danger text-decoration-none d-inline-flex align-items-center" aria-label="Appeler Pizza Rico au 05 63 32 14 43">
-                            <i class="bi bi-telephone me-3 text-center" style="width: 1.25em;" aria-hidden="true"></i>
-                            <span>05 63 32 14 43</span>
-                        </a>
+        <!-- Right Side Sticky Basket (4 colonnes) -->
+        <div class="lg:col-span-4">
+            {{ include('Components/cart/sticky_cart_sidebar.html.twig') }}
+        </div>
+    </div>
+</div>
+
+{# 4. Client-side Interactive Logic (avec Nonce CSP dynamique) #}
+<script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+    // État réactif du panier et des filtres
+    const state = {
+        cart: [],
+        currentCategory: 'all',
+        currentBase: 'all',
+        searchQuery: ''
+    };
+
+    /**
+     * Bascule dynamique du diamètre (29cm vs 33cm) et recalcul du prix affiché
+     */
+    function selectSize(button, extraPrice) {
+        const parentCard = button.closest('.menu-item-card');
+        if (!parentCard) return;
+
+        const sizeButtons = parentCard.querySelectorAll('.size-btn');
+        sizeButtons.forEach(btn => {
+            btn.classList.remove('active', 'bg-surface-container', 'text-secondary');
+            btn.classList.add('text-on-surface-variant');
+        });
+        button.classList.add('active', 'bg-surface-container', 'text-secondary');
+        button.classList.remove('text-on-surface-variant');
+
+        const priceElem = parentCard.querySelector('.item-price');
+        if (!priceElem) return;
+
+        const basePrice = parseFloat(priceElem.getAttribute('data-base-price') || '0');
+        const newPrice = (basePrice + parseFloat(extraPrice)).toFixed(2);
+        priceElem.textContent = newPrice + ' €';
+    }
+
+    /**
+     * Ajout d'un article au panier interactif
+     */
+    function addToCart(itemName, triggerBtn, explicitPrice = null) {
+        let finalPrice = explicitPrice;
+        let finalName = itemName;
+
+        if (explicitPrice === null) {
+            const parentCard = triggerBtn ? triggerBtn.closest('.menu-item-card') : null;
+            if (parentCard) {
+                const priceElem = parentCard.querySelector('.item-price');
+                if (priceElem) {
+                    finalPrice = parseFloat(priceElem.textContent.replace(/[^0-9.,]/g, '').replace(',', '.').trim());
+                }
+                const activeSize = parentCard.querySelector('.size-btn.active');
+                if (activeSize && activeSize.textContent.includes('Grande')) {
+                    finalName += ' (33cm)';
+                } else if (activeSize) {
+                    finalName += ' (29cm)';
+                }
+            }
+        }
+
+        if (finalPrice === null || isNaN(finalPrice)) {
+            finalPrice = 0.0;
+        }
+
+        // Vérification de présence préalable dans le panier
+        const existing = state.cart.find(item => item.name === finalName);
+        if (existing) {
+            existing.qty += 1;
+        } else {
+            state.cart.push({
+                name: finalName,
+                price: finalPrice,
+                qty: 1
+            });
+        }
+
+        // Sauvegarde persistante dans localStorage (FrankenPHP friendly, 0 état serveur mutable)
+        try {
+            localStorage.setItem('pizza_rico_cart', JSON.stringify(state.cart));
+        } catch (e) {
+            console.warn('LocalStorage non disponible pour le panier:', e);
+        }
+
+        // Micro-feedback visuel sur le bouton
+        if (triggerBtn) {
+            const originalHTML = triggerBtn.innerHTML;
+            triggerBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Ajouté !</span>';
+            triggerBtn.classList.add('brightness-125');
+            setTimeout(() => {
+                triggerBtn.innerHTML = originalHTML;
+                triggerBtn.classList.remove('brightness-125');
+            }, 900);
+        }
+
+        renderCart();
+    }
+
+    /**
+     * Modification de la quantité (+1 ou -1)
+     */
+    function updateCartQty(index, delta) {
+        if (!state.cart[index]) return;
+
+        state.cart[index].qty += delta;
+        if (state.cart[index].qty <= 0) {
+            state.cart.splice(index, 1);
+        }
+
+        try {
+            localStorage.setItem('pizza_rico_cart', JSON.stringify(state.cart));
+        } catch (e) {
+            console.warn('LocalStorage non disponible:', e);
+        }
+
+        renderCart();
+    }
+
+    /**
+     * Rendu temps réel du panier, calcul HT, TVA 10%, TTC et synchronisation avec la Navbar
+     */
+    function renderCart() {
+        const container = document.getElementById('cartItemsList');
+        const countBadge = document.getElementById('cartCountBadge');
+        const navCartBadge = document.getElementById('cartCount');
+        const subtotalElem = document.getElementById('cartSubtotal');
+        const taxElem = document.getElementById('cartTax');
+        const totalElem = document.getElementById('cartTotal');
+        const submitBtn = document.getElementById('orderSubmitBtn');
+
+        const totalItems = state.cart.reduce((sum, it) => sum + it.qty, 0);
+
+        if (countBadge) {
+            countBadge.textContent = totalItems + (totalItems > 1 ? ' articles' : ' article');
+        }
+
+        // Synchronisation du badge panier de la TopNavBar
+        if (navCartBadge) {
+            navCartBadge.textContent = totalItems;
+        }
+
+        if (state.cart.length === 0) {
+            if (container) {
+                container.innerHTML = `
+                    <div id="cartEmptyNotice" class="py-8 flex flex-col items-center justify-center text-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[36px] text-outline">local_pizza</span>
+                        <p class="font-body-sm text-body-sm">Votre panier est encore vide.<br/>Choisissez une création cuite au feu de bois.</p>
+                    </div>
+                `;
+            }
+            if (subtotalElem) subtotalElem.textContent = '0.00 €';
+            if (taxElem) taxElem.textContent = '0.00 €';
+            if (totalElem) totalElem.textContent = '0.00 €';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            return;
+        }
+
+        let totalTTC = 0;
+        let html = "";
+
+        state.cart.forEach((item, idx) => {
+            const lineTotal = item.price * item.qty;
+            totalTTC += lineTotal;
+
+            html += `
+                <div class="flex gap-3 items-start p-2.5 rounded-lg bg-surface-container border border-outline-variant/20">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline gap-1">
+                            <span class="font-label-md text-label-md text-on-surface truncate font-semibold">${item.name}</span>
+                            <span class="font-label-md text-label-md text-secondary shrink-0 font-bold">${lineTotal.toFixed(2).replace(".", ",")} €</span>
+                        </div>
+                        <p class="font-label-sm text-label-sm text-outline mt-0.5">${item.size || ""}</p>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="font-label-md text-label-md text-tertiary">Quantité : ${item.qty}</span>
+                            <button type="button" data-action="edit-cart-item" data-idx="${idx}" class="text-outline hover:text-primary font-label-sm text-label-sm transition-colors">Modifier</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button type="button"
+                                aria-label="Diminuer la quantité de ${item.name}"
+                                data-action="cart-qty" data-idx="${idx}" data-delta="-1"
+                                class="w-6 h-6 rounded bg-surface-container-high text-on-surface hover:text-primary flex items-center justify-center text-[14px] font-bold transition-colors">
+                            −
+                        </button>
+                        <button type="button"
+                                aria-label="Augmenter la quantité de ${item.name}"
+                                data-action="cart-qty" data-idx="${idx}" data-delta="1"
+                                class="w-6 h-6 rounded bg-surface-container-high text-on-surface hover:text-secondary flex items-center justify-center text-[14px] font-bold transition-colors">
+                            +
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            `;
+        });
+
+        if (container) {
+            container.innerHTML = html;
+        }
+
+        // Calcul fiscal rigoureux : TVA 10% pour la vente à emporter en restauration
+        const totalHT = totalTTC / 1.10;
+        const totalTVA = totalTTC - totalHT;
+        const formatPrice = (val) => val.toFixed(2).replace(".", ",") + " €";
+
+        if (subtotalElem) subtotalElem.textContent = formatPrice(totalHT);
+        if (taxElem) taxElem.textContent = formatPrice(totalTVA);
+        if (totalElem) totalElem.textContent = formatPrice(totalTTC);
+
+        // Mise à jour du prix dans le bouton CTA
+        const submitPrice = document.getElementById("orderSubmitPrice");
+        if (submitPrice) submitPrice.textContent = formatPrice(totalTTC);
+
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+        }
+    }
+
+    /**
+     * Validation et redirection vers la finalisation de commande (/commande/finaliser)
+     */
+    function checkoutOrder() {
+        if (state.cart.length === 0) return;
+        window.location.href = '/commande/finaliser';
+    }
+
+    /**
+     * Filtrage par catégorie
+     */
+    function filterCategory(cat, btn) {
+        state.currentCategory = cat;
+        document.querySelectorAll('.category-btn').forEach(b => {
+            b.classList.remove('bg-secondary', 'text-on-secondary');
+            b.classList.add('bg-surface-container', 'text-on-surface-variant');
+        });
+        if (btn) {
+            btn.classList.add('bg-secondary', 'text-on-secondary');
+            btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        }
+        applyFilters();
+    }
+
+    /**
+     * Filtrage par base de sauce (Tomate vs Crème)
+     */
+    function filterBase(baseType, btn) {
+        state.currentBase = baseType;
+        document.querySelectorAll('.base-btn').forEach(b => {
+            b.classList.remove('bg-surface-container-high', 'text-secondary');
+            b.classList.add('text-on-surface-variant');
+        });
+        if (btn) {
+            btn.classList.add('bg-surface-container-high', 'text-secondary');
+            btn.classList.remove('text-on-surface-variant');
+        }
+        applyFilters();
+    }
+
+    /**
+     * Recherche textuelle en direct
+     */
+    function handleSearch(val) {
+        state.searchQuery = (val || '').toLowerCase().trim();
+        applyFilters();
+    }
+
+    /**
+     * Réinitialisation de tous les filtres
+     */
+    function resetFilters() {
+        state.currentCategory = 'all';
+        state.currentBase = 'all';
+        state.searchQuery = '';
+        const searchInput = document.getElementById('menuSearch');
+        if (searchInput) searchInput.value = '';
+
+        const allCatBtn = document.querySelector('.category-btn');
+        if (allCatBtn) filterCategory('all', allCatBtn);
+
+        const allBaseBtn = document.getElementById('filterAllBases');
+        if (allBaseBtn) filterBase('all', allBaseBtn);
+    }
+
+    /**
+     * Application réactive combinée des filtres
+     */
+    function applyFilters() {
+        const cards = document.querySelectorAll('.menu-item-card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const catData = card.getAttribute('data-category') || '';
+            const baseData = card.getAttribute('data-base') || '';
+            const titleData = card.getAttribute('data-title') || '';
+
+            // Match Catégorie
+            const matchesCat = (state.currentCategory === 'all') || catData.includes(state.currentCategory);
+
+            // Match Base (les desserts et boissons ne sont pas affectés par le filtre de base)
+            const isDessertOrBoisson = catData.includes('dessert') || catData.includes('boisson');
+            const matchesBase = (state.currentBase === 'all') || isDessertOrBoisson || (baseData === state.currentBase);
+
+            // Match Recherche libre
+            const matchesSearch = !state.searchQuery || titleData.includes(state.searchQuery);
+
+            if (matchesCat && matchesBase && matchesSearch) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Gestion de l'affichage des sections si tous leurs éléments sont cachés
+        ['section-specialites', 'section-desserts', 'section-boissons'].forEach(secId => {
+            const sec = document.getElementById(secId);
+            if (sec) {
+                const visibleInSec = sec.querySelectorAll('.menu-item-card:not(.hidden)').length;
+                if (visibleInSec === 0) {
+                    sec.classList.add('hidden');
+                } else {
+                    sec.classList.remove('hidden');
+                }
+            }
+        });
+
+        const noResults = document.getElementById('noResultsNotice');
+        if (noResults) {
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+    }
+
+    /* ---------------------------------------------------- */
+    /* EVENT DELEGATION (CSP-compliant, no inline handlers) */
+    /* ---------------------------------------------------- */
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+        const action = target.getAttribute('data-action');
+
+        if (action === 'select-size') {
+            selectSize(target, parseFloat(target.getAttribute('data-extra-price') || '0'));
+        } else if (action === 'add-to-cart') {
+            const name = target.getAttribute('data-name');
+            const explicitPrice = target.getAttribute('data-explicit-price');
+            if (explicitPrice) {
+                addToCart(name, null, parseFloat(explicitPrice));
+            } else {
+                addToCart(name, target);
+            }
+        } else if (action === 'reset-filters') {
+            resetFilters();
+        } else if (action === 'cart-qty') {
+            const idx = parseInt(target.getAttribute('data-idx'), 10);
+            const delta = parseInt(target.getAttribute('data-delta'), 10);
+            if (!isNaN(idx) && !isNaN(delta)) {
+                updateCartQty(idx, delta);
+            }
+        } else if (action === 'filter-category') {
+            filterCategory(target.getAttribute('data-category'), target);
+        } else if (action === 'filter-base') {
+            filterBase(target.getAttribute('data-base'), target);
+        } else if (action === 'checkout-order') {
+            checkoutOrder();
+        } else if (action === "apply-promo") {
+            const promoInput = document.getElementById("promoCodeInput");
+            if (promoInput && promoInput.value.trim()) {
+                alert("Code promo \"" + promoInput.value.trim().toUpperCase() + "\" appliqué !");
+            }
+        } else if (action === "edit-cart-item") {
+            document.getElementById("section-specialites")?.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+
+    // Délégation pour la recherche live (événement input)
+    document.addEventListener('input', function(e) {
+        const target = e.target.closest('[data-action="search"]');
+        if (!target) return;
+        handleSearch(target.value);
+    });
+
+    // Initialisation au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restauration du panier persistant depuis le localStorage
+        try {
+            const saved = localStorage.getItem('pizza_rico_cart');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) {
+                    state.cart = parsed;
+                }
+            }
+        } catch (e) {
+            console.warn('Impossible de charger le panier depuis localStorage:', e);
+        }
+
+        renderCart();
+    });
+</script>
 {% endblock %}

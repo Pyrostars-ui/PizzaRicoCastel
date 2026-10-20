@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ seo ? seo.metaTitle : (title ~ ' | Pizza Rico') }}{% endblock %}
+{% block meta_description %}{{ seo ? seo.metaDescription : 'Contactez Pizza Rico au 7bis place des Belges à Castelsarrasin. Réservation de table, commande à emporter au 05 63 32 14 43 et plan d\'accès.' }}{% endblock %}
+
+{% block body %}
+<div class="flex flex-col w-full bg-background">
+    {{ include('Components/contact/contact_header.html.twig') }}
+
+    <!-- Editorial Split Grid: Details + Map Experience -->
+    <section class="max-w-7xl mx-auto w-full px-6 lg:px-12 py-space-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+            {{ include('Components/contact/practical_info.html.twig') }}
+            {{ include('Components/contact/map_access.html.twig') }}
+        </div>
+    </section>
+
+    {{ include('Components/contact/booking_form.html.twig') }}
+    {{ include('Components/contact/faq_accordion.html.twig') }}
+</div>
+{% endblock %}

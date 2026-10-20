@@ -46,7 +46,7 @@ class Hero
     /**
      * @var string|null Nom du fichier de l'image de fond stocké en base de données
      */
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $background = null;
 
     /**

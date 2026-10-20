@@ -1,0 +1,85 @@
+{# templates/Components/contact/faq_accordion.html.twig #}
+<!-- Practical FAQ & Ordering Modes -->
+<section class="max-w-7xl mx-auto w-full px-6 lg:px-12 py-space-xl">
+    <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-space-xl">
+        <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest font-semibold">Informations Pratiques</span>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mt-1">Questions Fréquentes</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+            Tout ce qu'il faut savoir pour une expérience fluide à Castelsarrasin : paiements, retraits chauds et fidélité.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+        <!-- FAQ Item 1 -->
+        <div class="p-space-lg rounded-xl bg-surface-container shadow-md flex flex-col gap-space-sm border border-outline-variant/10">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-high text-secondary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">payments</span>
+                </div>
+                <h3 class="font-title text-title text-on-surface font-semibold">Quels sont les moyens de paiement acceptés ?</h3>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Nous acceptons les cartes bancaires (Visa, Mastercard, sans contact), Apple Pay, Google Pay, les espèces, ainsi que les cartes et tickets restaurant (Edenred, Swile, Pluxee/Sodexo, Chèque Déjeuner).
+            </p>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="p-space-lg rounded-xl bg-surface-container shadow-md flex flex-col gap-space-sm border border-outline-variant/10">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-high text-secondary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">takeout_dining</span>
+                </div>
+                <h3 class="font-title text-title text-on-surface font-semibold">Comment fonctionne le retrait à emporter ?</h3>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Appelez-nous au <a href="tel:{{ hotline|default('0563321443')|replace({' ': ''}) }}" class="text-secondary font-semibold hover:underline">{{ hotline|default('05 63 32 14 43') }}</a> pour commander. Un créneau précis (ex: 19h40) vous est attribué. Vos pizzas sortent du four quelques secondes avant votre arrivée pour préserver la bulle alvéolée croustillante.
+            </p>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="p-space-lg rounded-xl bg-surface-container shadow-md flex flex-col gap-space-sm border border-outline-variant/10">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-high text-secondary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">moped</span>
+                </div>
+                <h3 class="font-title text-title text-on-surface font-semibold">Proposez-vous la livraison à domicile ?</h3>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Afin de préserver la qualité absolue de notre pâte napolitaine et sa cuisson au feu de bois, nous privilégions la dégustation sur place et la vente à emporter directe. Service de livraison locale disponible ponctuellement sur Castelsarrasin selon affluence.
+            </p>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="p-space-lg rounded-xl bg-surface-container shadow-md flex flex-col gap-space-sm border border-outline-variant/10">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-high text-secondary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">restaurant</span>
+                </div>
+                <h3 class="font-title text-title text-on-surface font-semibold">Avez-vous des options végétariennes ou sans porc ?</h3>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Absolument. Notre carte comprend des créations végétariennes généreuses à base de Fior di Latte d’Agerola, légumes rôtis au feu et pesto maison. Toutes nos charcuteries italiennes sont clairement indiquées.
+            </p>
+        </div>
+    </div>
+
+    <!-- Quick Call Out Banner -->
+    <div class="mt-space-xl p-space-lg rounded-2xl bg-gradient-to-r from-surface-container via-surface-container-high to-surface-container flex flex-col md:flex-row items-center justify-between gap-space-md shadow-xl text-center md:text-left border border-outline-variant/10">
+        <div class="flex items-center gap-space-md">
+            <div class="w-14 h-14 rounded-full bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[28px]">phone_in_talk</span>
+            </div>
+            <div>
+                <h4 class="font-title text-title text-on-surface font-semibold">Une envie irrésistible de pizza ce soir ?</h4>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Notre pâte a maturé 72h. Le four est à température optimale.</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-space-sm">
+            <a class="inline-flex items-center gap-space-xs px-6 py-3 rounded-lg bg-primary-container text-white font-label-lg text-label-lg font-bold shadow-md hover:brightness-110 transition-all active:scale-95"
+               href="tel:{{ hotline|default('0563321443')|replace({' ': ''}) }}">
+                <span class="material-symbols-outlined text-[20px]">call</span>
+                <span>Appeler le {{ hotline|default('05 63 32 14 43') }}</span>
+            </a>
+        </div>
+    </div>
+</section>

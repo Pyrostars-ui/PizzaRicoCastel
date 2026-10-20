@@ -1,0 +1,121 @@
+{# templates/Components/cards/card_style_02.html.twig #}
+{# Style 02 : Carte à Défilement Vertical Interne & Storyboard (ex: Reine d'Italie & Margherita Verace) #}
+
+{% set cardKey = cardKey|default('a') %}
+{% set pPriceMedium = pizza.priceMedium|number_format(2, '.', '') ~ '€' %}
+{% set pPriceLarge = pizza.priceLarge|number_format(2, '.', '') ~ '€' %}
+
+{% if pizza.image %}
+    {% set pImageUrl = pizza.image starts with 'http' ? pizza.image : asset('images/pizzas/' ~ pizza.image) %}
+{% else %}
+    {% set pImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCYdc-5xWaMwVjUSnOcERaF3hZ1j-Ske32u5ShBsx0lhENOJ5X0otvL9-a7jC94Uzw-OMM-shsgy94ao_jVgqvySfUSsnwgIqUO4r14A_4jfEEljEaht_UUXjUBCu5fbyJZURvNfX2jTI3wpkFwM1z_3pKhCXvqyqXltIefVt-g6wK55o89KzBlymxj_yRcpYEZ0VqQLvf24m8Im-1dhuTOyCwT8QpPBEbx62eMR8KZy13xAzg0g_lwIsLw_ZPsofrkqW4s_Ps5hBvz' %}
+{% endif %}
+
+<div class="rounded-2xl bg-surface-container-low border border-outline-variant/40 overflow-hidden shadow-xl flex flex-col group hover:border-secondary/40 transition-colors pizza-showcase-item"
+     data-pizza-card
+     data-pizza-id="{{ pizza.id }}"
+     data-pizza-name="{{ pizza.name }}"
+     data-pizza-ingredients="{{ pizza.ingredient }}"
+     data-pizza-category="{{ categoryFilter|default('tomate') }}"
+     data-architecture-style="02"
+     data-price-medium="{{ pizza.priceMedium }}"
+     data-price-large="{{ pizza.priceLarge }}">
+
+    <!-- Sticky Photo Header -->
+    <div class="relative h-56 sm:h-64 overflow-hidden bg-surface-container flex-shrink-0">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+             src="{{ pImageUrl }}"
+             alt="{{ pizza.name }} au feu de bois">
+        <div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/40 to-transparent"></div>
+
+        <!-- Badges Pinned -->
+        <div class="absolute top-4 left-4 flex flex-wrap gap-2">
+            {% if badgeTag is defined and badgeTag %}
+                <span class="px-2.5 py-1 rounded-md bg-surface-container-lowest/90 backdrop-blur-md text-secondary border border-secondary/30 font-label-sm text-label-sm font-bold">
+                    {{ badgeTag }}
+                </span>
+            {% elseif 'margherita' in pizza.slug %}
+                <span class="px-2.5 py-1 rounded-md bg-tertiary-container/30 text-tertiary border border-tertiary/30 font-label-sm text-label-sm font-bold">
+                    100% Végétarienne
+                </span>
+            {% else %}
+                <span class="px-2.5 py-1 rounded-md bg-surface-container-lowest/90 backdrop-blur-md text-secondary border border-secondary/30 font-label-sm text-label-sm font-bold">
+                    DOP &amp; Terroir
+                </span>
+            {% endif %}
+            <span class="px-2.5 py-1 rounded-md bg-primary-container text-white font-label-sm text-label-sm font-semibold shadow">
+                Feu de bois 450°C
+            </span>
+        </div>
+
+        <div class="absolute bottom-3 left-4 right-4 flex items-end justify-between">
+            <div>
+                <span class="text-xs text-secondary font-semibold uppercase tracking-wider block">
+                    {{ subtitle|default('Recette Artisanale') }}
+                </span>
+                <h4 class="font-display text-headline-sm font-bold text-white">{{ pizza.name }}</h4>
+            </div>
+            <div class="text-right">
+                <span class="text-xl font-bold text-secondary font-display" id="price-scroll-{{ cardKey }}">{{ pPriceMedium }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Storyboard Track (Custom Amber Scrollbar) -->
+    <div class="p-6 space-y-6 max-h-56 overflow-y-auto custom-card-scrollbar bg-surface-container-lowest/60 border-y border-outline-variant/20">
+        <!-- Chapter 1 -->
+        <div class="space-y-1.5 border-l-2 border-primary pl-3">
+            <div class="flex items-center gap-1.5 text-xs text-primary font-semibold uppercase">
+                <span class="material-symbols-outlined text-sm">local_fire_department</span>
+                <span>Étape 01 • Cuisson au Four Réfractaire</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+                {{ step1Text|default('Saisie en 80 secondes à 450°C sur sole de pierre de lave pour fixer le parfum des ingrédients sans dessécher leur cœur.') }}
+            </p>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div class="space-y-1.5 border-l-2 border-secondary pl-3">
+            <div class="flex items-center gap-1.5 text-xs text-secondary font-semibold uppercase">
+                <span class="material-symbols-outlined text-sm">verified</span>
+                <span>Étape 02 • Les Ingrédients AOP &amp; Terroir</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+                {{ pizza.ingredient }}
+            </p>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div class="space-y-1.5 border-l-2 border-tertiary pl-3">
+            <div class="flex items-center gap-1.5 text-xs text-tertiary font-semibold uppercase">
+                <span class="material-symbols-outlined text-sm">psychology_alt</span>
+                <span>Étape 03 • Conseil de Dégustation</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+                {{ step3Text|default('À savourer avec un filet d\'huile d\'olive extra-vierge toscane et une pincée d\'origan sauvage séché.') }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Docked Bottom: Dual Size Selector & Instant CTA -->
+    <div class="p-6 bg-surface-container-low space-y-3 mt-auto">
+        <div class="flex items-center gap-2 p-1 rounded-lg bg-surface-container subtle-hairline">
+            <button type="button"
+                    class="size-btn-s{{ cardKey }} flex-1 py-1.5 rounded font-label-sm text-label-sm text-center bg-surface-bright text-secondary font-semibold transition-all"
+                    data-action="scroll-size" data-key="{{ cardKey }}" data-size="29cm" data-price="{{ pPriceMedium }}">
+                Petite 29cm ({{ pPriceMedium }})
+            </button>
+            <button type="button"
+                    class="size-btn-s{{ cardKey }} flex-1 py-1.5 rounded font-label-sm text-label-sm text-center text-on-surface-variant hover:text-white transition-all"
+                    data-action="scroll-size" data-key="{{ cardKey }}" data-size="33cm" data-price="{{ pPriceLarge }}">
+                Grande 33cm ({{ pPriceLarge }})
+            </button>
+        </div>
+        <button type="button"
+                class="w-full py-3 rounded-lg bg-primary-container text-white font-label-md text-label-md font-semibold ember-glow hover:bg-inverse-primary transition-all flex items-center justify-center gap-2 active:scale-95"
+                data-action="add-to-cart" data-name="{{ pizza.name }}" data-price-source="price-scroll-{{ cardKey }}" data-default-price="{{ pPriceMedium }}" data-size-label="Format sélectionné">
+            <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+            <span>Ajouter au panier</span>
+        </button>
+    </div>
+</div>

@@ -1,35 +1,212 @@
-<!-- Responsive Navbar -->
-            {# Barre de navigation principale avec gestion de l'état actif via l'extension Twig personnalisée #}
-            <nav class="navbar navbar-expand-lg fixed-top">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ path('app_home') }}">{{ include('Components/icon/pizza_slice.html.twig') }}<span class="fw-bold">Pizza Rico</span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link {{ 'app_home'|is_active_route }}" aria-current="{{ 'app_home'|is_active_route ? 'page' : '' }}" href="{{ path('app_home') }}">Accueil</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ 'app_pizzas'|is_active_route }}" aria-current="{{ 'app_pizzas'|is_active_route ? 'page' : '' }}" href="{{ path('app_pizzas') }}">Nos pizzas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ 'app_boissons'|is_active_route }}" aria-current="{{ 'app_boissons'|is_active_route ? 'page' : '' }}" href="{{ path('app_boissons') }}">Nos boissons</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ 'app_about'|is_active_route }}" aria-current="{{ 'app_about'|is_active_route ? 'page' : '' }}" href="{{ path('app_about') }}">À propos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ 'app_news'|is_active_route or 'app_news_detail'|is_active_route }}" aria-current="{{ 'app_news'|is_active_route ? 'page' : '' }}" href="{{ path('app_news') }}">Actualités</a>
-                            </li>
-                            {% if app.user %}
-                            <li class="nav-item">
-                                <a class="nav-link {{ 'app_admin_dashboard'|is_active_route }}" aria-current="{{ 'app_admin_dashboard'|is_active_route ? 'page' : '' }}" href="{{ path ('app_admin_dashboard') }}">Administration</a>
-                            </li>
-                            {% endif %}
-                        </ul>
+{# templates/Components/navbar/navbar.html.twig #}
+<!-- ==================== SHARED COMPONENT: TopNavBar ==================== -->
+<header class="sticky top-0 z-50 w-full border-b border-outline-variant/20 shadow-2xl shadow-black/60 bg-surface-container-lowest/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+        <!-- Logo & Sub-identite -->
+        <a href="{{ path('app_home') }}" class="flex flex-col group text-left transition-transform duration-150 active:scale-95">
+            <span class="font-display text-headline-md font-semibold text-secondary tracking-tight group-hover:text-primary transition-colors duration-200">
+                Pizza Rico
+            </span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">
+                Pizzeria Traditionnelle Castelsarrasin
+            </span>
+        </a>
 
-                    </div>
-                </div>
-            </nav>
+        <!-- Desktop Navigation Links (>= 768px) -->
+        <nav class="hidden md:flex items-center gap-8" aria-label="Navigation principale">
+            {# 1. Accueil #}
+            <a href="{{ path('app_home') }}"
+               class="{{ 'app_home'|is_active_route ? 'text-secondary border-b-2 border-secondary font-bold' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-1 transition-colors duration-200">
+                Accueil
+            </a>
+
+            {# 2. La Carte (Route app_pizzas ou alias app_carte) #}
+            <a href="{{ path('app_pizzas') }}"
+               class="{{ ('app_pizzas'|is_active_route or 'app_carte'|is_active_route) ? 'text-secondary border-b-2 border-secondary font-bold' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-1 transition-colors duration-200">
+                La Carte
+            </a>
+
+            {# 3. Notre Savoir-Faire (Route app_about ou alias app_savoir_faire) #}
+            <a href="{{ path('app_about') }}"
+               class="{{ ('app_about'|is_active_route or 'app_savoir_faire'|is_active_route) ? 'text-secondary border-b-2 border-secondary font-bold' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-1 transition-colors duration-200">
+                Notre Savoir-Faire
+            </a>
+
+            {# 4. L'Histoire (Ancre sur la page Savoir-Faire) #}
+            <a href="{{ path('app_about') }}#histoire"
+               class="text-on-surface-variant font-label-lg text-label-lg hover:text-secondary transition-colors duration-200 py-1">
+                L'Histoire
+            </a>
+
+            {# 5. Contact & Accès (Route app_contact ou fallback /contact) #}
+            <a href="{% if app.routes is defined and 'app_contact' in app.routes %}{{ path('app_contact') }}{% else %}/contact{% endif %}"
+               class="{{ 'app_contact'|is_active_route ? 'text-secondary border-b-2 border-secondary font-bold' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-1 transition-colors duration-200">
+                Contact &amp; Accès
+            </a>
+
+            {# Lien Backoffice si utilisateur authentifié #}
+            {% if app.user %}
+                <a href="{{ path('app_admin_dashboard') }}"
+                   class="{{ 'app_admin_dashboard'|is_active_route ? 'text-secondary border-b-2 border-secondary font-bold' : 'text-outline hover:text-secondary' }} font-label-lg text-label-lg py-1 transition-colors duration-200">
+                    Administration
+                </a>
+            {% endif %}
+        </nav>
+
+        <!-- Right Action Hub: Hotline, Panier & CTA Commander -->
+        <div class="flex items-center gap-3 sm:gap-4">
+            <!-- Hotline Téléphonique Directe -->
+            <a href="tel:0563321443"
+               class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-secondary/30 bg-secondary/5 text-secondary hover:bg-secondary/15 transition-all text-label-md font-label-md">
+                <span class="material-symbols-outlined text-secondary text-base">call</span>
+                <span class="font-semibold tracking-wide">05 63 32 14 43</span>
+            </a>
+
+            <!-- Bouton Panier avec Badge Dynamique #cartCount -->
+            <button type="button"
+                    id="cartBtn"
+                    aria-label="Voir mon panier"
+                    class="relative p-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40">
+                <span class="material-symbols-outlined text-xl">shopping_bag</span>
+                <span id="cartCount"
+                      class="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-primary-container text-white ember-glow">
+                    {{ cartCount|default(0) }}
+                </span>
+            </button>
+
+            <!-- CTA Primaire Commander (Desktop) -->
+            <a href="{{ path('app_pizzas') }}"
+               class="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary-container text-white font-label-lg text-label-lg font-semibold ember-glow hover:bg-inverse-primary transition-all duration-200 active:scale-95">
+                <span>Commander en ligne</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </a>
+
+            <!-- Bouton Burger Mobile (< 768px) -->
+            <button type="button"
+                    id="mobileMenuToggle"
+                    aria-label="Ouvrir le menu de navigation"
+                    aria-expanded="false"
+                    aria-controls="mobileMenuDrawer"
+                    class="md:hidden p-2 rounded-lg bg-surface-container text-on-surface hover:text-secondary hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40">
+                <span class="material-symbols-outlined text-2xl" id="mobileMenuIcon">menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Drawer / Tiroir Mobile Dépliable (< 768px) -->
+    <div id="mobileMenuDrawer"
+         class="hidden md:hidden border-t border-outline-variant/20 bg-surface-container-lowest/98 backdrop-blur-xl px-6 py-6 transition-all duration-200">
+        <nav class="flex flex-col gap-3" aria-label="Navigation mobile">
+            <a href="{{ path('app_home') }}"
+               class="{{ 'app_home'|is_active_route ? 'text-secondary font-bold bg-surface-container/60 pl-3 border-l-2 border-secondary' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-2.5 rounded-r transition-colors">
+                Accueil
+            </a>
+            <a href="{{ path('app_pizzas') }}"
+               class="{{ ('app_pizzas'|is_active_route or 'app_carte'|is_active_route) ? 'text-secondary font-bold bg-surface-container/60 pl-3 border-l-2 border-secondary' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-2.5 rounded-r transition-colors">
+                La Carte
+            </a>
+            <a href="{{ path('app_about') }}"
+               class="{{ ('app_about'|is_active_route or 'app_savoir_faire'|is_active_route) ? 'text-secondary font-bold bg-surface-container/60 pl-3 border-l-2 border-secondary' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-2.5 rounded-r transition-colors">
+                Notre Savoir-Faire
+            </a>
+            <a href="{{ path('app_about') }}#histoire"
+               class="text-on-surface-variant hover:text-secondary font-label-lg text-label-lg py-2.5 transition-colors">
+                L'Histoire
+            </a>
+            <a href="{% if app.routes is defined and 'app_contact' in app.routes %}{{ path('app_contact') }}{% else %}/contact{% endif %}"
+               class="{{ 'app_contact'|is_active_route ? 'text-secondary font-bold bg-surface-container/60 pl-3 border-l-2 border-secondary' : 'text-on-surface-variant hover:text-secondary' }} font-label-lg text-label-lg py-2.5 rounded-r transition-colors">
+                Contact &amp; Accès
+            </a>
+
+            {% if app.user %}
+                <a href="{{ path('app_admin_dashboard') }}"
+                   class="text-outline hover:text-secondary font-label-lg text-label-lg py-2.5 transition-colors">
+                    Administration
+                </a>
+            {% endif %}
+
+            <!-- Actions Rapides Mobiles -->
+            <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-3">
+                <a href="tel:0563321443"
+                   class="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-secondary/30 bg-secondary/5 text-secondary hover:bg-secondary/15 transition-all text-label-md font-semibold">
+                    <span class="material-symbols-outlined text-base">call</span>
+                    <span>05 63 32 14 43</span>
+                </a>
+                <a href="{{ path('app_pizzas') }}"
+                   class="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-primary-container text-white font-label-lg text-label-lg font-semibold ember-glow hover:bg-inverse-primary transition-all">
+                    <span>Commander en ligne</span>
+                    <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Script Inline Autonome avec Nonce CSP pour le tiroir mobile et le bouton panier -->
+    <script nonce="{{ app.request.attributes.get('csp_nonce') }}">
+        document.addEventListener('DOMContentLoaded', function() {
+            var mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            var mobileMenuDrawer = document.getElementById('mobileMenuDrawer');
+            var mobileMenuIcon = document.getElementById('mobileMenuIcon');
+
+            if (mobileMenuToggle && mobileMenuDrawer) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    var isHidden = mobileMenuDrawer.classList.contains('hidden');
+                    if (isHidden) {
+                        mobileMenuDrawer.classList.remove('hidden');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+                        if (mobileMenuIcon) mobileMenuIcon.textContent = 'close';
+                    } else {
+                        mobileMenuDrawer.classList.add('hidden');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                        if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+                    }
+                });
+
+                mobileMenuDrawer.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        mobileMenuDrawer.classList.add('hidden');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                        if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+                    });
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !mobileMenuDrawer.classList.contains('hidden')) {
+                        mobileMenuDrawer.classList.add('hidden');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                        if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!mobileMenuDrawer.contains(e.target) && !mobileMenuToggle.contains(e.target) && !mobileMenuDrawer.classList.contains('hidden')) {
+                        mobileMenuDrawer.classList.add('hidden');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                        if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+                    }
+                });
+            }
+
+            // Synchronisation du badge panier depuis localStorage (toutes pages)
+            var cartCountBadge = document.getElementById("cartCount");
+            if (cartCountBadge) {
+                try {
+                    var storedCart = JSON.parse(localStorage.getItem("pizza_rico_cart") || "[]");
+                    var totalItems = Array.isArray(storedCart) ? storedCart.reduce(function(acc, item) { return acc + (item.qty || 1); }, 0) : 0;
+                    cartCountBadge.textContent = totalItems;
+                } catch (e) { /* fail-safe */ }
+            }
+            var cartBtn = document.getElementById('cartBtn');
+            if (cartBtn) {
+                cartBtn.addEventListener('click', function() {
+                    var cartSidebar = document.getElementById('cart-sidebar') || document.querySelector('[data-cart-sidebar]');
+                    if (cartSidebar) {
+                        cartSidebar.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        window.location.href = '{{ path('app_pizzas') }}#panier';
+                    }
+                });
+            }
+        });
+    </script>
+</header>

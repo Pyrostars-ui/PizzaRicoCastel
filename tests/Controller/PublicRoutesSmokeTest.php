@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Controller\Admin\DashboardController;
 use App\Controller\HealthController;
 use App\Controller\HomeController;
+use App\Controller\OrderController;
 use App\Controller\RegistrationController;
 use App\Controller\SecurityController;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 #[CoversClass(HomeController::class)]
+#[CoversClass(OrderController::class)]
 #[CoversClass(HealthController::class)]
 #[CoversClass(SecurityController::class)]
 #[CoversClass(RegistrationController::class)]
@@ -36,9 +38,13 @@ final class PublicRoutesSmokeTest extends WebTestCase
     {
         yield 'Accueil' => ['/'];
         yield 'Healthcheck' => ['/health'];
+        yield 'La carte' => ['/la-carte'];
         yield 'Nos pizzas' => ['/nos-pizzas'];
         yield 'Nos boissons' => ['/nos-boissons'];
         yield 'À propos' => ['/a-propos'];
+        yield 'Notre savoir-faire' => ['/notre-savoir-faire'];
+        yield 'Contact' => ['/contact'];
+        yield 'Checkout' => ['/commande/finaliser'];
         yield 'Actualités' => ['/actualites'];
         yield 'Mentions légales' => ['/mentions-legales'];
         yield 'Connexion' => ['/login'];

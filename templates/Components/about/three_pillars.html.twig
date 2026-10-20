@@ -1,0 +1,159 @@
+{# templates/Components/about/three_pillars.html.twig #}
+<!-- Interactive Deep Dive: Les 3 Piliers -->
+<section class="relative w-full py-space-xl lg:py-32 px-6 lg:px-12 bg-surface">
+    <div class="max-w-7xl mx-auto flex flex-col gap-space-xl">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+            <div class="flex flex-col max-w-2xl">
+                <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-container">Excellence Inaltérée</span>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mt-space-xs">Les Trois Piliers de Notre Tradition</h2>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+                Chaque détail est une profession de foi. Rien n'est laissé au hasard, du choix du bois jusqu’à la dernière goutte d’or vert toscan.
+            </p>
+        </div>
+
+        <!-- 3 Stepped Deep Dive Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg items-stretch">
+            <!-- Pilier 01 -->
+            <div class="group relative flex flex-col justify-between p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container transition-all duration-300 shadow-md border border-outline-variant/10">
+                <div>
+                    <div class="flex items-center justify-between pb-space-md">
+                        <span class="font-label-sm text-label-sm tracking-widest uppercase text-secondary">Pilier 01</span>
+                        <span class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary-container group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
+                        </span>
+                    </div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm group-hover:text-primary transition-colors">
+                        Le Four à Bois Réfractaire
+                    </h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                        Une coupole artisanale taillée sur mesure, vêtue de pierre volcanique et alimentée au bois de hêtre affiné. Portée entre 450°C et 485°C, elle saisit la pâte en exactement 60 à 90 secondes.
+                    </p>
+                    <div class="p-space-md rounded-lg bg-surface-container-lowest/80 mb-space-md border border-outline-variant/10">
+                        <div class="flex items-center justify-between text-on-surface mb-1">
+                            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Choc Thermique • 485°C</span>
+                            <span class="font-label-sm text-label-sm font-bold text-secondary">60 - 90s</span>
+                        </div>
+                        <!-- Flame Duration Graphic -->
+                        <div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-primary-container h-full rounded-full w-[85%]"></div>
+                        </div>
+                    </div>
+                    <ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+                            <span>Cornicione alvéolé et tigré (léopardage)</span>
+                        </li>
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+                            <span>Cœur moelleux préservé sans dessèchement</span>
+                        </li>
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+                            <span>Arôme fumé inimitable du hêtre séché</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-space-lg pt-space-md flex items-center justify-between border-t border-outline-variant/10">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed">Dôme en pierre de lave</span>
+                    <span class="material-symbols-outlined text-[18px] text-secondary">arrow_outward</span>
+                </div>
+            </div>
+
+            <!-- Pilier 02 -->
+            <div class="group relative flex flex-col justify-between p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container transition-all duration-300 shadow-md border border-outline-variant/10">
+                <div>
+                    <div class="flex items-center justify-between pb-space-md">
+                        <span class="font-label-sm text-label-sm tracking-widest uppercase text-secondary">Pilier 02</span>
+                        <span class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-[20px]">hourglass_top</span>
+                        </span>
+                    </div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm group-hover:text-secondary transition-colors">
+                        La Maturation Lente de 72 Heures
+                    </h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                        Loin des levées industrielles accélérées, notre empâtement repose 3 jours entiers au frais. Une farine italienne Tipo 00 pure mariée à un levain naturel mère cultivé avec patience.
+                    </p>
+                    <div class="p-space-md rounded-lg bg-surface-container-lowest/80 mb-space-md border border-outline-variant/10">
+                        <div class="flex items-center justify-between text-on-surface mb-1">
+                            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Hydratation Cristalline</span>
+                            <span class="font-label-sm text-label-sm font-bold text-tertiary">68% d'eau de source</span>
+                        </div>
+                        <div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-tertiary-container h-full rounded-full w-[68%]"></div>
+                        </div>
+                    </div>
+                    <ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+                            <span>Décomposition enzymatique &amp; ultra-digestibilité</span>
+                        </li>
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+                            <span>Zéro lourdeur stomacale en fin de repas</span>
+                        </li>
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+                            <span>Développement aromatique floral et noisetté</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-space-lg pt-space-md flex items-center justify-between border-t border-outline-variant/10">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed">Levain mère centenaire</span>
+                    <span class="material-symbols-outlined text-[18px] text-secondary">arrow_outward</span>
+                </div>
+            </div>
+
+            <!-- Pilier 03 -->
+            <div class="group relative flex flex-col justify-between p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container transition-all duration-300 shadow-md border border-outline-variant/10">
+                <div>
+                    <div class="flex items-center justify-between pb-space-md">
+                        <span class="font-label-sm text-label-sm tracking-widest uppercase text-secondary">Pilier 03</span>
+                        <span class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-[20px]">verified</span>
+                        </span>
+                    </div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm group-hover:text-tertiary transition-colors">
+                        Trésors AOP &amp; IGP d'Italie
+                    </h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                        Aucun intermédiaire, uniquement des relations directes avec de petites maisons familiales en Campanie, Toscane et Émilie-Romagne. L'intégrité pure du terroir transalpin.
+                    </p>
+                    <div class="flex flex-wrap gap-space-xs mb-space-md">
+                        <span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/10">
+                            San Marzano DOP
+                        </span>
+                        <span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/10">
+                            Bufala Campana DOP
+                        </span>
+                        <span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/10">
+                            Parma 24 Mois IGP
+                        </span>
+                        <span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/10">
+                            Huile Toscane Bio
+                        </span>
+                    </div>
+                    <ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+                            <span>Tomates cueillies à pleine maturité volcanique</span>
+                        </li>
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+                            <span>Lait de bufflonne frais expédié chaque semaine</span>
+                        </li>
+                        <li class="flex items-center gap-space-xs">
+                            <span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+                            <span>Affineurs artisanaux certifiés</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-space-lg pt-space-md flex items-center justify-between border-t border-outline-variant/10">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed">Traçabilité intégrale</span>
+                    <span class="material-symbols-outlined text-[18px] text-secondary">arrow_outward</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
