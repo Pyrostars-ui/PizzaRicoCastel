@@ -73,6 +73,9 @@ jobs:
       - name: Warmer le cache (dev)
         run: php bin/console cache:warmup --env=dev
 
+      - name: Installer les vendor assets Stimulus (requis par les templates)
+        run: php bin/console importmap:install
+
       - name: Linting PHP
         run: find src tests -name "*.php" -exec php -l {} \;
 
