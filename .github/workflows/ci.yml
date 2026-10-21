@@ -75,6 +75,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
+      - name: Création du fichier .env (requis par le boot Dotenv, surchargé par les variables du job)
+        run: cp .env.example .env
+
       - name: Installation des dépendances
         run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
@@ -123,6 +126,9 @@ jobs:
         run: |
           php bin/console doctrine:database:create --if-not-exists --env=test
           php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=test
+
+      - name: "[Gate 2.1b] Peuplement des données métier (Pizzas, Hero, About, SEO, Boissons)"
+        run: php bin/console app:seed-data --force --env=test
 
       - name: "[Gate 2.2] Pyramide des Tests — PHPUnit (Unitaires & Intégration)"
         run: vendor/bin/phpunit --colors=always
