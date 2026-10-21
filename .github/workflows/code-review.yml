@@ -19,30 +19,38 @@ jobs:
   review:
     name: Analyse statique & tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       fail-fast: false
       matrix:
         php-version: [ "8.4", "8.5" ]
 
+    # --------------------------------------------------------------------------
+    # CONTENEUR DE SERVICE : strictement identique au pipeline SecOps (ci.yml).
+    # Le préparatif (PHP, Composer, .env) et le provisionnement de la base de
+    # test sont délégués aux actions composites partagées — zéro config parallèle.
+    # --------------------------------------------------------------------------
     services:
-      postgres:
-        image: postgres:16
+      db:
+        image: postgres:16-alpine
         env:
+          POSTGRES_DB: app_test
           POSTGRES_USER: app
-          POSTGRES_PASSWORD: ChangeMe
-          POSTGRES_DB: pizzarico
-        ports: [ "5432:5432" ]
+          POSTGRES_PASSWORD: secret_test_password
+        ports:
+          - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U app"
+          --health-cmd "pg_isready -U app -d app_test"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
     env:
-      APP_ENV: dev
-      APP_SECRET: "!ChangeMe!"
-      DATABASE_URL: "postgresql://app:ChangeMe@127.0.0.1:5432/pizzarico?serverVersion=16&charset=utf8"
+      APP_ENV: test
+      APP_DEBUG: '0'
+      APP_SECRET: 'ci_static_secret_token_for_testing_only'
+      DATABASE_URL: 'postgresql://app:secret_test_password@127.0.0.1:5432/app_test?serverVersion=16&charset=utf8'
       CANONICAL_BASE_URL: https://pizzarico-castelsarrasin.example.fr
       MAILER_DSN: null://null
 
@@ -50,33 +58,12 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Préparation du runtime QA (PHP ${{ matrix.php-version }}, Composer, .env)
+        uses: ./.github/actions/qa-setup
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: ctype, iconv, intl, mbstring, pdo_pgsql
-          coverage: none
-          tools: composer:v2
 
-      - name: Cache Composer
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: composer-php-${{ matrix.php-version }}-${{ hashFiles('composer.json', 'composer.lock') }}
-
-      - name: Créer le fichier .env
-        run: cp .env.example .env
-
-      - name: Installer les dépendances
-        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
-
-      - name: Warmer le cache (dev)
-        run: php bin/console cache:warmup --env=dev
-
-      - name: Installer les vendor assets Stimulus (requis par les templates)
-        run: php bin/console importmap:install
-
-      - name: Linting PHP
+      - name: Linting PHP (syntaxe)
         run: find src tests -name "*.php" -exec php -l {} \;
 
       - name: Lint du conteneur Symfony
@@ -88,16 +75,11 @@ jobs:
       - name: Lint des fichiers YAML
         run: php bin/console lint:yaml --no-interaction config/ tests/
 
-      - name: PHPStan (niveau 10)
+      - name: PHPStan (niveau du projet)
         run: php vendor/bin/phpstan analyse --no-progress --no-interaction
 
-      - name: Créer la base de test et appliquer les migrations (suffixe _test en env test)
-        run: |
-          php bin/console doctrine:database:create --if-not-exists --env=test
-          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=test
-
-      - name: Peupler les données métier (Pizzas, Hero, About, SEO, Boissons)
-        run: php bin/console app:seed-data --force --env=test
+      - name: Provisionnement de la base de test (création, migrations, seed)
+        uses: ./.github/actions/qa-testdb
 
       - name: PHPUnit
         run: php vendor/bin/phpunit --no-coverage

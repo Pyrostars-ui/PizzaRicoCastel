@@ -1,0 +1,18 @@
+name: 'Base de test Doctrine (création + migrations + seed)'
+description: 'Source unique du provisionnement de la base de test CI : création (suffixe _test en env test), migrations réelles et données métier (app:seed-data). Tout job CI exécutant PHPUnit ou une commande Doctrine doit passer par cette action.'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Création de la base de test (suffixe _test en env test)
+      shell: bash
+      run: php bin/console doctrine:database:create --if-not-exists --env=test
+
+    - name: Exécution des migrations réelles Doctrine
+      shell: bash
+      run: php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=test
+
+    - name: Peuplement des données métier (Pizzas, Hero, About, SEO, Boissons)
+      shell: bash
+      run: php bin/console app:seed-data --force --env=test

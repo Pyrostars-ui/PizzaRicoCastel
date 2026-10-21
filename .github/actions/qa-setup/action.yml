@@ -1,0 +1,35 @@
+name: 'Runtime QA Symfony (PHP + Composer + .env)'
+description: 'Source unique du préparatif CI : configuration PHP, cache Composer, .env et installation des dépendances avec scripts (assets inclus). Tout job CI doit passer par cette action — aucune configuration parallèle.'
+
+inputs:
+  php-version:
+    description: 'Version PHP cible (format MAJOR.MINOR strict)'
+    required: true
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Configuration de PHP (${{ inputs.php-version }})
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php-version }}
+        extensions: ctype, iconv, intl, mbstring, pdo_pgsql, zip, apcu, opcache, pcntl
+        coverage: none
+        tools: composer:v2
+
+    - name: Mise en cache des dépendances Composer
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-php${{ inputs.php-version }}-${{ hashFiles('composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-php${{ inputs.php-version }}-
+
+    - name: Création du fichier .env (requis par le boot Dotenv, surchargé par les variables du job)
+      shell: bash
+      run: cp .env.example .env
+
+    - name: 'Installation des dépendances (avec scripts : cache:clear, assets:install, importmap:install)'
+      shell: bash
+      run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
