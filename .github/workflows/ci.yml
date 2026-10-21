@@ -98,9 +98,7 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: "[Gate 1.7] SAST — Analyse statique stricte (PHPStan niveau 8+)"
-        run: |
-          APP_ENV=dev APP_DEBUG=1 php bin/console cache:warmup --env=dev
-          vendor/bin/phpstan analyse --no-progress
+        run: vendor/bin/phpstan analyse --no-progress
 
       # ------------------------------------------------------------------------
       # GATE 2 : Intégrité Logique & Migrations DB Réelles (QA & Couche Données)

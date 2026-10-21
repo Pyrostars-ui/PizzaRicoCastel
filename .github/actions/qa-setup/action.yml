@@ -33,3 +33,7 @@ runs:
     - name: 'Installation des dépendances (avec scripts : cache:clear, assets:install, importmap:install)'
       shell: bash
       run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+    - name: 'Warmup du cache dev (conteneur XML requis par l''amorce PHPStan tests/phpstan/object-manager.php)'
+      shell: bash
+      run: APP_ENV=dev APP_DEBUG=1 php bin/console cache:warmup --env=dev
