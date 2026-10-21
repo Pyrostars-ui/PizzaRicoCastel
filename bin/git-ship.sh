@@ -8,7 +8,7 @@
 #     NAME : nom kebab-case de la branche (ex: auth-voter)
 #     MSG  : description du changement (utilisée pour le commit et la PR)
 #
-#   - Branche cible : TYPE/NAME (développée depuis 'develop', 'main' pour hotfix/*).
+#   - Branche cible : TYPE/NAME (développée depuis 'develop', 'v2' pour hotfix/*).
 #   - Gate QA fail-closed : bin/agent-verify.sh doit passer avant tout commit.
 #   - Push sur origin + Pull Request via GitHub CLI (gh pr create).
 #   - Aucune fusion : la décision de merge reste humaine, derrière les 5 Gates CI.
@@ -41,10 +41,10 @@ if [[ -z "$MSG" ]]; then
     exit 1
 fi
 
-# Gitflow : develop est la base par défaut, main pour les hotfix de production
+# Gitflow v2 : develop est la base d'intégration des fonctionnalités, v2 la base stable (hotfix de production)
 BASE_BRANCH="develop"
 if [[ "$TYPE" == "hotfix" ]]; then
-    BASE_BRANCH="main"
+    BASE_BRANCH="v2"
 fi
 
 # --- Résolution de la branche de travail ---

@@ -38,12 +38,13 @@ Ce fichier définit les règles de gouvernance strictes et non négociables pour
 - **Temps réel :** publication d'événements via le hub Mercure intégré à FrankenPHP (`Symfony\Component\Mercure\HubInterface`).
 
 ## 6. Gitflow Strict & Automatisation GitHub CLI (`gh`)
-- **`main` :** branche de production protégée. Commits directs strictement interdits. Reçoit uniquement les fusions de `release/vX.Y.Z` et `hotfix/*` (avec tag Git).
-- **`develop` :** branche tampon d'intégration par défaut. Commits directs strictement interdits.
+- **`v2` :** base stable de la version 2 (équivalent production). Commits directs strictement interdits. Reçoit uniquement les fusions testées depuis `develop` (PR `develop` → `v2`) et les `hotfix/*`.
+- **`develop` :** branche d'intégration et de test des nouvelles fonctionnalités. Commits directs strictement interdits. Les nouveautés y sont validées (CI complète) avant d'être intégrées à `v2`.
+- **`main` :** base historique de la version 1, archivée en lecture seule. Ne plus la modifier.
 - **Branches de travail :** dérivées systématiquement depuis `develop` :
   - `feat/<nom>`, `fix/<nom>`, `refactor/<nom>`, `test/<nom>`
-- **Releases :** `release/vX.Y.Z` dérivée de `develop`, fusionnée dans `main` (avec tag `vX.Y.Z`) puis réintégrée dans `develop`.
-- **Exceptions de production :** `hotfix/<nom>` dérivée de `main`, fusionnée dans `main` (avec tag) **ET** réintégrée dans `develop`.
+- **Intégration de version :** PR `develop` → `v2` lorsque les nouveautés sont validées sur `develop` (CI verte obligatoire).
+- **Exceptions de production :** `hotfix/<nom>` dérivée de `v2`, fusionnée dans `v2` **ET** réintégrée dans `develop`.
 - **Livraison automatisée & CI SecOps :** utiliser `make ship TYPE=feat NAME=ma-feature MSG="description"` (qui exécute `./bin/git-ship.sh` et ouvre la Pull Request via `gh pr create --base develop`), déclenchant le pipeline GitHub Actions `.github/workflows/ci.yml` (5 Gates *Fail-Closed*).
 
 ## 7. Boucle Fast-Fail, Protocole d'Abandon & Fail-Safe (Max 3 Essais)
