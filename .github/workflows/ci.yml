@@ -59,27 +59,10 @@ jobs:
           PHP_VERSION=$(php -r '$c=@json_decode(@file_get_contents("composer.json"),true); $raw=(string)($c["config"]["platform"]["php"] ?? $c["require"]["php"] ?? "8.4"); echo preg_match("/(\d+\.\d+)/", $raw, $m) ? $m[1] : "8.4";')
           echo "version=${PHP_VERSION}" >> "$GITHUB_OUTPUT"
 
-      - name: Configuration de PHP (${{ steps.detect-php.outputs.version }})
-        uses: shivammathur/setup-php@v2
+      - name: Préparation du runtime QA (PHP, Composer, .env — source unique partagée)
+        uses: ./.github/actions/qa-setup
         with:
           php-version: ${{ steps.detect-php.outputs.version }}
-          extensions: pdo_pgsql, intl, zip, apcu, opcache, pcntl
-          coverage: none
-          tools: composer:v2
-
-      - name: Mise en cache des dépendances Composer
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: Création du fichier .env (requis par le boot Dotenv, surchargé par les variables du job)
-        run: cp .env.example .env
-
-      - name: Installation des dépendances
-        run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
       # ------------------------------------------------------------------------
       # GATE 1 : Analyse Statique, Supply Chain & Zero EOL (SAST / SCA)
@@ -115,20 +98,13 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: "[Gate 1.7] SAST — Analyse statique stricte (PHPStan niveau 8+)"
-        run: |
-          APP_ENV=dev APP_DEBUG=1 php bin/console cache:warmup --env=dev
-          vendor/bin/phpstan analyse --no-progress
+        run: vendor/bin/phpstan analyse --no-progress
 
       # ------------------------------------------------------------------------
       # GATE 2 : Intégrité Logique & Migrations DB Réelles (QA & Couche Données)
       # ------------------------------------------------------------------------
-      - name: "[Gate 2.1] Exécution des Migrations réelles Doctrine sur PostgreSQL"
-        run: |
-          php bin/console doctrine:database:create --if-not-exists --env=test
-          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=test
-
-      - name: "[Gate 2.1b] Peuplement des données métier (Pizzas, Hero, About, SEO, Boissons)"
-        run: php bin/console app:seed-data --force --env=test
+      - name: "[Gate 2.1] Provisionnement de la base de test (création, migrations, seed — source unique partagée)"
+        uses: ./.github/actions/qa-testdb
 
       - name: "[Gate 2.2] Pyramide des Tests — PHPUnit (Unitaires & Intégration)"
         run: vendor/bin/phpunit --colors=always
