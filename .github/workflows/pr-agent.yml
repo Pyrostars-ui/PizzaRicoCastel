@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Revue — PR-Agent
         id: pragent
+        # Revue IA consultative : une indisponibilité du service LLM tiers ne doit pas bloquer le pipeline.
+        continue-on-error: true
         uses: the-pr-agent/pr-agent@main
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}

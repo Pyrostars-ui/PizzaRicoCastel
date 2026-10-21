@@ -75,6 +75,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
+      - name: Création du fichier .env (requis par le boot Dotenv, surchargé par les variables du job)
+        run: cp .env.example .env
+
       - name: Installation des dépendances
         run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
