@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\About;
+use App\Entity\Boisson;
 use App\Entity\Hero;
 use App\Entity\Pizza;
 use App\Entity\SEO;
@@ -24,7 +25,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
  */
 #[AsCommand(
     name: 'app:seed-data',
-    description: 'Peuple la base de données avec les données initiales réelles (Pizzas, Hero, About, SEO)',
+    description: 'Peuple la base de données avec les données initiales réelles (Pizzas, Hero, About, SEO, Boissons)',
 )]
 final class SeedDataCommand extends Command
 {
@@ -155,6 +156,102 @@ final class SeedDataCommand extends Command
         ],
     ];
 
+    /**
+     * @var list<array{
+     *     name: string,
+     *     price: float,
+     *     category: string,
+     *     capacity: string,
+     *     image: string
+     * }>
+     */
+    private const array BOISSONS_DATA = [
+        [
+            'name' => 'Coca-Cola Original / Zéro',
+            'price' => 2.00,
+            'category' => 'Sodas',
+            'capacity' => '33cl',
+            'image' => 'panel_canettes.jpg',
+        ],
+        [
+            'name' => 'Orangina & Oasis Tropical',
+            'price' => 2.00,
+            'category' => 'Sodas',
+            'capacity' => '33cl',
+            'image' => 'panel_canettes.jpg',
+        ],
+        [
+            'name' => 'Lipton Ice Tea & Fanta',
+            'price' => 2.00,
+            'category' => 'Sodas',
+            'capacity' => '33cl',
+            'image' => 'panel_canettes.jpg',
+        ],
+        [
+            'name' => 'San Pellegrino Fines Bulles',
+            'price' => 2.50,
+            'category' => 'Eaux',
+            'capacity' => '50cl / 1L',
+            'image' => 'panel_eaux.jpg',
+        ],
+        [
+            'name' => 'Sanpellegrino Aranciata Rossa',
+            'price' => 2.50,
+            'category' => 'Eaux',
+            'capacity' => '33cl',
+            'image' => 'panel_eaux.jpg',
+        ],
+        [
+            'name' => 'Bouteilles Maxi (Coca-Cola, Oasis, Ice Tea)',
+            'price' => 3.50,
+            'category' => 'Eaux',
+            'capacity' => '1.5L',
+            'image' => 'panel_eaux.jpg',
+        ],
+        [
+            'name' => 'Peroni & Heineken Bouteille',
+            'price' => 3.50,
+            'category' => 'Bières',
+            'capacity' => '33cl',
+            'image' => 'panel_bieres.jpg',
+        ],
+        [
+            'name' => 'Birra Moretti L\'Autentica',
+            'price' => 4.00,
+            'category' => 'Bières',
+            'capacity' => '33cl',
+            'image' => 'panel_bieres.jpg',
+        ],
+        [
+            'name' => 'Desperados & 1664 Blonde',
+            'price' => 4.00,
+            'category' => 'Bières',
+            'capacity' => '33cl',
+            'image' => 'panel_bieres.jpg',
+        ],
+        [
+            'name' => 'Lambrusco Dell\'Emilia Rouge & Rosé',
+            'price' => 9.50,
+            'category' => 'Vins',
+            'capacity' => '75cl',
+            'image' => 'panel_vins.jpg',
+        ],
+        [
+            'name' => 'Bardolino Chiaretto Rosé DOC',
+            'price' => 11.00,
+            'category' => 'Vins',
+            'capacity' => '75cl',
+            'image' => 'panel_vins.jpg',
+        ],
+        [
+            'name' => 'Chianti DOCG Toscane',
+            'price' => 12.50,
+            'category' => 'Vins',
+            'capacity' => '75cl',
+            'image' => 'panel_vins.jpg',
+        ],
+    ];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
@@ -169,7 +266,7 @@ final class SeedDataCommand extends Command
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
-                'Écrase et réinitialise les données existantes (Pizza, Hero, About, SEO) avant de réinsérer',
+                'Écrase et réinitialise les données existantes (Pizza, Hero, About, SEO, Boisson) avant de réinsérer',
             );
     }
 
@@ -184,27 +281,30 @@ final class SeedDataCommand extends Command
         $heroCount = $this->entityManager->getRepository(Hero::class)->count([]);
         $aboutCount = $this->entityManager->getRepository(About::class)->count([]);
         $seoCount = $this->entityManager->getRepository(SEO::class)->count([]);
+        $boissonCount = $this->entityManager->getRepository(Boisson::class)->count([]);
 
-        $totalExisting = $pizzaCount + $heroCount + $aboutCount + $seoCount;
+        $totalExisting = $pizzaCount + $heroCount + $aboutCount + $seoCount + $boissonCount;
 
         if ($totalExisting > 0 && !$force) {
             $io->warning(\sprintf(
-                'Des données existent déjà en base (%d pizzas, %d hero, %d about, %d SEO). Utilisez l\'option --force pour écraser et réinsérer.',
+                'Des données existent déjà en base (%d pizzas, %d hero, %d about, %d SEO, %d boissons). Utilisez l\'option --force pour écraser et réinsérer.',
                 $pizzaCount,
                 $heroCount,
                 $aboutCount,
                 $seoCount,
+                $boissonCount,
             ));
 
             return Command::FAILURE;
         }
 
         if ($force && $totalExisting > 0) {
-            $io->comment('Nettoyage des tables Pizza, Hero, About et SEO...');
+            $io->comment('Nettoyage des tables Pizza, Hero, About, SEO et Boisson...');
             $this->entityManager->createQuery('DELETE FROM App\Entity\Pizza p')->execute();
             $this->entityManager->createQuery('DELETE FROM App\Entity\Hero h')->execute();
             $this->entityManager->createQuery('DELETE FROM App\Entity\About a')->execute();
             $this->entityManager->createQuery('DELETE FROM App\Entity\SEO s')->execute();
+            $this->entityManager->createQuery('DELETE FROM App\Entity\Boisson b')->execute();
             $this->entityManager->clear();
             $io->note('Données existantes purgées avec succès.');
         }
@@ -305,6 +405,36 @@ final class SeedDataCommand extends Command
         $io->table(
             ['Page Name', 'Meta Title', 'Meta Description'],
             $seoRows,
+        );
+
+        // 5. Insertion des Boissons
+        $io->section('5. Insertion des 12 Boissons & Vins Italiens');
+        $boissonRows = [];
+
+        foreach (self::BOISSONS_DATA as $data) {
+            $boisson = new Boisson();
+            $boisson->setName($data['name']);
+            $boisson->setPrice($data['price']);
+            $boisson->setCategory($data['category']);
+            $boisson->setCapacity($data['capacity']);
+            $boisson->setImage($data['image']);
+
+            $this->entityManager->persist($boisson);
+
+            $boissonRows[] = [
+                $data['name'],
+                number_format($data['price'], 2, ',', ' ').' €',
+                $data['category'],
+                $data['capacity'],
+                $data['image'],
+            ];
+        }
+
+        $this->entityManager->flush();
+
+        $io->table(
+            ['Nom', 'Prix', 'Catégorie', 'Contenance', 'Image Asset'],
+            $boissonRows,
         );
 
         $io->success('Toutes les données initiales ont été insérées avec succès en base de données PostgreSQL !');
