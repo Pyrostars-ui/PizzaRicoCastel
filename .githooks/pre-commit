@@ -5,11 +5,11 @@ echo "🔍 [Pre-Commit] Exécution des garde-fous Gitflow et QA via Docker..."
 
 DOCKER_CMD=(docker compose exec -T app)
 
-# 1. Protection stricte des branches main et develop (Gitflow Règle 6)
+# 1. Protection stricte des branches stables et d'intégration (Gitflow Règle 6)
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
-if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "master" || "$CURRENT_BRANCH" == "develop" ]]; then
+if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "master" || "$CURRENT_BRANCH" == "develop" || "$CURRENT_BRANCH" == "v2" ]]; then
     echo "❌ [Pre-Commit] INTERDICTION : Les commits directs sur '$CURRENT_BRANCH' sont bloqués par le Gitflow."
-    echo "   Créez une branche dérivée de 'develop' (feat/*, fix/*, refactor/*, test/*) ou 'main' (hotfix/*)."
+    echo "   Créez une branche dérivée de 'develop' (feat/*, fix/*, refactor/*, test/*) ou de 'v2' (hotfix/*)."
     exit 1
 fi
 
