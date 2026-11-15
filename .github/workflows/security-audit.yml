@@ -1,0 +1,166 @@
+name: Security Audit
+on:
+  push:
+    branches: [main, master, v2, develop]
+  pull_request:
+    branches: [main, master, v2, develop]
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'URL de staging/production pour DAST complet (Nuclei, Nikto, testssl.sh)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  secrets:
+    name: Gitleaks (secrets â€” bloquant)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ci-and-docker-lint:
+    name: Actionlint & Hadolint (CI & Docker â€” bloquant)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Run actionlint
+        run: |
+          TAG="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/rhysd/actionlint/releases/latest | sed 's|.*/||')"
+          VER="${TAG#v}"
+          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/${TAG}/actionlint_${VER}_linux_amd64.tar.gz" -o /tmp/actionlint.tar.gz
+          tar -xzf /tmp/actionlint.tar.gz -C /tmp actionlint
+          /tmp/actionlint
+      - name: Run hadolint on Dockerfiles
+        run: |
+          DOCKERFILES="$(find . -maxdepth 4 -type f \( -name 'Dockerfile' -o -name 'Dockerfile.*' \))"
+          if [ -z "$DOCKERFILES" ]; then
+            echo "Aucun Dockerfile dÃ©tectÃ©."
+            exit 0
+          fi
+          curl -fsSL https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 -o /tmp/hadolint
+          chmod +x /tmp/hadolint
+          echo "$DOCKERFILES" | xargs -r /tmp/hadolint
+
+  sca:
+    name: Trivy (SCA + Misconfig â€” CRITICAL/HIGH bloquant)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Trivy Vuln CRITICAL,HIGH (exit 1 si trouvÃ©)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+          format: 'json'
+          output: 'trivy-vuln-critical-high.json'
+      - name: Trivy Vuln MEDIUM,LOW (rapport)
+        if: always()
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'MEDIUM,LOW'
+          exit-code: '0'
+          format: 'json'
+          output: 'trivy-vuln-medium-low.json'
+          skip-setup-trivy: true
+      - name: Trivy Config CRITICAL,HIGH (exit 1 si trouvÃ©)
+        if: always()
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+          format: 'json'
+          output: 'trivy-config-critical-high.json'
+          skip-setup-trivy: true
+      - name: Upload Trivy reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: trivy-reports
+          path: |
+            trivy-vuln-critical-high.json
+            trivy-vuln-medium-low.json
+            trivy-config-critical-high.json
+          if-no-files-found: ignore
+
+  sast:
+    name: Semgrep (SAST OWASP + Secrets â€” bloquant)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.12'
+      - name: Install semgrep
+        run: pip install semgrep
+      - name: Semgrep scan (4 packs sÃ©quentiels)
+        run: |
+          STATUS=0
+          for pack in ci owasp-top-ten security-audit secrets; do
+            echo "=== Semgrep p/${pack} ==="
+            semgrep scan \
+              --config "p/${pack}" \
+              -j 1 \
+              --max-memory 2048 \
+              --error \
+              --metrics=off \
+              --json -o "semgrep-${pack}.json" . || STATUS=$?
+          done
+          exit "$STATUS"
+      - name: Upload Semgrep report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: semgrep-report
+          path: semgrep-*.json
+          if-no-files-found: ignore
+
+  dast:
+    name: DAST (Nuclei, Nikto, testssl.sh â€” si target_url)
+    if: ${{ inputs.target_url != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Set DAST target URL
+        env:
+          INPUT_TARGET_URL: ${{ inputs.target_url }}
+        run: echo "TARGET_URL=$INPUT_TARGET_URL" >> "$GITHUB_ENV"
+      - name: Nuclei scan (critical,high,medium,low)
+        uses: projectdiscovery/nuclei-action@cc153d0541e1adf8a42bbe31c0a4fb2376147538 # v3.1.1
+        with:
+          args: -u ${{ env.TARGET_URL }} -severity critical,high,medium,low -jsonl -o nuclei-report.jsonl -silent
+      - name: Nikto & testssl.sh
+        run: |
+          git clone --depth 1 https://github.com/sullo/nikto.git /tmp/nikto
+          perl /tmp/nikto/program/nikto.pl -h "$TARGET_URL" -maxtime 180s -output nikto-report.txt || true
+          case "$TARGET_URL" in
+            https://*)
+              git clone --depth 1 https://github.com/testssl/testssl.sh.git /tmp/testssl.sh
+              /tmp/testssl.sh/testssl.sh --quiet --jsonfile testssl-report.json "$TARGET_URL" || true
+              ;;
+          esac
+      - name: Upload DAST reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: dast-reports
+          path: |
+            nuclei-report.jsonl
+            nikto-report.txt
+            testssl-report.json
+          if-no-files-found: ignore
