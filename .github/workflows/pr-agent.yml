@@ -22,10 +22,12 @@ jobs:
         id: pragent
         # Revue IA consultative : une indisponibilité du service LLM tiers ne doit pas bloquer le pipeline.
         continue-on-error: true
-        uses: the-pr-agent/pr-agent@main
+        uses: the-pr-agent/pr-agent@dec3e88c029c0a32957bd95aa694cb34d2b256e0 # main
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG.MODEL: "gemini/gemini-4-hydrogen"
+          CONFIG.FALLBACK_MODELS: "[]"
         with:
           github_action_config.auto_describe: "false"
           github_action_config.auto_review: "true"
