@@ -5,17 +5,17 @@
 
 {% block body %}
 <div class="flex flex-col w-full bg-background">
-    {{ include('Components/contact/contact_header.html.twig') }}
+    {{ include('components/contact/contact_header.html.twig') }}
 
     <!-- Editorial Split Grid: Details + Map Experience -->
     <section class="max-w-7xl mx-auto w-full px-6 lg:px-12 py-space-xl">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
-            {{ include('Components/contact/practical_info.html.twig') }}
-            {{ include('Components/contact/map_access.html.twig') }}
+            {{ include('components/contact/practical_info.html.twig') }}
+            {{ include('components/contact/map_access.html.twig') }}
         </div>
     </section>
 
-    {{ include('Components/contact/booking_form.html.twig') }}
-    {{ include('Components/contact/faq_accordion.html.twig') }}
+    {{ include('components/contact/booking_form.html.twig') }}
+    {{ include('components/contact/faq_accordion.html.twig') }}
 </div>
 {% endblock %}

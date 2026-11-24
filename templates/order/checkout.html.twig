@@ -13,33 +13,33 @@
 
         <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
             {# Stepper 4 étapes #}
-            {{ include('Components/checkout/stepper.html.twig') }}
+            {{ include('components/checkout/stepper.html.twig') }}
 
             {# Main Asymmetric Checkout Grid: 8 cols (inputs) / 4 cols (sticky cart) #}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
                 <!-- Left Column: Checkout Inputs (8 cols) -->
                 <div class="lg:col-span-7 xl:col-span-8 flex flex-col gap-space-xl">
                     {# Section 1: Mode de Réception #}
-                    {{ include('Components/checkout/pickup_delivery_toggle.html.twig', {
+                    {{ include('components/checkout/pickup_delivery_toggle.html.twig', {
                         deliveryFee: deliveryFee|default(2.50),
                         freeDeliveryThreshold: freeDeliveryThreshold|default(35.00),
                         freeDeliveryFrom: freeDeliveryFrom|default(25.00),
                     }) }}
 
                     {# Section 2: Créneau de Retrait #}
-                    {{ include('Components/checkout/time_slots_grid.html.twig', {
+                    {{ include('components/checkout/time_slots_grid.html.twig', {
                         timeSlots: timeSlots|default(['19h45', '20h00', '20h15', '20h30', '20h45', '21h00', '21h15', '21h30']),
                     }) }}
 
                     {# Section 3: Coordonnées #}
-                    {{ include('Components/checkout/customer_form.html.twig') }}
+                    {{ include('components/checkout/customer_form.html.twig') }}
 
                     {# Section 4: Paiement #}
-                    {{ include('Components/checkout/payment_methods.html.twig') }}
+                    {{ include('components/checkout/payment_methods.html.twig') }}
                 </div>
 
                 <!-- Right Column: Sticky Cart Summary (4 cols) -->
-                {{ include('Components/checkout/order_summary_sidebar.html.twig', {
+                {{ include('components/checkout/order_summary_sidebar.html.twig', {
                     hotline: hotline|default('05 63 32 14 43'),
                 }) }}
             </div>

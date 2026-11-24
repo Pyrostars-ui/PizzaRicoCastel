@@ -7,10 +7,10 @@
 {% block body %}
 <div class="flex flex-col w-full min-h-screen bg-background">
     {# 1. Atmospheric Storytelling Ribbon (Badges 450°C/72h/DOP, H1, Facts) #}
-    {{ include('Components/menu/carte_ribbon.html.twig') }}
+    {{ include('components/menu/carte_ribbon.html.twig') }}
 
     {# 2. Sticky Live Filter & Sub-Navigation Bar #}
-    {{ include('Components/menu/carte_filter_bar.html.twig') }}
+    {{ include('components/menu/carte_filter_bar.html.twig') }}
 
     {# 3. Main Asymmetric 12-Column Grid Layout (8 cols Catalogue + 4 cols Sticky Cart) #}
     <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -36,7 +36,7 @@
                 <!-- Pizza Grid (2 colonnes) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="pizza-grid">
                     {% for pizza in pizzas %}
-                        {{ include('Components/cards/carte_pizza_card.html.twig', {pizza: pizza}) }}
+                        {{ include('components/cards/carte_pizza_card.html.twig', {pizza: pizza}) }}
                     {% else %}
                         <div class="col-span-2 p-8 rounded-xl bg-surface-container text-center text-on-surface-variant">
                             <p class="font-body-md">Aucune pizza disponible pour le moment.</p>
@@ -65,7 +65,7 @@
                 <!-- Desserts Grid (3 colonnes) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {% for dolce in dolci %}
-                        {{ include('Components/cards/carte_dolce_card.html.twig', {dolce: dolce}) }}
+                        {{ include('components/cards/carte_dolce_card.html.twig', {dolce: dolce}) }}
                     {% endfor %}
                 </div>
             </section>
@@ -90,7 +90,7 @@
                 <!-- Boissons Grid (2 colonnes) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {% for boisson in boissons %}
-                        {{ include('Components/cards/carte_boisson_card.html.twig', {boisson: boisson}) }}
+                        {{ include('components/cards/carte_boisson_card.html.twig', {boisson: boisson}) }}
                     {% else %}
                         <div class="col-span-2 p-8 rounded-xl bg-surface-container text-center text-on-surface-variant">
                             <p class="font-body-md">Aucune boisson disponible pour le moment.</p>
@@ -125,7 +125,7 @@
 
         <!-- Right Side Sticky Basket (4 colonnes) -->
         <div class="lg:col-span-4">
-            {{ include('Components/cart/sticky_cart_sidebar.html.twig') }}
+            {{ include('components/cart/sticky_cart_sidebar.html.twig') }}
         </div>
     </div>
 </div>

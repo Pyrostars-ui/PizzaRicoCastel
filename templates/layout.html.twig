@@ -29,16 +29,16 @@
     </head>
     <body class="admin-body">
         {# <header>
-            {% include "AdminComponents/adminNavbar/adminNavbar.html.twig" %}
+            {% include "admin_components/adminNavbar/adminNavbar.html.twig" %}
         </header> #}
 
         <main class="container-fluid p-0">
-        {{ include('AdminComponents/flash/flash.html.twig') }}
+        {{ include('admin_components/flash/flash.html.twig') }}
             {% block body %}{% endblock %}
         </main>
 
         <footer class="pb-4">
-            {{ include('AdminComponents/adminFooter/adminFooter.html.twig') }}
+            {{ include('admin_components/adminFooter/adminFooter.html.twig') }}
         </footer>
     </body>
 </html>
