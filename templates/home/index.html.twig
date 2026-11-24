@@ -6,12 +6,12 @@
 
 {% block body %}
     {# 1. Section Hero Dramatique 450°C avec Shaders, Badges et 4 Compteurs #}
-    {{ include('Components/hero/hero.html.twig', {
+    {{ include('components/hero/hero.html.twig', {
         hero: hero,
     }) }}
 
     {# 2. Barre Flottante Sticky de Filtres et Recherche #}
-    {{ include('Components/menu/sticky_filter_bar.html.twig', {
+    {{ include('components/menu/sticky_filter_bar.html.twig', {
         totalCount: (allPizzas is defined and allPizzas|length > 0) ? allPizzas|length : (specialPizzas|default([])|length),
         specialPizzas: specialPizzas|default([]),
     }) }}
@@ -48,7 +48,7 @@
 
         <!-- STYLE 01 : Masterpiece Interactive & Tactile -->
         {% if pTartufata %}
-            {{ include('Components/cards/card_style_01.html.twig', {
+            {{ include('components/cards/card_style_01.html.twig', {
                 pizza: pTartufata,
             }) }}
         {% endif %}
@@ -68,7 +68,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {% if pReine %}
-                        {{ include('Components/cards/card_style_02.html.twig', {
+                        {{ include('components/cards/card_style_02.html.twig', {
                             pizza: pReine,
                             cardKey: 'a',
                             subtitle: 'Recette Royale',
@@ -80,7 +80,7 @@
                     {% endif %}
 
                     {% if pMargherita %}
-                        {{ include('Components/cards/card_style_02.html.twig', {
+                        {{ include('components/cards/card_style_02.html.twig', {
                             pizza: pMargherita,
                             cardKey: 'b',
                             subtitle: 'L\'Origine Absolue',
@@ -109,7 +109,7 @@
 
                 <div class="space-y-8">
                     {% if pBurrata %}
-                        {{ include('Components/cards/card_style_03.html.twig', {
+                        {{ include('components/cards/card_style_03.html.twig', {
                             pizza: pBurrata,
                             index: 1,
                             refNumber: 'Référence Création • N°05',
@@ -128,7 +128,7 @@
                     {% endif %}
 
                     {% if pQuattro %}
-                        {{ include('Components/cards/card_style_03.html.twig', {
+                        {{ include('components/cards/card_style_03.html.twig', {
                             pizza: pQuattro,
                             index: 2,
                             refNumber: 'Référence Création • N°04',
@@ -164,7 +164,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {% if pParma %}
-                        {{ include('Components/cards/card_style_04.html.twig', {
+                        {{ include('components/cards/card_style_04.html.twig', {
                             pizza: pParma,
                             cardKey: 'a',
                             tagEdition: 'Parma 18M',
@@ -174,7 +174,7 @@
                     {% endif %}
 
                     {% if pDiavola %}
-                        {{ include('Components/cards/card_style_04.html.twig', {
+                        {{ include('components/cards/card_style_04.html.twig', {
                             pizza: pDiavola,
                             cardKey: 'b',
                             tagEdition: 'Piment Calabre & Spianata',
@@ -188,10 +188,10 @@
     </main>
 
     {# 4. Section Les 3 Piliers de la Tradition #}
-    {{ include('Components/sections/pillars.html.twig', {about: about}) }}
+    {{ include('components/sections/pillars.html.twig', {about: about}) }}
 
     {# 5. Section Contact & Accès Rapide #}
-    {{ include('Components/sections/quick_contact.html.twig') }}
+    {{ include('components/sections/quick_contact.html.twig') }}
 
     <!-- Notification Toast Flottant lors de l'ajout au panier -->
     <div id="cartToast"

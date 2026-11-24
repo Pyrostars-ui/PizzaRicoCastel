@@ -4,7 +4,7 @@
 - **Framework & Runtime** : Symfony 7.4 LTS, PHP 8.4 (`declare(strict_types=1);`), FrankenPHP Worker Mode (aucun état statique mutable, ResetInterface si requis).
 - **Environnement** : Docker-Only (`docker compose exec -T app <cmd>`).
 - **Frontend & Design System** : Thème sombre "Artisanal Ember & Stone", Tailwind CDN avec nonce CSP dynamique (`SecurityHeadersSubscriber`), Google Fonts (`Playfair Display`, `Plus Jakarta Sans`), `Material Symbols Outlined`.
-- **Architecture Twig** : Découpage modulaire en composants réutilisables (`templates/Components/`), aucune donnée métier codée en dur.
+- **Architecture Twig** : Découpage modulaire en composants réutilisables (`templates/components/`), aucune donnée métier codée en dur.
 - **Backend & Persistance** : Entités Doctrine (`Pizza`, `Boisson`, `About`, `Hero`, `SEO`, `News`).
 
 ## Feature Inventory
@@ -27,7 +27,7 @@
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Design System, Base Layout & Data Seeding | `templates/base.html.twig`, Tailwind CDN + CSP nonces, Google Fonts, Material Symbols, `Components/navbar/`, `Components/footer/`, commande/fixtures Doctrine pour peupler les données requises | none | DONE |
+| M1 | Design System, Base Layout & Data Seeding | `templates/base.html.twig`, Tailwind CDN + CSP nonces, Google Fonts, Material Symbols, `components/navbar/`, `components/footer/`, commande/fixtures Doctrine pour peupler les données requises | none | DONE |
 | M2 | Page Accueil & Showcase 4 Architectures (/) | Gabarit `templates/home/index.html.twig`, Hero 450°C, 4 compteurs, barre de recherche/filtres sticky, 4 styles de cartes radicales liés aux entités `Pizza` et `Hero` | M1 | DONE |
 | M3 | Page La Carte & Panier (/la-carte) | Gabarit `templates/home/pizzas.html.twig` (route `/la-carte` et `/nos-pizzas`), grille 12 colonnes, filtres catégories/base, variation 29cm/33cm, panier interactif avec TVA 10% | M1 | DONE |
 | M4 | Savoir-Faire & Contact (/notre-savoir-faire, /contact) | Gabarits `templates/home/about.html.twig` (3 piliers, Schiaffo, timeline, équipe) et `templates/home/contact.html.twig` (accès, horaires, carte sombre, formulaire réservation) | M1 | DONE |
@@ -53,13 +53,13 @@
 
 ## Code Layout
 - `templates/base.html.twig` : Gabarit racine intégrant Tailwind CDN, configuration Ember & Stone, polices et symboles.
-- `templates/Components/navbar/navbar.html.twig` : En-tête responsive unifié.
-- `templates/Components/footer/footer.html.twig` : Pied de page unifié 4 colonnes.
+- `templates/components/navbar/navbar.html.twig` : En-tête responsive unifié.
+- `templates/components/footer/footer.html.twig` : Pied de page unifié 4 colonnes.
 - `templates/home/index.html.twig` : Page 1 (Accueil & Showcase 4 styles).
 - `templates/home/carte.html.twig` ou `pizzas.html.twig` : Page 2 (La Carte & Panier).
 - `templates/home/about.html.twig` : Page 3 (Notre Savoir-Faire & Histoire).
 - `templates/home/contact.html.twig` : Page 4 (Contact, Accès & Réservations).
 - `templates/order/checkout.html.twig` : Page 5 (Finaliser commande & Paiement).
-- `templates/Components/checkout/` : 6 composants modulaires (stepper, pickup_delivery_toggle, time_slots_grid, customer_form, payment_methods, order_summary_sidebar).
+- `templates/components/checkout/` : 6 composants modulaires (stepper, pickup_delivery_toggle, time_slots_grid, customer_form, payment_methods, order_summary_sidebar).
 - `src/Controller/HomeController.php` & `src/Controller/OrderController.php` : Contrôleurs typés PHP 8.4 avec attributs `#[Route]`.
 - `src/Command/SeedDataCommand.php` : Commande Symfony pour insérer les données réelles (8 pizzas, hero, about, seo) dans PostgreSQL.
